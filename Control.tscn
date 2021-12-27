@@ -1,0 +1,26 @@
+[gd_scene format=2]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -82.1053
+margin_top = -91.5263
+margin_right = -82.1053
+margin_bottom = -91.5263
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.0107422
+anchor_top = 0.09
+anchor_right = 0.0107422
+anchor_bottom = 0.09
+margin_left = 77.8946
+margin_top = 32.6316
+margin_right = 1048.89
+margin_bottom = 563.632
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Node2D" type="Node2D" parent="."]
