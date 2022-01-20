@@ -8,17 +8,145 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Control",
+"class": "ChildAdder",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/ChildAdder.gd"
+}, {
+"base": "Control",
+"class": "Draggable",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/Draggable.gd"
+}, {
+"base": "OptionButton",
+"class": "EnumDropdown",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/EnumDropdown.gd"
+}, {
+"base": "Node",
+"class": "ExtraAnimationPlayer",
+"language": "GDScript",
+"path": "res://ExtraAnimationPlayer.gd"
+}, {
+"base": "ColorRect",
+"class": "Keyframe",
+"language": "GDScript",
+"path": "res://keyframe.gd"
+}, {
+"base": "BaseButton",
+"class": "OpacityButton",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/OpacityButton.gd"
+}, {
+"base": "Control",
+"class": "RemoteHide",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/RemoteHide.gd"
+}, {
+"base": "Node",
+"class": "Renameable",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/Renameable.gd"
+}, {
+"base": "Node",
+"class": "SaveController",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/SaveController.gd"
+}, {
+"base": "Node",
+"class": "Saveable",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/Saveable.gd"
+}, {
+"base": "Control",
+"class": "Scrollable",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/Scrollable.gd"
+}, {
+"base": "Control",
+"class": "SelectBox",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/SelectBox.gd"
+}, {
+"base": "Control",
+"class": "Selectable",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/Selectable.gd"
+}, {
+"base": "Node",
+"class": "SelectionController",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/SelectionController.gd"
+}, {
+"base": "Control",
+"class": "SplashAndFade",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/SplashAndFade.gd"
+}, {
+"base": "Control",
+"class": "TabController",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/TabController.gd"
+}, {
+"base": "Button",
+"class": "TabgroupButton",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/TabgroupButton.gd"
+}, {
+"base": "Button",
+"class": "ToggleVisible",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/ToggleVisible.gd"
+}, {
+"base": "Panel",
+"class": "Track",
+"language": "GDScript",
+"path": "res://Track.gd"
+}, {
+"base": "Control",
+"class": "Undoable",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/Undoable.gd"
+} ]
 _global_script_class_icons={
-
+"ChildAdder": "res://addons/ExtraGui/add_icon.png",
+"Draggable": "res://addons/ExtraGui/move_icon.png",
+"EnumDropdown": "res://addons/ExtraGui/list_icon.png",
+"ExtraAnimationPlayer": "",
+"Keyframe": "",
+"OpacityButton": "",
+"RemoteHide": "res://addons/ExtraGui/eye_icon.png",
+"Renameable": "res://addons/ExtraGui/edit_icon.png",
+"SaveController": "res://addons/ExtraGui/save_icon.png",
+"Saveable": "res://addons/ExtraGui/save_icon.png",
+"Scrollable": "res://addons/ExtraGui/move_icon.png",
+"SelectBox": "res://addons/ExtraGui/select_icon.png",
+"Selectable": "res://addons/ExtraGui/select_icon.png",
+"SelectionController": "res://addons/ExtraGui/select_icon.png",
+"SplashAndFade": "",
+"TabController": "res://addons/ExtraGui/tab_icon.png",
+"TabgroupButton": "res://addons/ExtraGui/tab_icon.png",
+"ToggleVisible": "res://addons/ExtraGui/eye_icon.png",
+"Track": "",
+"Undoable": "res://addons/ExtraGui/undo_icon.png"
 }
 
 [application]
 
 config/name="ExtraAnimationEditor"
-run/main_scene="res://Control.tscn"
+run/main_scene="res://AnimationEditor.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
+
+[autoload]
+
+egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
+aes="*res://AnimationEditorSingleton.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/ExtraGui/plugin.cfg" )
 
 [rendering]
 

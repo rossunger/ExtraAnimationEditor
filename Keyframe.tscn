@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://addons/ExtraGui/Selectable.gd" type="Script" id=1]
+[ext_resource path="res://addons/ExtraGui/Draggable.gd" type="Script" id=2]
+[ext_resource path="res://keyframe.gd" type="Script" id=3]
+[ext_resource path="res://addons/ExtraGui/Saveable.gd" type="Script" id=4]
+[ext_resource path="res://KeyframeDataSaver.gd" type="Script" id=5]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
+
+[node name="Keyframe0" type="ColorRect"]
+margin_top = 5.0
+margin_right = 10.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 10, 10 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+curve = SubResource( 1 )
+
+[node name="Saveable" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="Saveable" type="Node" parent="Saveable"]
+script = ExtResource( 5 )
+
+[node name="Draggable" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+canResizeX = false
+canResizeY = false
+canMoveY = false
+canReceiveDrop = false
+canBeDragged = false
+canClose = false
+minWidth = 10
+minHeight = 10
+moveHandle = NodePath("..")
+
+[node name="Selectable" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,86 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://addons/ExtraGui/Selectable.gd" type="Script" id=1]
+[ext_resource path="res://addons/ExtraGui/Saveable.gd" type="Script" id=2]
+[ext_resource path="res://addons/ExtraGui/Undoable.gd" type="Script" id=3]
+[ext_resource path="res://addons/ExtraGui/ChildAdder.gd" type="Script" id=4]
+[ext_resource path="res://addons/ExtraGui/Draggable.gd" type="Script" id=5]
+[ext_resource path="res://addons/ExtraGui/Renameable.gd" type="Script" id=6]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.258824, 0.223529, 0.223529, 1 )
+
+[node name="Panel" type="Panel"]
+margin_left = 85.0
+margin_top = 97.0
+margin_right = 213.0
+margin_bottom = 232.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Draggable" type="Control" parent="."]
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+resizeHandle = NodePath("../resizeHandle")
+moveHandle = NodePath("../moveHandle2")
+
+[node name="resizeHandle" type="Panel" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -22.0
+margin_top = -23.0
+margin_right = -2.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="moveHandle2" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 18.0
+mouse_filter = 0
+custom_styles/normal = SubResource( 2 )
+text = "NAME 1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Selectable" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Renameable" type="Node" parent="."]
+script = ExtResource( 6 )
+who = NodePath("../moveHandle2")
+
+[node name="ChildAdder" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+who = "res://addons/ExtraGui/exampleRecursiveChildToBeAdded.tscn"
+
+[node name="Saveable" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="Undoable" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
