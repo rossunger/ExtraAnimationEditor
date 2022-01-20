@@ -14,8 +14,6 @@
 # - nested animations
 extends Node
 
-signal keyframeChanged
-signal previewContextChanged
 
 var zoom: float = 100 #percent
 var zoomY: float = 100 #percent
@@ -23,15 +21,19 @@ var scrollX: float = 0 #seconds
 var scrollY: float = 0 #tracks
 
 var tracks:Array
-export var previewContext: PackedScene setget changeContext
-var playrate
+var previewContext: PackedScene
+
+onready var animationPlayer = find_node("AnimationPlayer")
+
 
 func _ready():
-	aes.AnimationEditor = self
+	aes.connect("play", animationPlayer, "play")
+	aes.connect("stop", animationPlayer, "stop")
+	aes.connect("contextChanged", self, "changeContext")
 	
 func changeContext(newScene):
 	if previewContext == newScene: return
-	var context = get_node("PreviewContext")
+	var context = find_node("PreviewContext")
 	for oldScene in context.get_children():
 		oldScene.queue_free()
 	var s = newScene.instance()

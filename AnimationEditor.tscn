@@ -1,9 +1,9 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Keyframe.tscn" type="PackedScene" id=1]
 [ext_resource path="res://AnimationEditor.gd" type="Script" id=2]
-[ext_resource path="res://AnimationCollection.gd" type="Script" id=3]
-[ext_resource path="res://Track.gd" type="Script" id=4]
+[ext_resource path="res://Animation.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ChangeContextButton.gd" type="Script" id=4]
 [ext_resource path="res://StatusBar.gd" type="Script" id=5]
 [ext_resource path="res://ExtraAnimationPlayer.gd" type="Script" id=6]
 [ext_resource path="res://addons/ExtraGui/SelectionController.gd" type="Script" id=7]
@@ -11,6 +11,13 @@
 [ext_resource path="res://addons/ExtraGui/SaveController.gd" type="Script" id=9]
 [ext_resource path="res://LoadButton.gd" type="Script" id=10]
 [ext_resource path="res://Track.tscn" type="PackedScene" id=11]
+[ext_resource path="res://PlayStopButton.gd" type="Script" id=12]
+[ext_resource path="res://playhead.gd" type="Script" id=13]
+[ext_resource path="res://icons/icon_play.svg" type="Texture" id=14]
+[ext_resource path="res://icons/icon_save.svg" type="Texture" id=15]
+[ext_resource path="res://icons/icon_load.svg" type="Texture" id=16]
+[ext_resource path="res://icons/icon_environment.svg" type="Texture" id=17]
+[ext_resource path="res://TimelineViewportSplitter.gd" type="Script" id=18]
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
@@ -24,156 +31,246 @@ _data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
 [node name="AnimationEditor" type="Node"]
 script = ExtResource( 2 )
 
-[node name="PreviewContext" type="Node" parent="."]
+[node name="AnimationPlayer" type="Node" parent="."]
 script = ExtResource( 6 )
-animationFile = "res://animation1.json"
 
-[node name="NewAnimation" type="Control" parent="."]
-margin_top = 30.0
-margin_bottom = 30.0
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Track" parent="NewAnimation" instance=ExtResource( 11 )]
-
-[node name="Keyframe0" parent="NewAnimation/Track" instance=ExtResource( 1 )]
-curve = SubResource( 1 )
-
-[node name="Keyframe1" parent="NewAnimation/Track" instance=ExtResource( 1 )]
-margin_left = 330.0
-margin_right = 340.0
-time = 12.0
-curve = SubResource( 2 )
-
-[node name="Keyframe2" parent="NewAnimation/Track" instance=ExtResource( 1 )]
-margin_left = 538.0
-margin_right = 548.0
-time = 15.0
-curve = SubResource( 3 )
-
-[node name="Track2 Scale" type="Panel" parent="NewAnimation"]
-margin_top = 24.0
-margin_right = 1000.0
-margin_bottom = 44.0
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Keyframe3" parent="NewAnimation/Track2 Scale" instance=ExtResource( 1 )]
-curve = SubResource( 1 )
-
-[node name="Keyframe4" parent="NewAnimation/Track2 Scale" instance=ExtResource( 1 )]
-margin_left = 330.0
-margin_right = 340.0
-time = 12.0
-curve = SubResource( 2 )
-
-[node name="Keyframe5" parent="NewAnimation/Track2 Scale" instance=ExtResource( 1 )]
-margin_left = 538.0
-margin_right = 548.0
-time = 15.0
-curve = SubResource( 3 )
-
-[node name="Track3 Position B" type="Panel" parent="NewAnimation"]
-margin_top = 49.0
-margin_right = 1000.0
-margin_bottom = 69.0
-script = ExtResource( 4 )
-
-[node name="StatusBar" type="ColorRect" parent="."]
+[node name="TimelineViewportSplitter" type="VSplitContainer" parent="."]
 anchor_right = 1.0
-margin_bottom = 27.0
+anchor_bottom = 1.0
+split_offset = 1200
+script = ExtResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="TimelineViewportSplitter"]
+margin_right = 2560.0
+margin_bottom = 1200.0
+rect_clip_content = true
+color = Color( 0.298039, 0.0862745, 0.0862745, 1 )
+
+[node name="ViewportContainer" type="ViewportContainer" parent="TimelineViewportSplitter/ColorRect"]
+margin_right = 2560.0
+margin_bottom = 1240.0
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PreviewContext" type="Viewport" parent="TimelineViewportSplitter/ColorRect/ViewportContainer"]
+size = Vector2( 2560, 1240 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+gui_disable_input = true
+
+[node name="ColorRect2" type="ColorRect" parent="TimelineViewportSplitter"]
+margin_top = 1212.0
+margin_right = 2560.0
+margin_bottom = 1440.0
+color = Color( 0.0745098, 0.0745098, 0.0823529, 1 )
+
+[node name="StatusBar" type="ColorRect" parent="TimelineViewportSplitter/ColorRect2"]
+anchor_right = 1.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 25 )
 color = Color( 0, 0, 0, 1 )
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="StatusBar"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TimelineViewportSplitter/ColorRect2/StatusBar"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/separation = 3
+alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="StatusBar/HBoxContainer"]
-margin_right = 5.0
-margin_bottom = 27.0
+[node name="MarginContainer" type="MarginContainer" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1007.0
+margin_right = 1012.0
+margin_bottom = 35.0
 rect_min_size = Vector2( 5, 0 )
 
-[node name="TimeLabel" type="Label" parent="StatusBar/HBoxContainer"]
-margin_left = 8.0
-margin_top = 6.0
-margin_right = 44.0
-margin_bottom = 20.0
+[node name="TimeLabel" type="Label" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1015.0
+margin_top = 10.0
+margin_right = 1051.0
+margin_bottom = 24.0
 text = "Time:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeValue" type="Label" parent="StatusBar/HBoxContainer"]
-margin_left = 47.0
-margin_top = 6.0
-margin_right = 55.0
-margin_bottom = 20.0
+[node name="TimeValue" type="Label" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1054.0
+margin_top = 10.0
+margin_right = 1062.0
+margin_bottom = 24.0
 text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer2" type="MarginContainer" parent="StatusBar/HBoxContainer"]
-margin_left = 58.0
-margin_right = 63.0
-margin_bottom = 27.0
+[node name="MarginContainer2" type="MarginContainer" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1065.0
+margin_right = 1070.0
+margin_bottom = 35.0
 rect_min_size = Vector2( 5, 0 )
 
-[node name="ValueLabel" type="Label" parent="StatusBar/HBoxContainer"]
-margin_left = 66.0
-margin_top = 6.0
-margin_right = 101.0
-margin_bottom = 20.0
+[node name="ValueLabel" type="Label" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1073.0
+margin_top = 10.0
+margin_right = 1108.0
+margin_bottom = 24.0
 text = "Value"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ValueValue" type="Label" parent="StatusBar/HBoxContainer"]
-margin_left = 104.0
-margin_top = 6.0
-margin_right = 112.0
-margin_bottom = 20.0
+[node name="ValueValue" type="Label" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1111.0
+margin_top = 10.0
+margin_right = 1119.0
+margin_bottom = 24.0
 text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer3" type="MarginContainer" parent="StatusBar/HBoxContainer"]
-margin_left = 115.0
-margin_right = 215.0
-margin_bottom = 27.0
+[node name="MarginContainer3" type="MarginContainer" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1122.0
+margin_right = 1222.0
+margin_bottom = 35.0
 rect_min_size = Vector2( 100, 0 )
 
-[node name="SaveButton" type="Button" parent="StatusBar/HBoxContainer"]
-margin_left = 218.0
-margin_right = 259.0
-margin_bottom = 27.0
-text = "Save"
+[node name="SaveButton" type="Button" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1225.0
+margin_right = 1253.0
+margin_bottom = 35.0
+icon = ExtResource( 15 )
 script = ExtResource( 8 )
 
-[node name="FileDialog" type="FileDialog" parent="StatusBar/HBoxContainer/SaveButton"]
+[node name="FileDialog" type="FileDialog" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/SaveButton"]
 margin_right = 315.0
 margin_bottom = 130.0
 
-[node name="LoadButton" type="Button" parent="StatusBar/HBoxContainer"]
-margin_left = 262.0
-margin_right = 304.0
-margin_bottom = 27.0
-text = "Load"
+[node name="LoadButton" type="Button" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1256.0
+margin_right = 1284.0
+margin_bottom = 35.0
+icon = ExtResource( 16 )
 script = ExtResource( 10 )
+
+[node name="MarginContainer4" type="MarginContainer" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1287.0
+margin_right = 1387.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="BackButton" type="Button" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1390.0
+margin_right = 1418.0
+margin_bottom = 35.0
+toggle_mode = true
+icon = ExtResource( 14 )
+script = ExtResource( 12 )
+
+[node name="MarginContainer5" type="MarginContainer" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1421.0
+margin_right = 1521.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="ChangeContextButton" type="Button" parent="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer"]
+margin_left = 1524.0
+margin_right = 1552.0
+margin_bottom = 35.0
+icon = ExtResource( 17 )
+script = ExtResource( 4 )
+
+[node name="MarginContainer" type="MarginContainer" parent="TimelineViewportSplitter/ColorRect2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 38.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSplitContainer" type="HSplitContainer" parent="TimelineViewportSplitter/ColorRect2/MarginContainer"]
+margin_right = 2555.0
+margin_bottom = 190.0
+split_offset = 300
+
+[node name="TrackListContainer" type="ColorRect" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer"]
+margin_right = 300.0
+margin_bottom = 190.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="AnimationTimeline" type="ColorRect" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer"]
+margin_left = 312.0
+margin_right = 2555.0
+margin_bottom = 190.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="NewAnimation2" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline" instance=ExtResource( 3 )]
+margin_top = 0.0
+margin_right = 2243.0
+margin_bottom = 290.0
+
+[node name="Track" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2" instance=ExtResource( 11 )]
+margin_right = 1000.0
+margin_bottom = 35.0
+
+[node name="Keyframe0" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
+curve = SubResource( 1 )
+
+[node name="Keyframe1" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
+margin_left = 330.0
+margin_right = 340.0
+time = 12.0
+curve = SubResource( 2 )
+
+[node name="Keyframe2" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
+margin_left = 538.0
+margin_right = 548.0
+time = 15.0
+curve = SubResource( 3 )
+
+[node name="Track2" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2" instance=ExtResource( 11 )]
+margin_top = 43.0
+margin_right = 1000.0
+margin_bottom = 78.0
+
+[node name="Keyframe0" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]
+curve = SubResource( 1 )
+
+[node name="Keyframe1" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]
+margin_left = 330.0
+margin_right = 340.0
+time = 12.0
+curve = SubResource( 2 )
+
+[node name="Keyframe2" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]
+margin_left = 538.0
+margin_right = 548.0
+time = 15.0
+curve = SubResource( 3 )
+
+[node name="Playhead" type="ColorRect" parent="TimelineViewportSplitter/ColorRect2/MarginContainer/HSplitContainer/AnimationTimeline"]
+margin_right = 2.0
+margin_bottom = 300.0
+color = Color( 1, 1, 1, 0.541176 )
+script = ExtResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="SaveController" type="Node" parent="."]
 script = ExtResource( 9 )
@@ -182,5 +279,8 @@ script = ExtResource( 9 )
 script = ExtResource( 7 )
 color = Color( 0.388235, 0.580392, 0.929412, 1 )
 
-[connection signal="pressed" from="StatusBar/HBoxContainer/SaveButton" to="StatusBar/HBoxContainer/SaveButton" method="_on_SaveButton_pressed"]
-[connection signal="pressed" from="StatusBar/HBoxContainer/LoadButton" to="StatusBar/HBoxContainer/LoadButton" method="_on_LoadButton_pressed"]
+[connection signal="dragged" from="TimelineViewportSplitter" to="TimelineViewportSplitter" method="_on_TimelineViewportSplitter_dragged"]
+[connection signal="pressed" from="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/SaveButton" to="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/SaveButton" method="_on_SaveButton_pressed"]
+[connection signal="pressed" from="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/LoadButton" to="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/LoadButton" method="_on_LoadButton_pressed"]
+[connection signal="pressed" from="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/BackButton" to="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/BackButton" method="_on_PlayStopButton_pressed"]
+[connection signal="pressed" from="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/ChangeContextButton" to="TimelineViewportSplitter/ColorRect2/StatusBar/HBoxContainer/ChangeContextButton" method="_on_ChangeContextButton_pressed"]

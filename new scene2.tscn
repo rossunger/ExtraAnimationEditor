@@ -16,3 +16,7 @@ color = Color( 0.0862745, 0.219608, 0.447059, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.0941176, 0.286275, 0.219608, 1 )
+polygon = PoolVector2Array( 105, -94, -58, 132, -352, 1496, 428, 1760, 2488, 1376, 2452, 452, 3268, 428, 2828, -568, 488, -216 )

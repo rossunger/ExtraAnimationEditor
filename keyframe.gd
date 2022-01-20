@@ -6,8 +6,8 @@ enum ValueTypes {
 }
 
 #DATA
-export var time:float # in seconds
-export var absolute = true #absolute or relative
+export var time:float setget timeChanged # in seconds
+export var absolute = true setget absoluteChanged #absolute or relative
 
 export (ValueTypes) var type = ValueTypes.Float
 
@@ -22,9 +22,21 @@ func _ready():
 	
 
 func rect_changed():
-	if !aes.AnimationEditor: return
-	time = rect_position.x / 20	
-	aes.AnimationEditor.emit_signal("keyframeChanged")
+	if is_inside_tree():
+		time = rect_position.x / 20	
+		aes.emit_signal("animationChanged")
 	#rect_position.y = 5
 	#rect_position.x = time * 20
+	
+func timeChanged(newtime):	
+	if !time == newtime:
+		time = newtime
+	if is_inside_tree():
+		aes.emit_signal("animationChanged")
+	
+func absoluteChanged(newvalue):
+	if !absolute == newvalue:
+		absolute = newvalue
+	if is_inside_tree():		
+		aes.emit_signal("animationChanged")
 	

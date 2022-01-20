@@ -8,6 +8,7 @@ class_name Saveable, "save_icon.png"
 
 
 var parent
+
 func _ready():
 	parent = get_parent()
 	add_to_group("saveable")

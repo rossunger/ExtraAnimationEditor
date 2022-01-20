@@ -144,6 +144,13 @@ config/icon="res://icon.png"
 egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
 aes="*res://AnimationEditorSingleton.gd"
 
+[display]
+
+window/size/width=2560
+window/size/height=1440
+window/size/fullscreen=true
+window/dpi/allow_hidpi=true
+
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/ExtraGui/plugin.cfg" )

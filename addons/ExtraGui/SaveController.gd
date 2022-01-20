@@ -79,7 +79,7 @@ func doLoad(filepath:String = autosaveFilePath):
 	var data = JSON.parse(saveFile.get_as_text()).result			
 	var errors = false
 	for d in data:
-		if !get_viewport().has_node(d.path_to_parent): #!is_instance_valid( get_node_or_null( d.path_to_parent )):			
+		if !is_instance_valid( get_node_or_null( d.path_to_parent )):			
 			#This should never happen, because we sort the nodes by heirarchy first
 			print("Error! trying to load a node who's parent doesn't exist yet")	
 				
@@ -123,8 +123,8 @@ static func SortByHeirarchy(a, b):
 	var apath = a.get_path() as String
 	var bpath = b.get_path() as String
 	if apath.find(bpath) != -1:	 
-		return false
-	return true
+		return true
+	return false
 
 func doSave(filepath:String = autosaveFilePath):
 	if !filepath.ends_with(".json"):		
@@ -141,12 +141,14 @@ func doSave(filepath:String = autosaveFilePath):
 	
 	var saveData: Array
 	var sortedSaveables = get_tree().get_nodes_in_group("saveable")
-	sortedSaveables.sort_custom(self, "SortByHeirarchy")
+	sortedSaveables.sort_custom(self, "SortByHeirarchy")	
 	
 	for s in sortedSaveables:
+		print(s.get_path())
 		saveData.push_back( s.getDataToSave() )			
 		
 	saveFile.open(saveFilePath, File.WRITE)
+	
 	saveFile.store_string(JSON.print(saveData))
 	saveFile.close() 	 	
 	if dialog.is_connected("file_selected", self, "doSave"):
