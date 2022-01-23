@@ -1,0 +1,136 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://RuntimeExample/RuntimeDemo.gd" type="Script" id=1]
+[ext_resource path="res://new scene2.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ExtraAnimation.gd" type="Script" id=3]
+[ext_resource path="res://AnimationController.gd" type="Script" id=4]
+[ext_resource path="res://addons/ExtraGui/fonts/defaultFont.tres" type="DynamicFont" id=5]
+[ext_resource path="res://Keyframe.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Track.tscn" type="PackedScene" id=7]
+[ext_resource path="res://playhead.gd" type="Script" id=8]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationController" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="ExtraAnimation" type="Control" parent="AnimationController"]
+visible = false
+script = ExtResource( 3 )
+speed = 6
+looping = true
+Track1/obj = NodePath("../../Control/Polygon2D/ColorRect")
+Track1/prop = "rect_position.x"
+trackObjects = {
+"Track1": NodePath("../../Control/Polygon2D/ColorRect"),
+"Track2": NodePath("../../Control/Polygon2D/ColorRect")
+}
+trackProperties = {
+"Track1": "rect_position.x",
+"Track2": "rect_size.y"
+}
+Track2/obj = NodePath("../../Control/Polygon2D/ColorRect")
+Track2/prop = "rect_size.y"
+trackObjects = {
+"Track1": NodePath("../../Control/Polygon2D/ColorRect"),
+"Track2": NodePath("../../Control/Polygon2D/ColorRect")
+}
+trackProperties = {
+"Track1": "rect_position.x",
+"Track2": "rect_size.y"
+}
+
+[node name="Track1" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
+type = 1
+
+[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
+absolute = true
+value = 330
+curve = SubResource( 1 )
+
+[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
+margin_left = 240.0
+margin_right = 260.0
+time = 12.0
+absolute = true
+value = 110
+curve = SubResource( 2 )
+
+[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
+margin_left = 438.0
+margin_right = 458.0
+time = 21.9
+absolute = true
+value = 900
+curve = SubResource( 3 )
+
+[node name="Track2" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
+margin_top = 47.0
+margin_bottom = 82.0
+type = 1
+
+[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
+absolute = true
+value = 54
+curve = SubResource( 1 )
+
+[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
+margin_left = 240.0
+margin_right = 260.0
+time = 12.0
+absolute = true
+value = 1200
+curve = SubResource( 2 )
+
+[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
+margin_left = 300.0
+margin_right = 320.0
+time = 15.0
+absolute = true
+value = 190
+curve = SubResource( 3 )
+
+[node name="Control" parent="." instance=ExtResource( 2 )]
+
+[node name="Button" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -251.0
+margin_top = -117.5
+margin_right = 251.0
+margin_bottom = 117.5
+custom_fonts/font = ExtResource( 5 )
+text = "PLAY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Playhead" type="ColorRect" parent="."]
+margin_right = 2.0
+margin_bottom = 300.0
+color = Color( 1, 1, 1, 0.541176 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+
+[editable path="Control"]

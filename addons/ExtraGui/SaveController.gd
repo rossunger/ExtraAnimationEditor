@@ -144,7 +144,6 @@ func doSave(filepath:String = autosaveFilePath):
 	sortedSaveables.sort_custom(self, "SortByHeirarchy")	
 	
 	for s in sortedSaveables:
-		print(s.get_path())
 		saveData.push_back( s.getDataToSave() )			
 		
 	saveFile.open(saveFilePath, File.WRITE)

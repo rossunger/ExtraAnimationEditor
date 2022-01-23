@@ -7,7 +7,6 @@
 [ext_resource path="res://KeyframeDataSaver.gd" type="Script" id=5]
 
 [sub_resource type="Curve" id=1]
-_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
 
 [node name="Keyframe0" type="ColorRect"]
 margin_top = 5.0
@@ -18,7 +17,9 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+absolute = false
 curve = SubResource( 1 )
+type = 0
 
 [node name="Saveable" type="Node" parent="."]
 script = ExtResource( 4 )

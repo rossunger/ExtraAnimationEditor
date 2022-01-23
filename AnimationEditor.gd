@@ -21,21 +21,26 @@ var scrollX: float = 0 #seconds
 var scrollY: float = 0 #tracks
 
 var tracks:Array
-var previewContext: PackedScene
 
-onready var animationPlayer = find_node("AnimationPlayer")
 
+var animationPlayer
+
+var defaultAnimationContext = preload("res://DefaultAnimationContext.tscn")
 
 func _ready():
+	animationPlayer = find_node("Animation")
 	aes.connect("play", animationPlayer, "play")
 	aes.connect("stop", animationPlayer, "stop")
-	aes.connect("contextChanged", self, "changeContext")
+	aes.connect("contextChanged", self, "changeContext")	
+	aes.connect("animationChanged", animationPlayer, "updateAnimation")
+	animationPlayer.connect("frameChanged", aes, "frameChanged")
+	changeContext(defaultAnimationContext)	
 	
 func changeContext(newScene):
-	if previewContext == newScene: return
+	if aes.previewContext == newScene: return
 	var context = find_node("PreviewContext")
 	for oldScene in context.get_children():
 		oldScene.queue_free()
 	var s = newScene.instance()
 	context.add_child(s)
-	previewContext = newScene
+	aes.previewContext = newScene

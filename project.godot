@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "AnimationController",
+"language": "GDScript",
+"path": "res://AnimationController.gd"
+}, {
 "base": "Control",
 "class": "ChildAdder",
 "language": "GDScript",
@@ -24,10 +29,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/ExtraGui/EnumDropdown.gd"
 }, {
-"base": "Node",
-"class": "ExtraAnimationPlayer",
+"base": "Control",
+"class": "ExtraAnimation",
 "language": "GDScript",
-"path": "res://ExtraAnimationPlayer.gd"
+"path": "res://ExtraAnimation.gd"
 }, {
 "base": "ColorRect",
 "class": "Keyframe",
@@ -63,6 +68,11 @@ _global_script_classes=[ {
 "class": "Scrollable",
 "language": "GDScript",
 "path": "res://addons/ExtraGui/Scrollable.gd"
+}, {
+"base": "LineEdit",
+"class": "SearchBox",
+"language": "GDScript",
+"path": "res://addons/ExtraGui/SearchBox.gd"
 }, {
 "base": "Control",
 "class": "SelectBox",
@@ -110,10 +120,11 @@ _global_script_classes=[ {
 "path": "res://addons/ExtraGui/Undoable.gd"
 } ]
 _global_script_class_icons={
+"AnimationController": "",
 "ChildAdder": "res://addons/ExtraGui/add_icon.png",
 "Draggable": "res://addons/ExtraGui/move_icon.png",
 "EnumDropdown": "res://addons/ExtraGui/list_icon.png",
-"ExtraAnimationPlayer": "",
+"ExtraAnimation": "",
 "Keyframe": "",
 "OpacityButton": "",
 "RemoteHide": "res://addons/ExtraGui/eye_icon.png",
@@ -121,6 +132,7 @@ _global_script_class_icons={
 "SaveController": "res://addons/ExtraGui/save_icon.png",
 "Saveable": "res://addons/ExtraGui/save_icon.png",
 "Scrollable": "res://addons/ExtraGui/move_icon.png",
+"SearchBox": "",
 "SelectBox": "res://addons/ExtraGui/select_icon.png",
 "Selectable": "res://addons/ExtraGui/select_icon.png",
 "SelectionController": "res://addons/ExtraGui/select_icon.png",
