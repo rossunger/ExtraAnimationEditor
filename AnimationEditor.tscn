@@ -248,11 +248,13 @@ curve = SubResource( 1 )
 [node name="Keyframe1" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
 margin_left = 330.0
 margin_right = 340.0
+time = 16.5
 curve = SubResource( 2 )
 
 [node name="Keyframe2" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
 margin_left = 538.0
 margin_right = 548.0
+time = 26.9
 curve = SubResource( 3 )
 
 [node name="Track2" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2" instance=ExtResource( 11 )]
@@ -266,11 +268,13 @@ curve = SubResource( 4 )
 [node name="Keyframe1" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]
 margin_left = 330.0
 margin_right = 340.0
+time = 16.5
 curve = SubResource( 5 )
 
 [node name="Keyframe2" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]
 margin_left = 538.0
 margin_right = 548.0
+time = 26.9
 curve = SubResource( 6 )
 
 [node name="Playhead" type="ColorRect" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline"]
