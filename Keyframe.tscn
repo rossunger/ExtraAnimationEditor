@@ -19,7 +19,6 @@ __meta__ = {
 }
 absolute = false
 curve = SubResource( 1 )
-type = 0
 
 [node name="Saveable" type="Node" parent="."]
 script = ExtResource( 4 )

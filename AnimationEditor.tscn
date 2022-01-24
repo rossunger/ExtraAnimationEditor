@@ -4,7 +4,7 @@
 [ext_resource path="res://AnimationEditor.gd" type="Script" id=2]
 [ext_resource path="res://Animation.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ChangeContextButton.gd" type="Script" id=4]
-[ext_resource path="res://StatusBar.gd" type="Script" id=5]
+[ext_resource path="res://addons/AnimationEditorPlugin/StatusBar.gd" type="Script" id=5]
 [ext_resource path="res://ExtraAnimation.gd" type="Script" id=6]
 [ext_resource path="res://addons/ExtraGui/SelectionController.gd" type="Script" id=7]
 [ext_resource path="res://SaveButton.gd" type="Script" id=8]
@@ -37,10 +37,20 @@
 script = ExtResource( 2 )
 
 [node name="Animation" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+speed = 1
+AutoDuration = true
+Duration = 1
+Zoom = 100.0
+Grid = false
+Snap = false
+SnapIncriment = 1
+looping = false
 
 [node name="TimelineViewportSplitter" type="VSplitContainer" parent="."]
 anchor_right = 1.0
@@ -81,9 +91,14 @@ margin_bottom = 1440.0
 color = Color( 0.0745098, 0.0745098, 0.0823529, 1 )
 
 [node name="StatusBar" type="ColorRect" parent="TimelineViewportSplitter/TimelinePanel"]
+visible = false
 anchor_right = 1.0
-margin_bottom = 35.0
+margin_left = -1922.45
+margin_top = -1774.34
+margin_right = -2744.45
+margin_bottom = -1739.34
 rect_min_size = Vector2( 0, 25 )
+rect_scale = Vector2( 4, 4 )
 color = Color( 0, 0, 0, 1 )
 script = ExtResource( 5 )
 __meta__ = {
@@ -100,15 +115,15 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 992.0
-margin_right = 997.0
+margin_left = 581.0
+margin_right = 586.0
 margin_bottom = 35.0
 rect_min_size = Vector2( 5, 0 )
 
 [node name="TimeLabel" type="Label" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1000.0
+margin_left = 589.0
 margin_top = 10.0
-margin_right = 1036.0
+margin_right = 625.0
 margin_bottom = 24.0
 text = "Time:"
 __meta__ = {
@@ -116,9 +131,9 @@ __meta__ = {
 }
 
 [node name="TimeValue" type="Label" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1039.0
+margin_left = 628.0
 margin_top = 10.0
-margin_right = 1047.0
+margin_right = 636.0
 margin_bottom = 24.0
 text = "0"
 __meta__ = {
@@ -126,15 +141,15 @@ __meta__ = {
 }
 
 [node name="MarginContainer2" type="MarginContainer" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1050.0
-margin_right = 1055.0
+margin_left = 639.0
+margin_right = 644.0
 margin_bottom = 35.0
 rect_min_size = Vector2( 5, 0 )
 
 [node name="ValueLabel" type="Label" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1058.0
+margin_left = 647.0
 margin_top = 10.0
-margin_right = 1093.0
+margin_right = 682.0
 margin_bottom = 24.0
 text = "Value"
 __meta__ = {
@@ -142,9 +157,9 @@ __meta__ = {
 }
 
 [node name="ValueValue" type="Label" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1096.0
+margin_left = 685.0
 margin_top = 10.0
-margin_right = 1104.0
+margin_right = 693.0
 margin_bottom = 24.0
 text = "0"
 __meta__ = {
@@ -152,14 +167,14 @@ __meta__ = {
 }
 
 [node name="MarginContainer3" type="MarginContainer" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1107.0
-margin_right = 1207.0
+margin_left = 696.0
+margin_right = 796.0
 margin_bottom = 35.0
 rect_min_size = Vector2( 100, 0 )
 
 [node name="SaveButton" type="Button" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1210.0
-margin_right = 1238.0
+margin_left = 799.0
+margin_right = 827.0
 margin_bottom = 35.0
 icon = ExtResource( 15 )
 script = ExtResource( 8 )
@@ -169,42 +184,42 @@ margin_right = 315.0
 margin_bottom = 130.0
 
 [node name="LoadButton" type="Button" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1241.0
-margin_right = 1269.0
+margin_left = 830.0
+margin_right = 858.0
 margin_bottom = 35.0
 icon = ExtResource( 16 )
 script = ExtResource( 10 )
 
 [node name="NewAnimationButton" type="Button" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1272.0
-margin_right = 1300.0
+margin_left = 861.0
+margin_right = 889.0
 margin_bottom = 35.0
 icon = ExtResource( 20 )
 script = ExtResource( 19 )
 
 [node name="MarginContainer4" type="MarginContainer" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1303.0
-margin_right = 1403.0
+margin_left = 892.0
+margin_right = 992.0
 margin_bottom = 35.0
 rect_min_size = Vector2( 100, 0 )
 
 [node name="BackButton" type="Button" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1406.0
-margin_right = 1434.0
+margin_left = 995.0
+margin_right = 1023.0
 margin_bottom = 35.0
 toggle_mode = true
 icon = ExtResource( 14 )
 script = ExtResource( 12 )
 
 [node name="MarginContainer5" type="MarginContainer" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1437.0
-margin_right = 1537.0
+margin_left = 1026.0
+margin_right = 1126.0
 margin_bottom = 35.0
 rect_min_size = Vector2( 100, 0 )
 
 [node name="ChangeContextButton" type="Button" parent="TimelineViewportSplitter/TimelinePanel/StatusBar/HBoxContainer"]
-margin_left = 1540.0
-margin_right = 1568.0
+margin_left = 1129.0
+margin_right = 1157.0
 margin_bottom = 35.0
 icon = ExtResource( 17 )
 script = ExtResource( 4 )
@@ -240,6 +255,7 @@ margin_right = 2243.0
 margin_bottom = 290.0
 
 [node name="Track" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2" instance=ExtResource( 11 )]
+rect_min_size = Vector2( 0, 32 )
 type = 1
 
 [node name="Keyframe0" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
@@ -260,6 +276,7 @@ curve = SubResource( 3 )
 [node name="Track2" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2" instance=ExtResource( 11 )]
 margin_top = 47.0
 margin_bottom = 82.0
+rect_min_size = Vector2( 0, 32 )
 type = 1
 
 [node name="Keyframe0" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]

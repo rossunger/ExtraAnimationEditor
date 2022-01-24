@@ -148,13 +148,12 @@ _global_script_class_icons={
 
 config/name="ExtraAnimationEditor"
 run/main_scene="res://AnimationEditor.tscn"
-run/low_processor_mode=true
 config/icon="res://icon.png"
 
 [autoload]
 
-egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
 aes="*res://AnimationEditorSingleton.gd"
+egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
 
 [display]
 
@@ -165,7 +164,7 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/ExtraGui/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
 
 [rendering]
 

@@ -1,4 +1,6 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ExtraAnimation.gd" type="Script" id=1]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -7,11 +9,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="ExtraAnimation" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+script = ExtResource( 1 )
+speed = 1
+AutoDuration = true
+Duration = 1
+Zoom = 100.0
+Grid = false
+Snap = false
+SnapIncriment = 1
+looping = false
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 8
+
+[node name="Polygon2D" type="Polygon2D" parent="CanvasLayer"]
 color = Color( 0.0941176, 0.286275, 0.219608, 1 )
 polygon = PoolVector2Array( 105, -94, -58, 132, -352, 1496, 428, 1760, 2488, 1376, 2452, 452, 3268, 428, 2828, -568, 488, -216 )
 
-[node name="ColorRect" type="ColorRect" parent="Polygon2D"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Polygon2D"]
 margin_left = 526.0
 margin_top = 309.0
 margin_right = 791.0

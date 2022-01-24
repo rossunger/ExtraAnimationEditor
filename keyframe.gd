@@ -13,9 +13,10 @@ export var curve: Curve = Curve.new()
 #PLAYBACK
 var startingValue
 
-
-func _ready():
+func _init():
 	add_to_group("keyframe")
+	
+func _ready():	
 	connect("item_rect_changed", self, "rect_changed")
 	time = rect_position.x /20
 

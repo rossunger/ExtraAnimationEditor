@@ -3,10 +3,10 @@ extends Panel
 class_name Track
 
 #this enum is defined here AND in ExtraAnimation.gd. 
-enum Types {
-	Bool, Float, Vec2, Vec3, Vec4, Res
+enum TYPES {
+	Bool, Float, Res, Str, Vec2, Vec3, Vec4, 
 }
-var type = Types.Float
+var type = TYPES.Float
 var object
 var property
 var inputs
@@ -20,11 +20,12 @@ var canvas
 var lastKeyframe
 
 ##### TO DO: first keyframe should default to time 0, with a relative value 0...
-
+	
 func _init():	
 	#rect_size = Vector2(1000, 20)	
 	if !is_in_group("AnimationTracks"):
 		add_to_group("AnimationTracks")
+	rect_min_size.y = 32		
 
 func frameChanged(position):
 	#check to see if we've moved on to the next keyframe
@@ -96,7 +97,7 @@ func _get_property_list():
 		"hint": PROPERTY_HINT_ENUM,
 		"usage": PROPERTY_USAGE_DEFAULT,    	
 		"type": TYPE_INT,
-		"hint_string": Types
+		"hint_string": TYPES
 
 	})	
 	

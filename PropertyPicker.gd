@@ -29,7 +29,7 @@ func selectProperty(path):
 
 func search(results):	
 	for prop in searchBox.allItems:
-		if prop.is_inside_tree() && !results.has(prop):
+		if prop.is_inside_tree() and !results.has(prop):
 			container.remove_child(prop)
 		else:
 			container.add_child(prop)

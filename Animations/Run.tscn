@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://ExtraAnimation.gd" type="Script" id=1]
+[ext_resource path="res://Track.gd" type="Script" id=2]
+[ext_resource path="res://keyframe.gd" type="Script" id=3]
+[ext_resource path="res://RuntimeExample/RuntimeDemo.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Curve" id=1]
+
+[node name="Run" type="Control"]
+visible = false
+anchor_right = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+speed = 1
+AutoDuration = true
+Duration = 1
+Zoom = 100.0
+Grid = false
+Snap = false
+SnapIncriment = 1
+looping = false
+Tracks/X/obj = null
+Tracks/X/prop = null
+trackObjects = {
+}
+trackProperties = {
+}
+Tracks/Y/obj = null
+Tracks/Y/prop = null
+trackObjects = {
+}
+trackProperties = {
+}
+Tracks/footsteps/obj = null
+Tracks/footsteps/prop = null
+trackObjects = {
+}
+trackProperties = {
+}
+
+[node name="context" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Control" parent="context" instance=ExtResource( 4 )]
+
+[node name="X" type="Panel" parent="."]
+anchor_right = 1.0
+margin_right = -2460.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 100, 32 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+type = 1
+
+[node name="Keyframe" type="ColorRect" parent="X"]
+margin_top = 5.0
+margin_right = 20.0
+margin_bottom = 25.0
+script = ExtResource( 3 )
+curve = SubResource( 1 )
+
+[node name="Keyframe2" type="ColorRect" parent="X"]
+margin_left = 519.044
+margin_top = 5.0
+margin_right = 539.044
+margin_bottom = 25.0
+script = ExtResource( 3 )
+time = 25.9522
+curve = SubResource( 1 )
+
+[node name="Y" type="Panel" parent="."]
+anchor_right = 1.0
+margin_top = 35.0
+margin_right = -2460.0
+margin_bottom = 67.0
+rect_min_size = Vector2( 100, 32 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+type = 1
+
+[node name="Keyframe2" type="ColorRect" parent="Y"]
+margin_top = 5.0
+margin_right = 20.0
+margin_bottom = 25.0
+script = ExtResource( 3 )
+curve = SubResource( 1 )
+
+[node name="footsteps" type="Panel" parent="."]
+anchor_right = 1.0
+margin_top = 70.0
+margin_right = -2460.0
+margin_bottom = 102.0
+rect_min_size = Vector2( 100, 32 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+type = 1
+
+[node name="Keyframe3" type="ColorRect" parent="footsteps"]
+margin_top = 5.0
+margin_right = 20.0
+margin_bottom = 25.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+curve = SubResource( 1 )

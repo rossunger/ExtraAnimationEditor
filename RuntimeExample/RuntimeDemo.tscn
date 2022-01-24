@@ -26,85 +26,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationController" type="Node" parent="."]
-script = ExtResource( 4 )
-
-[node name="ExtraAnimation" type="Control" parent="AnimationController"]
-visible = false
-script = ExtResource( 3 )
-speed = 6
-looping = true
-Track1/obj = NodePath("../../Control/Polygon2D/ColorRect")
-Track1/prop = "rect_position.x"
-trackObjects = {
-"Track1": NodePath("../../Control/Polygon2D/ColorRect"),
-"Track2": NodePath("../../Control/Polygon2D/ColorRect")
-}
-trackProperties = {
-"Track1": "rect_position.x",
-"Track2": "rect_size.y"
-}
-Track2/obj = NodePath("../../Control/Polygon2D/ColorRect")
-Track2/prop = "rect_size.y"
-trackObjects = {
-"Track1": NodePath("../../Control/Polygon2D/ColorRect"),
-"Track2": NodePath("../../Control/Polygon2D/ColorRect")
-}
-trackProperties = {
-"Track1": "rect_position.x",
-"Track2": "rect_size.y"
-}
-
-[node name="Track1" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
-type = 1
-
-[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
-absolute = true
-value = 330
-curve = SubResource( 1 )
-
-[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
-margin_left = 240.0
-margin_right = 260.0
-time = 12.0
-absolute = true
-value = 110
-curve = SubResource( 2 )
-
-[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
-margin_left = 438.0
-margin_right = 458.0
-time = 21.9
-absolute = true
-value = 900
-curve = SubResource( 3 )
-
-[node name="Track2" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
-margin_top = 47.0
-margin_bottom = 82.0
-type = 1
-
-[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
-absolute = true
-value = 54
-curve = SubResource( 1 )
-
-[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
-margin_left = 240.0
-margin_right = 260.0
-time = 12.0
-absolute = true
-value = 1200
-curve = SubResource( 2 )
-
-[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
-margin_left = 300.0
-margin_right = 320.0
-time = 15.0
-absolute = true
-value = 190
-curve = SubResource( 3 )
-
 [node name="Control" parent="." instance=ExtResource( 2 )]
 
 [node name="Button" type="Button" parent="."]
@@ -130,6 +51,93 @@ script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AnimationController" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="ExtraAnimation" type="Control" parent="AnimationController"]
+visible = false
+anchor_right = 1.0
+mouse_filter = 2
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+speed = 6
+AutoDuration = true
+Duration = 33
+Zoom = 100.0
+Grid = false
+Snap = false
+SnapIncriment = 1
+looping = true
+Tracks/Track1/obj = null
+Tracks/Track1/prop = null
+trackObjects = {
+}
+trackProperties = {
+}
+Tracks/Track2/obj = null
+Tracks/Track2/prop = null
+trackObjects = {
+}
+trackProperties = {
+}
+
+[node name="Track1" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
+margin_right = -2460.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+type = 1
+
+[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
+absolute = true
+value = 330
+curve = SubResource( 1 )
+
+[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
+margin_left = 604.442
+margin_right = 624.442
+time = 30.2221
+absolute = true
+value = 110
+curve = SubResource( 2 )
+
+[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
+margin_left = 1220.88
+margin_right = 1240.88
+time = 61.044
+absolute = true
+value = 900
+curve = SubResource( 3 )
+
+[node name="Track2" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
+margin_top = 35.0
+margin_right = -2460.0
+margin_bottom = 67.0
+rect_min_size = Vector2( 0, 32 )
+type = 1
+
+[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
+absolute = true
+value = 54
+curve = SubResource( 1 )
+
+[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
+margin_left = 210.0
+margin_right = 230.0
+time = 10.5
+absolute = true
+value = 1200
+curve = SubResource( 2 )
+
+[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
+margin_left = 782.479
+margin_right = 802.479
+time = 39.124
+absolute = true
+value = 190
+curve = SubResource( 3 )
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 

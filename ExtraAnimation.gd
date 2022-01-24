@@ -2,31 +2,65 @@ tool
 extends Control
 class_name ExtraAnimation
 
+var debug = true
+
 #this enum is defined here AND in track.gd
 enum TYPES {
-	Bool, Float, Vec2, Vec3, Vec4, Res
+	Bool, Float, Res, Str, Vec2, Vec3, Vec4, 
 }
 
+#RUNTIME SIGNALS
 signal frameChanged
 
+
+##RUNTIME EXPORT VARS
+var speed = 1
+var autoDuration = true 
 var playing = false
-export var speed = 1
+var duration = 1 
+var looping = false
+
+#EDITING EXPORT VARS
+var zoom = Vector2(100, 1)
+var grid = false 
+var snap = false
+var snapIncriment = 1
+var context 
+var contextScene
+
+#INTERNAL VARS
 var position:float = 0
-var duration = 0
-var root
 var tracks
 var trackObjects = {}
 var trackProperties = {}
 var keyframes = []
-export var looping = false
 var lastKeyframe
-var asvfd: Quat
-func _ready():		
-	if get_parent().name != "AnimationEditor":
+
+#INTERNAL EDITOR VARS
+var animationEditorPlugin #for accesing the editorPlugin
+
+func _enter_tree():	
+	#if there's no context, then we're in runtime, so hide the interface
+	if str(get_path()).find("context") == -1:
 		hide()
+	else:
+		updateTracksWidths()
+		if not is_in_group("animations"):
+			add_to_group("animations")
+
+	
+func _ready():				
+	if has_node("context"):
+		context = $context
+	if !Engine.editor_hint and !debug:
+		hide()		
+		if is_instance_valid(context):
+			context.queue_free()
+		
 	for child in get_children():		
-		connect("frameChanged", child, "frameChanged")	
-		duration = child.get_child(child.get_child_count()-1).time
+		if child is Track:
+			if !is_connected("frameChanged", child, "frameChanged"):
+				connect("frameChanged", child, "frameChanged")	
 	
 func play(playSpeed=speed, start=position):
 	playing = true
@@ -47,7 +81,9 @@ func _physics_process(delta):
 	
 	aes.emit_signal("frameChanged", position)
 	
-	for track in get_children():						
+	for track in get_children():	
+		if !track is Track:
+			continue
 		if getTrackObject(track) and getPropertyValue(track):			
 	
 			var keys = track.findNearestKeyframes(position)
@@ -105,70 +141,155 @@ func getPropertyValue(track):
 func play_backwards(anim):
 	play(-1, 1)
 
-#This is where we parse the json file for data, but not for nodes
-func loadAnimation(path):
-	keyframes = []
-	tracks.clear()
-	root = null
-	if !path:
-		return
-		
-	var file =File.new()
-	file.open(path, File.READ)
-	var data = JSON.parse( file.get_as_text() ).result
-	file.close()   	
-	for d in data:		
-		if d.what == "animation":
-			root = d			
-		elif d.what == "track":
-			tracks[d.path_to_parent + "/" + d.name] = d
-			tracks[d.path_to_parent + "/" + d.name].keyframes = []
-		elif d.what == "keyframe":
-			keyframes.push_back(d)
-	for k in keyframes:
-		tracks[k.path_to_parent].keyframes.push_back(k)
-
 func _set(prop, value):
-	for track in get_children():
-		if prop == track.name + "/obj":
-			trackObjects[track.name] =  value
-		if prop == track.name + "/prop":
-			trackProperties[track.name] = value
+	#RUNTIME VARS	
+	if prop == "Duration":
+		duration = value
+		updateTracksWidths()		
+		return true
 			
-func _get(prop):
+	for track in get_children():
+		if prop == "Tracks/" + track.name + "/obj":
+			trackObjects[track.name] =  value
+		if prop == "Tracks/" + track.name + "/prop":
+			trackProperties[track.name] = value	
+	
+	#EDITOR VARS
+	if prop == "Grid":
+		grid = value
+		update()
+	if prop == "Zoom":
+		zoom.x = value
+		updateTracksWidths()		
+	if prop == "Snap":
+		snap = value		
+	if prop == "SnapIncriment":
+		snapIncriment = value
+		
+	if prop == "AutoDuration":
+		autoDuration = value
+		if autoDuration:								
+			for child in get_children():		
+				if child is Track:
+					duration = max(duration, child.get_child(child.get_child_count()-1).time)	
+		updateTracksWidths()
+		property_list_changed_notify()
+		return true		
+	
+func _get(prop):	
+	#RUNTIME VARS
+	if prop=="Duration":
+		return duration		
 	for track in get_children():
 		if prop == track.name + "/obj":			
-			return trackObjects[track.name]
+			if trackObjects.has(track.name):
+				return trackObjects[track.name]
 		if prop == track.name + "/prop":											
-			return trackProperties[track.name]
+			if trackProperties.has(track.name):
+				return trackProperties[track.name]
+	
+	#EDITOR VARS
+	if prop == "Grid":
+		return grid
+	if prop == "Zoom":
+		return zoom.x
+	if prop == "Snap":
+		return snap
+	if prop == "SnapIncriment":
+		return snapIncriment	
+	if prop == "AutoDuration":
+		return autoDuration
+	return null
 	
 func _get_property_list():	# overridden function
 	var property_list = []	
-	for track in get_children(): #tracks:		
-		property_list.append({
-			"name": track.name +"/obj",
-			"hint": PROPERTY_HINT_NONE,
-			"usage": PROPERTY_USAGE_DEFAULT,    	
-			"type": TYPE_NODE_PATH,
-			"hint_string": ""		
-		})
-		property_list.append({
-			"name": track.name +"/prop",
-			"hint": PROPERTY_HINT_NONE,
-			"usage": PROPERTY_USAGE_DEFAULT,    	
-			"type": TYPE_STRING,
-			"hint_string": ""		
-		})
-		property_list.append({
-			"name": "trackObjects",
-			"hint": PROPERTY_HINT_NONE,
-			"usage": PROPERTY_USAGE_STORAGE,    	
-			"type": TYPE_DICTIONARY,			
-		})
-		property_list.append({
-			"name": "trackProperties",
-			"hint": PROPERTY_HINT_NONE,
-			"usage": PROPERTY_USAGE_STORAGE,    	
-			"type": TYPE_DICTIONARY,			
-		})
+	property_list.append({
+		"name": "speed",				    
+		"type": TYPE_REAL,				
+	})
+	property_list.append({
+		"name": "AutoDuration",				
+		"type": TYPE_BOOL,				
+	})		
+	var dur = {
+		"name": "Duration",
+		"hint": PROPERTY_HINT_RANGE,
+		"usage": PROPERTY_USAGE_NOEDITOR,    	
+		"type": TYPE_REAL,			
+		"hint_string": "0,60,1,or_greater"
+	}	
+	if !autoDuration:
+		dur.usage = PROPERTY_USAGE_DEFAULT
+	property_list.append(dur)
+	
+	
+	property_list.append({
+		"name": "Zoom",				    
+		"type": TYPE_REAL,
+		"hint": PROPERTY_HINT_EXP_RANGE,
+		"hint_string": "1,10000"				
+	})	
+	property_list.append({
+		"name": "Grid",				
+		"type": TYPE_BOOL,				
+		"usage": PROPERTY_USAGE_DEFAULT
+	})
+	property_list.append({
+		"name": "Snap",				
+		"type": TYPE_BOOL,	
+		"usage": PROPERTY_USAGE_DEFAULT			
+	})
+	property_list.append({
+		"name": "SnapIncriment",				    
+		"type": TYPE_REAL,
+		"hint": PROPERTY_HINT_RANGE,
+		"hint_string": "1,30, 1",
+		"usage": PROPERTY_USAGE_DEFAULT			
+	})
+	
+	property_list.append({
+		"name": "looping",				
+		"type": TYPE_BOOL,	
+		"usage": PROPERTY_USAGE_DEFAULT			
+	})
+	
+	for track in get_children():
+		if track is Track:			
+			property_list.append({
+				"name": "Tracks/" + track.name +"/obj",
+				"hint": PROPERTY_HINT_NONE,
+				"usage": PROPERTY_USAGE_DEFAULT,    	
+				"type": TYPE_NODE_PATH,
+				"hint_string": ""		
+			})
+			property_list.append({
+				"name": "Tracks/" + track.name +"/prop",
+				"hint": PROPERTY_HINT_NONE,
+				"usage": PROPERTY_USAGE_DEFAULT,    	
+				"type": TYPE_STRING,
+				"hint_string": ""		
+			})
+			property_list.append({
+				"name": "trackObjects",
+				"hint": PROPERTY_HINT_NONE,
+				"usage": PROPERTY_USAGE_STORAGE,    	
+				"type": TYPE_DICTIONARY,			
+			})
+			property_list.append({
+				"name": "trackProperties",
+				"hint": PROPERTY_HINT_NONE,
+				"usage": PROPERTY_USAGE_STORAGE,    	
+				"type": TYPE_DICTIONARY,			
+			})
 	return property_list
+
+
+func updateTracksWidths():
+	set_anchors_and_margins_preset(Control.PRESET_TOP_WIDE)
+	var i =0
+	for child in get_children():
+		if child is Track:
+			child.rect_position.y = i * 35
+			child.rect_min_size.x = duration * zoom.x
+			child.rect_size.x = 0
+			i+=1			

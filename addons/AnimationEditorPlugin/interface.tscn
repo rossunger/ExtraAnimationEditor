@@ -1,0 +1,182 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://addons/AnimationEditorPlugin/StatusBar.gd" type="Script" id=1]
+[ext_resource path="res://ChangeContextButton.gd" type="Script" id=2]
+[ext_resource path="res://LoadButton.gd" type="Script" id=3]
+[ext_resource path="res://PlayStopButton.gd" type="Script" id=4]
+[ext_resource path="res://SaveButton.gd" type="Script" id=5]
+[ext_resource path="res://NewAnimationButton.gd" type="Script" id=6]
+[ext_resource path="res://icons/icon_save.svg" type="Texture" id=7]
+[ext_resource path="res://icons/icon_environment.svg" type="Texture" id=8]
+[ext_resource path="res://icons/icon_create_new_scene_from.svg" type="Texture" id=9]
+[ext_resource path="res://icons/icon_load.svg" type="Texture" id=10]
+[ext_resource path="res://icons/icon_play.svg" type="Texture" id=11]
+[ext_resource path="res://addons/AnimationEditorPlugin/interface.gd" type="Script" id=12]
+[ext_resource path="res://addons/ExtraGui/eye_icon.png" type="Texture" id=13]
+[ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=14]
+[ext_resource path="res://addons/AnimationEditorPlugin/TimelineResizeHandle.gd" type="Script" id=15]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="StatusBar" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -19030.1
+margin_top = -9164.71
+margin_right = -19852.1
+margin_bottom = -9164.71
+rect_min_size = Vector2( 0, 40 )
+rect_scale = Vector2( 20.1587, 20.1587 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/StatusBar"]
+anchor_right = 1.0
+margin_bottom = 44.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatusBarBackground" type="ColorRect" parent="CanvasLayer/StatusBar/VBoxContainer"]
+margin_right = 1738.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimelineBackground" type="ColorRect" parent="CanvasLayer/StatusBar/VBoxContainer"]
+margin_top = 40.0
+margin_right = 1738.0
+margin_bottom = 240.0
+rect_min_size = Vector2( 0, 200 )
+color = Color( 0.145098, 0.145098, 0.145098, 1 )
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimelineResizeHandle" type="ColorRect" parent="CanvasLayer/StatusBar/VBoxContainer/TimelineBackground"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 10 )
+color = Color( 0.0666667, 0.0666667, 0.0666667, 1 )
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer/StatusBar"]
+margin_left = 995.005
+margin_top = 10.9983
+margin_right = 1035.01
+margin_bottom = 24.9983
+text = "Time:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeValue" type="Label" parent="CanvasLayer/StatusBar"]
+margin_left = 1039.0
+margin_top = 10.0
+margin_right = 1047.0
+margin_bottom = 24.0
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ValueLabel" type="Label" parent="CanvasLayer/StatusBar"]
+margin_left = 1058.0
+margin_top = 10.0
+margin_right = 1093.0
+margin_bottom = 24.0
+text = "Value"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ValueValue" type="Label" parent="CanvasLayer/StatusBar"]
+margin_left = 1096.0
+margin_top = 10.0
+margin_right = 1104.0
+margin_bottom = 24.0
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveButton" type="Button" parent="CanvasLayer/StatusBar"]
+margin_left = 1210.0
+margin_right = 1238.0
+margin_bottom = 35.0
+icon = ExtResource( 7 )
+script = ExtResource( 5 )
+
+[node name="FileDialog" type="FileDialog" parent="CanvasLayer/StatusBar/SaveButton"]
+margin_right = 315.0
+margin_bottom = 130.0
+
+[node name="LoadButton" type="Button" parent="CanvasLayer/StatusBar"]
+margin_left = 1241.0
+margin_right = 1269.0
+margin_bottom = 35.0
+icon = ExtResource( 10 )
+script = ExtResource( 3 )
+
+[node name="NewAnimationButton" type="Button" parent="CanvasLayer/StatusBar"]
+margin_left = 1272.0
+margin_right = 1300.0
+margin_bottom = 35.0
+icon = ExtResource( 9 )
+script = ExtResource( 6 )
+
+[node name="BackButton" type="Button" parent="CanvasLayer/StatusBar"]
+margin_left = 1406.0
+margin_right = 1434.0
+margin_bottom = 35.0
+toggle_mode = true
+icon = ExtResource( 11 )
+script = ExtResource( 4 )
+
+[node name="ChangeContextButton" type="Button" parent="CanvasLayer/StatusBar"]
+margin_left = 1540.0
+margin_right = 1568.0
+margin_bottom = 35.0
+icon = ExtResource( 8 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="toggleTimelineButton" type="Button" parent="CanvasLayer/StatusBar"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = 82.5
+margin_right = -4.0
+margin_bottom = 117.5
+grow_horizontal = 0
+icon = ExtResource( 13 )
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="CanvasLayer/StatusBar/toggleTimelineButton" to="CanvasLayer/StatusBar" method="_on_toggleTimelineButton_pressed"]
