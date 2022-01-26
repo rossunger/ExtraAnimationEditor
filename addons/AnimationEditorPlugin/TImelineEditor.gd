@@ -59,14 +59,14 @@ func getTimeline():
 	if is_instance_valid(timeline):
 		return timeline
 	else:
-		timeline = get_node("VBoxContainer/TimelineContainer/Timeline")		
+		timeline = get_node("VBoxContainer/Animation/Timeline")		
 		return timeline
 		
 func getTrackContainer():
 	if is_instance_valid(trackContainer):
 		return trackContainer
 	else:
-		trackContainer = get_node("VBoxContainer/TimelineContainer/TrackMeta")		
+		trackContainer = get_node("VBoxContainer/Animation/TrackMeta")		
 		return trackContainer
 
 

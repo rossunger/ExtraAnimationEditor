@@ -189,8 +189,16 @@ __meta__ = {
 
 [node name="Animation" parent="VBoxContainer" instance=ExtResource( 5 )]
 
+[node name="Track" parent="VBoxContainer/Animation/Timeline" index="2"]
+anchor_right = 0.0
+
+[node name="Track2" parent="VBoxContainer/Animation/Timeline" index="3"]
+anchor_right = 0.0
+
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground" to="." method="_on_toggleTimelineButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/NewAnimationButton" to="VBoxContainer/StatusBarBackground/NewAnimationButton" method="_on_NewAnimationButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/ChangeContextButton" to="." method="_on_ChangeContextButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/toggleTimelineButton" to="." method="_on_toggleTimelineButton_pressed"]
+
+[editable path="VBoxContainer/Animation"]
