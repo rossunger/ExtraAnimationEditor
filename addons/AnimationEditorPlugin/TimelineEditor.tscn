@@ -1,13 +1,12 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://SaveButton.gd" type="Script" id=1]
 [ext_resource path="res://NewAnimationButton.gd" type="Script" id=2]
 [ext_resource path="res://ChangeContextButton.gd" type="Script" id=3]
 [ext_resource path="res://addons/ExtraGui/edit_icon.png" type="Texture" id=4]
-[ext_resource path="res://AnimationTemplate.tscn" type="PackedScene" id=5]
 [ext_resource path="res://LoadButton.gd" type="Script" id=6]
 [ext_resource path="res://PlayStopButton.gd" type="Script" id=7]
-[ext_resource path="res://addons/AnimationEditorPlugin/TImelineEditor.gd" type="Script" id=8]
+[ext_resource path="res://addons/AnimationEditorPlugin/TimelineEditor.gd" type="Script" id=8]
 [ext_resource path="res://icons/icon_load.svg" type="Texture" id=9]
 [ext_resource path="res://icons/icon_create_new_scene_from.svg" type="Texture" id=10]
 [ext_resource path="res://icons/icon_save.svg" type="Texture" id=11]
@@ -187,18 +186,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Animation" parent="VBoxContainer" instance=ExtResource( 5 )]
-
-[node name="Track" parent="VBoxContainer/Animation/Timeline" index="2"]
-anchor_right = 0.0
-
-[node name="Track2" parent="VBoxContainer/Animation/Timeline" index="3"]
-anchor_right = 0.0
-
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground" to="." method="_on_toggleTimelineButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/NewAnimationButton" to="VBoxContainer/StatusBarBackground/NewAnimationButton" method="_on_NewAnimationButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/ChangeContextButton" to="." method="_on_ChangeContextButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/toggleTimelineButton" to="." method="_on_toggleTimelineButton_pressed"]
-
-[editable path="VBoxContainer/Animation"]

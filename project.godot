@@ -163,7 +163,12 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
+
+[gui]
+
+theme/use_hidpi=true
+theme/custom="res://addons/ExtraGui/ExtraGui1.theme"
 
 [rendering]
 

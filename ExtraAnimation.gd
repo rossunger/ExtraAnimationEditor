@@ -34,6 +34,8 @@ var trackObjects = {}
 var trackProperties = {}
 var keyframes = []
 var lastKeyframe
+var timeline 
+var trackMeta
 
 #INTERNAL EDITOR VARS
 var animationEditorPlugin #for accesing the editorPlugin
@@ -56,7 +58,10 @@ func _ready():
 	if !Engine.editor_hint and !debug:
 		hide()		
 		
-	for child in get_children():		
+	timeline = get_node("Timeline")
+	trackMeta = get_node("TrackMeta")
+		
+	for child in timeline.get_children():		
 		if child is Track:
 			if !is_connected("frameChanged", child, "frameChanged"):
 				connect("frameChanged", child, "frameChanged")	
@@ -80,7 +85,7 @@ func _physics_process(delta):
 	
 	aes.emit_signal("frameChanged", position)
 	
-	for track in get_children():	
+	for track in timeline.get_children():	
 		if !track is Track:
 			continue
 		if getTrackObject(track) and getPropertyValue(track):			

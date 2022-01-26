@@ -51,29 +51,7 @@ __meta__ = {
 script = ExtResource( 4 )
 
 [node name="Run" parent="AnimationController" instance=ExtResource( 3 )]
-trackObjects = {
-}
-trackProperties = {
-}
-trackObjects = {
-}
-trackProperties = {
-}
-trackObjects = {
-}
-trackProperties = {
-}
-
-[node name="X" parent="AnimationController/Run" index="0"]
-margin_right = 100.0
-
-[node name="Y" parent="AnimationController/Run" index="1"]
-margin_right = 100.0
-
-[node name="footsteps2" parent="AnimationController/Run" index="2"]
-margin_right = 100.0
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 
 [editable path="Control"]
-[editable path="AnimationController/Run"]

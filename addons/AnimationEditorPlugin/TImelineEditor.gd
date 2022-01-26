@@ -13,63 +13,36 @@ var trackContainer = null
 var animation
 
 func setAnimation(obj= animation):
+	if !obj:
+		return
+	if is_instance_valid(animation):
+		if obj.name==animation.name:
+			return
 	clearAnimation()	
-	
-	animation = obj
-		
-	for track in animation.get_children():		
-		if !track is Track:
-			print("error: trying to load not a track: ", track.get_path())
-			continue			
-		getTimeline().add_child(track.duplicate(DUPLICATE_USE_INSTANCING))		
-		
-		var trackMetaInstance = preload("res://TrackMeta.tscn").instance()		
-		getTrackContainer().add_child(trackMetaInstance)	
-		trackMetaInstance.get_node("Label").text = track.name		
-		
-		#for key in track.get_children():
-		#	if !key is Keyframe:
-		#		continue
-		#	var k = preload("res://Keyframe.tscn").instance()
-		#	trackInstance.add_child(k)						
-	#getTimeline().get_parent().split_offset = 0		
-		
+	animation = load(obj.filename).instance()
+	animation.filename = obj.filename
+	$VBoxContainer.add_child(animation)
+	trackContainer = get_node("VBoxContainer/" + animation.name + "/TrackMeta")		
+	timeline = get_node("VBoxContainer/" + animation.name + "/Timeline")		
 	
 func clearAnimation():			
-	for child in getTimeline().get_children():
-		if child is SelectionController:
-			continue
-		getTimeline().remove_child(child)		
-		child.free()			
-	for child in getTrackContainer().get_children():
-		getTrackContainer().remove_child(child)
-		child.free()
+	if is_instance_valid(animation):
+		animation.queue_free()			
 
 func _on_toggleTimelineButton_pressed():
 	showTimeline = !showTimeline
 	if showTimeline:		
-		getTimeline().show()
+		for child in get_children():
+			if child is ExtraAnimation:				
+				child.show()
 		rect_min_size.y = 250
 	else:
-		getTimeline().hide()
+		for child in get_children():
+			if child is ExtraAnimation:				
+				child.hide()		
 		rect_min_size.y = 45
 		rect_size.y = 0
-		
-func getTimeline():	
-	if is_instance_valid(timeline):
-		return timeline
-	else:
-		timeline = get_node("VBoxContainer/Animation/Timeline")		
-		return timeline
-		
-func getTrackContainer():
-	if is_instance_valid(trackContainer):
-		return trackContainer
-	else:
-		trackContainer = get_node("VBoxContainer/Animation/TrackMeta")		
-		return trackContainer
-
-
+			
 func _on_TrackMeta_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.doubleclick:
@@ -83,4 +56,4 @@ func _on_ChangeContextButton_pressed():
 func _on_SaveButton_pressed():
 	if !animation:
 		return	
-	get_tree().call_group("AnimationEditorPlugin", "saveChanges", getTimeline())			
+	get_tree().call_group("AnimationEditorPlugin", "saveChanges", animation)			

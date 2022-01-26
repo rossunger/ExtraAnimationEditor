@@ -10,9 +10,9 @@ var hover = null
 var dragging=null
 var dragStartX = null
 var drawGrid = false
-var tools
+var timelineEditor
 	
-var toolsScene = preload("TimelineEditor.tscn")
+var timelineEditorScene = preload("TimelineEditor.tscn")
 var TrackScene = preload("res://Track.tscn")
 var KeyframeScene = preload("res://Keyframe.tscn")
 var previewContainer = Control.new()
@@ -36,17 +36,17 @@ func _enter_tree():
 	if !is_in_group("AnimationEditorPlugin"):
 		add_to_group("AnimationEditorPlugin")
 	
-	if !is_instance_valid(tools):
-		tools = toolsScene.instance()	
-	add_control_to_bottom_panel(tools, "Timeline")
+	if !is_instance_valid(timelineEditor):
+		timelineEditor = timelineEditorScene.instance()	
+	add_control_to_bottom_panel(timelineEditor, "Timeline")
 	
 func _exit_tree():
 	#UNREGISTER MAIN SCREEN
 	previewContainer.queue_free()
 	
-	if is_instance_valid(tools):
-		remove_control_from_bottom_panel(tools)
-		tools.queue_free()
+	if is_instance_valid(timelineEditor):
+		remove_control_from_bottom_panel(timelineEditor)
+		timelineEditor.queue_free()
 		
 func make_visible(visible: bool) -> void:
 	if is_instance_valid(previewContainer):		
@@ -57,30 +57,25 @@ func make_visible(visible: bool) -> void:
 func handles(object: Object) -> bool:	
 	var selection = get_editor_interface().get_selection().get_selected_nodes()
 	if selection.size() == 1:				
-		var obj = selection[0]
-		if obj is Keyframe:
-			obj = obj.get_parent().get_parent()
-		if obj is Track:
-			obj = obj.get_parent()			
+		var obj = selection[0]				
 		if obj is ExtraAnimation:
 			var s = get_current_main_screen_name() 
 			if s != "Animation": previousMainScreen = s
 			get_editor_interface().call_deferred("set_main_screen_editor", "Animation")
 			#LOAD ANIMATION DATA
-			currentAnimation = obj
-			tools.setAnimation(currentAnimation)
+			currentAnimation = obj				
+			timelineEditor.setAnimation(currentAnimation)
 			if File.new().file_exists(currentAnimation.defaultPreviewScene):
 				loadPreviewFromFile(currentAnimation.defaultPreviewScene)				
 			return true	
-	if previousMainScreen:
-		print(previousMainScreen)			
+	if previousMainScreen:		
 		get_editor_interface().call_deferred("set_main_screen_editor", previousMainScreen)
 		previousMainScreen = null
 	
 	if is_instance_valid(currentAnimation):		
 		currentAnimation = null
-	if is_instance_valid(tools):	
-		tools.clearAnimation()
+	if is_instance_valid(timelineEditor):	
+		timelineEditor.clearAnimation()
 	clearPreview()	
 	return false
 
@@ -109,24 +104,11 @@ func newAnimation():
 	newAnimation.owner = get_editor_interface().get_edited_scene_root()
 	
 
-func saveChanges(timeline):
-	
-		
-	for track in currentAnimation.get_children():
-		track.queue_free()
-	for track in timeline.get_children():
-		if !track is Track:
-			continue
-		track.get_parent().remove_child(track)
-		currentAnimation.add_child(track)	
-		track.owner = currentAnimation
-		for child in track.get_children():
-			child.owner = currentAnimation
-			
+func saveChanges(anim):
 	var packedScene = PackedScene.new()
-	packedScene.pack(currentAnimation) 
-	currentAnimation.owner = get_editor_interface().get_edited_scene_root()
-	ResourceSaver.save(currentAnimation.filename, packedScene)
+	packedScene.pack(anim) 
+	#anim.owner = get_editor_interface().get_edited_scene_root()
+	ResourceSaver.save(anim.filename, packedScene)
 	
 func changeContext():	
 	var dialog: FileDialog	
@@ -183,9 +165,8 @@ func selectKeyframes(keys):
 		get_editor_interface().get_selection().add_node(key)
 
 func editKeyframe(data):
-	if "time" in data:
-		
-		data.key.get_pa
+	if "time" in data:		
+		#data.key.get_pa
 		pass	
 	if "value" in data:
 		pass
@@ -199,13 +180,13 @@ func addKeyframe(parent):
 	var k = KeyframeScene.instance()
 	parent.add_child(k)	
 	k.owner = currentAnimation #get_editor_interface().get_edited_scene_root()	
-	tools.setAnimation(currentAnimation)
+	timelineEditor.setAnimation(currentAnimation)
 	
 func addTrack():
 	var t = TrackScene.instance()	
 	currentAnimation.add_child(t)	
 	t.owner = currentAnimation #get_editor_interface().get_edited_scene_root()	
-	tools.setAnimation(currentAnimation)
+	timelineEditor.setAnimation(currentAnimation)
 	
 func editTrack():
 	pass
