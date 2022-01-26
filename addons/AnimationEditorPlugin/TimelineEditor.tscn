@@ -1,0 +1,196 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://SaveButton.gd" type="Script" id=1]
+[ext_resource path="res://NewAnimationButton.gd" type="Script" id=2]
+[ext_resource path="res://ChangeContextButton.gd" type="Script" id=3]
+[ext_resource path="res://addons/ExtraGui/edit_icon.png" type="Texture" id=4]
+[ext_resource path="res://AnimationTemplate.tscn" type="PackedScene" id=5]
+[ext_resource path="res://LoadButton.gd" type="Script" id=6]
+[ext_resource path="res://PlayStopButton.gd" type="Script" id=7]
+[ext_resource path="res://addons/AnimationEditorPlugin/TImelineEditor.gd" type="Script" id=8]
+[ext_resource path="res://icons/icon_load.svg" type="Texture" id=9]
+[ext_resource path="res://icons/icon_create_new_scene_from.svg" type="Texture" id=10]
+[ext_resource path="res://icons/icon_save.svg" type="Texture" id=11]
+[ext_resource path="res://icons/icon_environment.svg" type="Texture" id=12]
+[ext_resource path="res://icons/icon_play.svg" type="Texture" id=13]
+[ext_resource path="res://addons/ExtraGui/ExtraGui1.theme" type="Theme" id=14]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_color = Color( 0.2, 0.227451, 0.309804, 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+
+[node name="TimelineEditor" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.0876, 0.0957, 0.12, 1 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatusBarBackground" type="Button" parent="VBoxContainer"]
+margin_right = 2560.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/normal = SubResource( 1 )
+
+[node name="TimeLabel" type="Label" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 995.005
+margin_top = 10.9983
+margin_right = 1046.01
+margin_bottom = 34.9983
+text = "Time:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeValue" type="Label" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1039.0
+margin_top = 10.0
+margin_right = 1051.0
+margin_bottom = 34.0
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ValueLabel" type="Label" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1058.0
+margin_top = 10.0
+margin_right = 1109.0
+margin_bottom = 34.0
+text = "Value"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ValueValue" type="Label" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1096.0
+margin_top = 10.0
+margin_right = 1108.0
+margin_bottom = 34.0
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveButton" type="Button" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1210.0
+margin_top = 2.0
+margin_right = 1238.0
+margin_bottom = 37.0
+icon = ExtResource( 11 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="VBoxContainer/StatusBarBackground/SaveButton"]
+margin_right = 315.0
+margin_bottom = 130.0
+filters = PoolStringArray( "\"*.tscn, PackedScene\"" )
+
+[node name="LoadButton" type="Button" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1241.0
+margin_top = 2.0
+margin_right = 1269.0
+margin_bottom = 37.0
+icon = ExtResource( 9 )
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewAnimationButton" type="Button" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1272.0
+margin_top = 2.0
+margin_right = 1300.0
+margin_bottom = 37.0
+icon = ExtResource( 10 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1406.0
+margin_top = 2.0
+margin_right = 1434.0
+margin_bottom = 37.0
+toggle_mode = true
+icon = ExtResource( 13 )
+script = ExtResource( 7 )
+
+[node name="ChangeContextButton" type="Button" parent="VBoxContainer/StatusBarBackground"]
+margin_left = 1540.0
+margin_top = 2.0
+margin_right = 1568.0
+margin_bottom = 37.0
+icon = ExtResource( 12 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="toggleTimelineButton" type="Button" parent="VBoxContainer/StatusBarBackground"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -31.0
+margin_top = 3.0
+margin_right = -3.0
+margin_bottom = 38.0
+grow_horizontal = 0
+icon = ExtResource( 4 )
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BottomLine" type="ColorRect" parent="VBoxContainer/StatusBarBackground"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 1395.0
+margin_bottom = 1400.0
+rect_min_size = Vector2( 0, 5 )
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/StatusBarBackground"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 1400.0
+margin_bottom = 1600.0
+rect_min_size = Vector2( 0, 200 )
+color = Color( 0.2, 0.227451, 0.309804, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Animation" parent="VBoxContainer" instance=ExtResource( 5 )]
+
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground" to="." method="_on_toggleTimelineButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/SaveButton" to="." method="_on_SaveButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/NewAnimationButton" to="VBoxContainer/StatusBarBackground/NewAnimationButton" method="_on_NewAnimationButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/ChangeContextButton" to="." method="_on_ChangeContextButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/toggleTimelineButton" to="." method="_on_toggleTimelineButton_pressed"]

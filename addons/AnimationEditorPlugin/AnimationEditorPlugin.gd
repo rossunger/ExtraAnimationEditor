@@ -12,7 +12,7 @@ var dragStartX = null
 var drawGrid = false
 var tools
 	
-var toolsScene = preload("interface.tscn")
+var toolsScene = preload("TimelineEditor.tscn")
 var TrackScene = preload("res://Track.tscn")
 var KeyframeScene = preload("res://Keyframe.tscn")
 var previewContainer = Control.new()
