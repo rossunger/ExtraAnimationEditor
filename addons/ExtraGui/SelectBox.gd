@@ -1,3 +1,4 @@
+tool
 extends Control
 class_name SelectBox,"select_icon.png"
 
@@ -34,4 +35,4 @@ func _draw():
 func make_rect():
 	var position = Vector2( min(start.x, end.x), min(start.y, end.y))
 	var size = Vector2( abs(start.x - end.x) + 1, abs(start.y-end.y) +1)
-	return Rect2(position, size)
+	return Rect2(position, size).clip(get_parent().parent.get_global_rect())

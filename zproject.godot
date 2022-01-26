@@ -1,0 +1,35 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+[application]
+
+config/name="ExtraAnimationEditor"
+run/main_scene="res://RuntimeExample/RuntimeDemo.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+aes="*res://AnimationEditorSingleton.gd"
+egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
+
+[display]
+
+window/size/width=2560
+window/size/height=1440
+window/size/fullscreen=true
+window/dpi/allow_hidpi=true
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

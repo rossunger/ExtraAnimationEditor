@@ -25,8 +25,7 @@ var zoom = Vector2(100, 1)
 var grid = false 
 var snap = false
 var snapIncriment = 1
-var context 
-var contextScene
+export (String, FILE, "*.tscn, PackedScene") var defaultPreviewScene = ""
 
 #INTERNAL VARS
 var position:float = 0
@@ -39,9 +38,13 @@ var lastKeyframe
 #INTERNAL EDITOR VARS
 var animationEditorPlugin #for accesing the editorPlugin
 
+func _init():
+	pass
+	
 func _enter_tree():	
+	pass
 	#if there's no context, then we're in runtime, so hide the interface
-	if str(get_path()).find("context") == -1:
+	if !debug or !Engine.editor_hint:
 		hide()
 	else:
 		updateTracksWidths()
@@ -50,12 +53,8 @@ func _enter_tree():
 
 	
 func _ready():				
-	if has_node("context"):
-		context = $context
 	if !Engine.editor_hint and !debug:
 		hide()		
-		if is_instance_valid(context):
-			context.queue_free()
 		
 	for child in get_children():		
 		if child is Track:

@@ -4,7 +4,7 @@
 [ext_resource path="res://AnimationEditor.gd" type="Script" id=2]
 [ext_resource path="res://Animation.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ChangeContextButton.gd" type="Script" id=4]
-[ext_resource path="res://addons/AnimationEditorPlugin/StatusBar.gd" type="Script" id=5]
+[ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=5]
 [ext_resource path="res://ExtraAnimation.gd" type="Script" id=6]
 [ext_resource path="res://addons/ExtraGui/SelectionController.gd" type="Script" id=7]
 [ext_resource path="res://SaveButton.gd" type="Script" id=8]
@@ -93,9 +93,9 @@ color = Color( 0.0745098, 0.0745098, 0.0823529, 1 )
 [node name="StatusBar" type="ColorRect" parent="TimelineViewportSplitter/TimelinePanel"]
 visible = false
 anchor_right = 1.0
-margin_left = -1922.45
+margin_left = -2126.45
 margin_top = -1774.34
-margin_right = -2744.45
+margin_right = -2948.45
 margin_bottom = -1739.34
 rect_min_size = Vector2( 0, 25 )
 rect_scale = Vector2( 4, 4 )
@@ -256,7 +256,6 @@ margin_bottom = 290.0
 
 [node name="Track" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2" instance=ExtResource( 11 )]
 rect_min_size = Vector2( 0, 32 )
-type = 1
 
 [node name="Keyframe0" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track" instance=ExtResource( 1 )]
 curve = SubResource( 1 )
@@ -277,7 +276,6 @@ curve = SubResource( 3 )
 margin_top = 47.0
 margin_bottom = 82.0
 rect_min_size = Vector2( 0, 32 )
-type = 1
 
 [node name="Keyframe0" parent="TimelineViewportSplitter/TimelinePanel/MarginContainer/HSplitContainer/AnimationTimeline/NewAnimation2/Track2" instance=ExtResource( 1 )]
 curve = SubResource( 4 )

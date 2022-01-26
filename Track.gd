@@ -1,5 +1,5 @@
 tool
-extends Panel
+extends Control
 class_name Track
 
 #this enum is defined here AND in ExtraAnimation.gd. 
@@ -25,7 +25,6 @@ func _init():
 	#rect_size = Vector2(1000, 20)	
 	if !is_in_group("AnimationTracks"):
 		add_to_group("AnimationTracks")
-	rect_min_size.y = 32		
 
 func frameChanged(position):
 	#check to see if we've moved on to the next keyframe
@@ -102,3 +101,10 @@ func _get_property_list():
 	})	
 	
 	return property_list
+
+
+func _on_Track_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.doubleclick:
+			get_tree().call_group("AnimationEditorPlugin", "addKeyframe", self)			
+

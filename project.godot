@@ -109,7 +109,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/ExtraGui/ToggleVisible.gd"
 }, {
-"base": "Panel",
+"base": "Control",
 "class": "Track",
 "language": "GDScript",
 "path": "res://Track.gd"
@@ -121,33 +121,32 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "AnimationController": "",
-"ChildAdder": "res://addons/ExtraGui/add_icon.png",
+"ChildAdder": "",
 "Draggable": "res://addons/ExtraGui/move_icon.png",
-"EnumDropdown": "res://addons/ExtraGui/list_icon.png",
+"EnumDropdown": "",
 "ExtraAnimation": "",
 "Keyframe": "",
 "OpacityButton": "",
-"RemoteHide": "res://addons/ExtraGui/eye_icon.png",
-"Renameable": "res://addons/ExtraGui/edit_icon.png",
-"SaveController": "res://addons/ExtraGui/save_icon.png",
-"Saveable": "res://addons/ExtraGui/save_icon.png",
-"Scrollable": "res://addons/ExtraGui/move_icon.png",
+"RemoteHide": "",
+"Renameable": "",
+"SaveController": "",
+"Saveable": "",
+"Scrollable": "",
 "SearchBox": "",
 "SelectBox": "res://addons/ExtraGui/select_icon.png",
 "Selectable": "res://addons/ExtraGui/select_icon.png",
 "SelectionController": "res://addons/ExtraGui/select_icon.png",
 "SplashAndFade": "",
-"TabController": "res://addons/ExtraGui/tab_icon.png",
-"TabgroupButton": "res://addons/ExtraGui/tab_icon.png",
-"ToggleVisible": "res://addons/ExtraGui/eye_icon.png",
+"TabController": "",
+"TabgroupButton": "",
+"ToggleVisible": "",
 "Track": "",
-"Undoable": "res://addons/ExtraGui/undo_icon.png"
+"Undoable": ""
 }
 
 [application]
 
 config/name="ExtraAnimationEditor"
-run/main_scene="res://AnimationEditor.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -164,7 +163,7 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
 
 [rendering]
 

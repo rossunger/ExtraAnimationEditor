@@ -1,3 +1,4 @@
+tool
 extends Node
 
 # This is a singleton that manages the Input map and overseas the Undo system
@@ -12,7 +13,7 @@ enum test_enum {
 	Enum_Option_A, Enum_Option_B
 }
 
-func _ready():
+func _init():
 	if !InputMap.has_action("Undo"):
 		InputMap.add_action("Undo")
 		var event = InputEventKey.new()

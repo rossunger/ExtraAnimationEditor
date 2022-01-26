@@ -1,22 +1,11 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://RuntimeExample/RuntimeDemo.gd" type="Script" id=1]
 [ext_resource path="res://new scene2.tscn" type="PackedScene" id=2]
-[ext_resource path="res://ExtraAnimation.gd" type="Script" id=3]
+[ext_resource path="res://Animations/Run.tscn" type="PackedScene" id=3]
 [ext_resource path="res://AnimationController.gd" type="Script" id=4]
 [ext_resource path="res://addons/ExtraGui/fonts/defaultFont.tres" type="DynamicFont" id=5]
-[ext_resource path="res://Keyframe.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Track.tscn" type="PackedScene" id=7]
 [ext_resource path="res://playhead.gd" type="Script" id=8]
-
-[sub_resource type="Curve" id=1]
-_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
-
-[sub_resource type="Curve" id=2]
-_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
-
-[sub_resource type="Curve" id=3]
-_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -27,6 +16,12 @@ __meta__ = {
 }
 
 [node name="Control" parent="." instance=ExtResource( 2 )]
+
+[node name="ExtraAnimation" parent="Control" index="0"]
+defaultPreviewScene = null
+
+[node name="Polygon2D" parent="Control/CanvasLayer" index="0"]
+position = Vector2( 86, 30 )
 
 [node name="Button" type="Button" parent="."]
 anchor_left = 0.5
@@ -55,90 +50,30 @@ __meta__ = {
 [node name="AnimationController" type="Node" parent="."]
 script = ExtResource( 4 )
 
-[node name="ExtraAnimation" type="Control" parent="AnimationController"]
-visible = false
-anchor_right = 1.0
-mouse_filter = 2
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-speed = 6
-AutoDuration = true
-Duration = 33
-Zoom = 100.0
-Grid = false
-Snap = false
-SnapIncriment = 1
-looping = true
-Tracks/Track1/obj = null
-Tracks/Track1/prop = null
+[node name="Run" parent="AnimationController" instance=ExtResource( 3 )]
 trackObjects = {
 }
 trackProperties = {
 }
-Tracks/Track2/obj = null
-Tracks/Track2/prop = null
+trackObjects = {
+}
+trackProperties = {
+}
 trackObjects = {
 }
 trackProperties = {
 }
 
-[node name="Track1" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
-margin_right = -2460.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
-type = 1
+[node name="X" parent="AnimationController/Run" index="0"]
+margin_right = 100.0
 
-[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
-absolute = true
-value = 330
-curve = SubResource( 1 )
+[node name="Y" parent="AnimationController/Run" index="1"]
+margin_right = 100.0
 
-[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
-margin_left = 604.442
-margin_right = 624.442
-time = 30.2221
-absolute = true
-value = 110
-curve = SubResource( 2 )
-
-[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track1" instance=ExtResource( 6 )]
-margin_left = 1220.88
-margin_right = 1240.88
-time = 61.044
-absolute = true
-value = 900
-curve = SubResource( 3 )
-
-[node name="Track2" parent="AnimationController/ExtraAnimation" instance=ExtResource( 7 )]
-margin_top = 35.0
-margin_right = -2460.0
-margin_bottom = 67.0
-rect_min_size = Vector2( 0, 32 )
-type = 1
-
-[node name="Keyframe0" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
-absolute = true
-value = 54
-curve = SubResource( 1 )
-
-[node name="Keyframe1" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
-margin_left = 210.0
-margin_right = 230.0
-time = 10.5
-absolute = true
-value = 1200
-curve = SubResource( 2 )
-
-[node name="Keyframe2" parent="AnimationController/ExtraAnimation/Track2" instance=ExtResource( 6 )]
-margin_left = 782.479
-margin_right = 802.479
-time = 39.124
-absolute = true
-value = 190
-curve = SubResource( 3 )
+[node name="footsteps2" parent="AnimationController/Run" index="2"]
+margin_right = 100.0
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 
 [editable path="Control"]
+[editable path="AnimationController/Run"]

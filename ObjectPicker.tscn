@@ -3,6 +3,7 @@
 [ext_resource path="res://ObjectPicker.gd" type="Script" id=1]
 [ext_resource path="res://addons/ExtraGui/Scrollable.gd" type="Script" id=2]
 
+
 [node name="WindowDialog" type="WindowDialog"]
 anchor_right = 1.0
 anchor_bottom = 1.0

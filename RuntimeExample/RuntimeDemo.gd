@@ -6,4 +6,4 @@ func _ready():
 
 
 func _on_Button_pressed():
-	animationController.play("ExtraAnimation")
+	animationController.play("ExtraAnimation")	

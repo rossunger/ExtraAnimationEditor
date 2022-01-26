@@ -1,86 +1,91 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=19 format=2]
 
-[ext_resource path="res://addons/AnimationEditorPlugin/StatusBar.gd" type="Script" id=1]
-[ext_resource path="res://ChangeContextButton.gd" type="Script" id=2]
-[ext_resource path="res://LoadButton.gd" type="Script" id=3]
-[ext_resource path="res://PlayStopButton.gd" type="Script" id=4]
-[ext_resource path="res://SaveButton.gd" type="Script" id=5]
-[ext_resource path="res://NewAnimationButton.gd" type="Script" id=6]
-[ext_resource path="res://icons/icon_save.svg" type="Texture" id=7]
-[ext_resource path="res://icons/icon_environment.svg" type="Texture" id=8]
-[ext_resource path="res://icons/icon_create_new_scene_from.svg" type="Texture" id=9]
-[ext_resource path="res://icons/icon_load.svg" type="Texture" id=10]
-[ext_resource path="res://icons/icon_play.svg" type="Texture" id=11]
-[ext_resource path="res://addons/AnimationEditorPlugin/interface.gd" type="Script" id=12]
-[ext_resource path="res://addons/ExtraGui/eye_icon.png" type="Texture" id=13]
+[ext_resource path="res://icons/icon_environment.svg" type="Texture" id=1]
+[ext_resource path="res://icons/icon_play.svg" type="Texture" id=2]
+[ext_resource path="res://icons/icon_create_new_scene_from.svg" type="Texture" id=3]
+[ext_resource path="res://icons/icon_load.svg" type="Texture" id=4]
+[ext_resource path="res://icons/icon_save.svg" type="Texture" id=5]
+[ext_resource path="res://LoadButton.gd" type="Script" id=6]
+[ext_resource path="res://PlayStopButton.gd" type="Script" id=7]
+[ext_resource path="res://addons/AnimationEditorPlugin/TImelineEditor.gd" type="Script" id=8]
+[ext_resource path="res://SaveButton.gd" type="Script" id=9]
+[ext_resource path="res://ChangeContextButton.gd" type="Script" id=10]
+[ext_resource path="res://NewAnimationButton.gd" type="Script" id=11]
+[ext_resource path="res://playhead.gd" type="Script" id=12]
+[ext_resource path="res://addons/ExtraGui/edit_icon.png" type="Texture" id=13]
 [ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=14]
-[ext_resource path="res://addons/AnimationEditorPlugin/TimelineResizeHandle.gd" type="Script" id=15]
+[ext_resource path="res://addons/ExtraGui/ExtraGui1.theme" type="Theme" id=15]
+[ext_resource path="res://addons/ExtraGui/SelectionController.gd" type="Script" id=16]
 
-[node name="Control" type="Control"]
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_color = Color( 0.2, 0.227451, 0.309804, 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+
+[node name="StatusBar" type="ColorRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 12 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 128
-
-[node name="StatusBar" type="Control" parent="CanvasLayer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -19030.1
-margin_top = -9164.71
-margin_right = -19852.1
-margin_bottom = -9164.71
 rect_min_size = Vector2( 0, 40 )
-rect_scale = Vector2( 20.1587, 20.1587 )
-script = ExtResource( 1 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.0876, 0.0957, 0.12, 1 )
+script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/StatusBar"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
-margin_bottom = 44.0
-custom_constants/separation = 0
+anchor_bottom = 1.0
+theme = ExtResource( 15 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StatusBarBackground" type="ColorRect" parent="CanvasLayer/StatusBar/VBoxContainer"]
-margin_right = 1738.0
+[node name="StatusBarBackground" type="Button" parent="VBoxContainer"]
+margin_right = 2560.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
-color = Color( 0, 0, 0, 1 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/normal = SubResource( 1 )
+
+[node name="TimelineContainer" type="HSplitContainer" parent="VBoxContainer"]
+margin_top = 44.0
+margin_right = 2560.0
+margin_bottom = 1440.0
+size_flags_vertical = 3
+split_offset = 100
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimelineBackground" type="ColorRect" parent="CanvasLayer/StatusBar/VBoxContainer"]
-margin_top = 40.0
-margin_right = 1738.0
-margin_bottom = 240.0
-rect_min_size = Vector2( 0, 200 )
-color = Color( 0.145098, 0.145098, 0.145098, 1 )
+[node name="TrackMeta" type="VBoxContainer" parent="VBoxContainer/TimelineContainer"]
+margin_right = 220.0
+margin_bottom = 1396.0
+rect_min_size = Vector2( 120, 0 )
+rect_clip_content = true
+custom_constants/separation = 5
+
+[node name="Timeline" type="VBoxContainer" parent="VBoxContainer/TimelineContainer"]
+margin_left = 232.0
+margin_right = 2560.0
+margin_bottom = 1396.0
+rect_min_size = Vector2( 200, 0 )
+rect_clip_content = true
+custom_constants/separation = 5
 script = ExtResource( 14 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TimelineResizeHandle" type="ColorRect" parent="CanvasLayer/StatusBar/VBoxContainer/TimelineBackground"]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 10 )
-color = Color( 0.0666667, 0.0666667, 0.0666667, 1 )
-script = ExtResource( 15 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="SelectionController" type="Node" parent="VBoxContainer/TimelineContainer/Timeline"]
+script = ExtResource( 16 )
 
-[node name="TimeLabel" type="Label" parent="CanvasLayer/StatusBar"]
+[node name="Playhead" type="Node" parent="VBoxContainer/TimelineContainer/Timeline"]
+script = ExtResource( 12 )
+
+[node name="TimeLabel" type="Label" parent="."]
 margin_left = 995.005
 margin_top = 10.9983
 margin_right = 1035.01
@@ -90,7 +95,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeValue" type="Label" parent="CanvasLayer/StatusBar"]
+[node name="TimeValue" type="Label" parent="."]
 margin_left = 1039.0
 margin_top = 10.0
 margin_right = 1047.0
@@ -100,7 +105,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ValueLabel" type="Label" parent="CanvasLayer/StatusBar"]
+[node name="ValueLabel" type="Label" parent="."]
 margin_left = 1058.0
 margin_top = 10.0
 margin_right = 1093.0
@@ -110,7 +115,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ValueValue" type="Label" parent="CanvasLayer/StatusBar"]
+[node name="ValueValue" type="Label" parent="."]
 margin_left = 1096.0
 margin_top = 10.0
 margin_right = 1104.0
@@ -120,58 +125,71 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SaveButton" type="Button" parent="CanvasLayer/StatusBar"]
+[node name="SaveButton" type="Button" parent="."]
 margin_left = 1210.0
+margin_top = 2.0
 margin_right = 1238.0
-margin_bottom = 35.0
-icon = ExtResource( 7 )
-script = ExtResource( 5 )
-
-[node name="FileDialog" type="FileDialog" parent="CanvasLayer/StatusBar/SaveButton"]
-margin_right = 315.0
-margin_bottom = 130.0
-
-[node name="LoadButton" type="Button" parent="CanvasLayer/StatusBar"]
-margin_left = 1241.0
-margin_right = 1269.0
-margin_bottom = 35.0
-icon = ExtResource( 10 )
-script = ExtResource( 3 )
-
-[node name="NewAnimationButton" type="Button" parent="CanvasLayer/StatusBar"]
-margin_left = 1272.0
-margin_right = 1300.0
-margin_bottom = 35.0
-icon = ExtResource( 9 )
-script = ExtResource( 6 )
-
-[node name="BackButton" type="Button" parent="CanvasLayer/StatusBar"]
-margin_left = 1406.0
-margin_right = 1434.0
-margin_bottom = 35.0
-toggle_mode = true
-icon = ExtResource( 11 )
-script = ExtResource( 4 )
-
-[node name="ChangeContextButton" type="Button" parent="CanvasLayer/StatusBar"]
-margin_left = 1540.0
-margin_right = 1568.0
-margin_bottom = 35.0
-icon = ExtResource( 8 )
-script = ExtResource( 2 )
+margin_bottom = 37.0
+icon = ExtResource( 5 )
+script = ExtResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="toggleTimelineButton" type="Button" parent="CanvasLayer/StatusBar"]
+[node name="FileDialog" type="FileDialog" parent="SaveButton"]
+margin_right = 315.0
+margin_bottom = 130.0
+filters = PoolStringArray( "\"*.tscn, PackedScene\"" )
+
+[node name="LoadButton" type="Button" parent="."]
+margin_left = 1241.0
+margin_top = 2.0
+margin_right = 1269.0
+margin_bottom = 37.0
+icon = ExtResource( 4 )
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewAnimationButton" type="Button" parent="."]
+margin_left = 1272.0
+margin_top = 2.0
+margin_right = 1300.0
+margin_bottom = 37.0
+icon = ExtResource( 3 )
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="."]
+margin_left = 1406.0
+margin_top = 2.0
+margin_right = 1434.0
+margin_bottom = 37.0
+toggle_mode = true
+icon = ExtResource( 2 )
+script = ExtResource( 7 )
+
+[node name="ChangeContextButton" type="Button" parent="."]
+margin_left = 1540.0
+margin_top = 2.0
+margin_right = 1568.0
+margin_bottom = 37.0
+icon = ExtResource( 1 )
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="toggleTimelineButton" type="Button" parent="."]
 anchor_left = 1.0
-anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = 82.5
-margin_right = -4.0
-margin_bottom = 117.5
+margin_left = -31.0
+margin_top = 3.0
+margin_right = -3.0
+margin_bottom = 38.0
 grow_horizontal = 0
 icon = ExtResource( 13 )
 align = 2
@@ -179,4 +197,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="CanvasLayer/StatusBar/toggleTimelineButton" to="CanvasLayer/StatusBar" method="_on_toggleTimelineButton_pressed"]
+[node name="BottomLine" type="ColorRect" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -5.0
+rect_min_size = Vector2( 0, 5 )
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 200 )
+color = Color( 0.2, 0.227451, 0.309804, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground" to="." method="_on_toggleTimelineButton_pressed"]
+[connection signal="gui_input" from="VBoxContainer/TimelineContainer/TrackMeta" to="." method="_on_TrackMeta_gui_input"]
+[connection signal="pressed" from="SaveButton" to="." method="_on_SaveButton_pressed"]
+[connection signal="pressed" from="NewAnimationButton" to="NewAnimationButton" method="_on_NewAnimationButton_pressed"]
+[connection signal="pressed" from="ChangeContextButton" to="." method="_on_ChangeContextButton_pressed"]
+[connection signal="pressed" from="toggleTimelineButton" to="." method="_on_toggleTimelineButton_pressed"]

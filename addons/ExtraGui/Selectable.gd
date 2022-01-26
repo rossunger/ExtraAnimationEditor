@@ -1,23 +1,29 @@
+tool
 extends Control
 class_name Selectable, "select_icon.png"
 
 # This component makes it's parent selectable 
 
-onready var parent = get_parent()
+var parent
 var selected = false
 
-func _ready():
+func _enter_tree():
+	if Engine.editor_hint:
+		_ready()
+		
+func _ready():	
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_to_group("selectable", true)	
-	parent.connect("resized", self, "resize")
+	if !getParent().is_connected("resized", self, "resize"):
+		getParent().connect("resized", self, "resize")
 	resize()
 
 #resize this component to be the size of it's parent
 func resize():	
-	rect_size = parent.rect_size
+	rect_size = getParent().rect_size
 	
 func select_one(who):
-	if parent == who:
+	if getParent() == who:
 		doSelect()
 	else:
 		deselect()
@@ -25,25 +31,25 @@ func select_one(who):
 func drag_select(box: Rect2):	
 	if !is_visible_in_tree():
 		return
-	var r = Rect2(parent.rect_global_position, parent.rect_size)	
+	var r = Rect2(getParent().rect_global_position, getParent().rect_size)	
 	if box.intersects(r) && !r.encloses(box) && !is_grandparent_selected():				
 		doSelect()
 
 # parent is the parent's parent... not the "selectable" node's parent
 func is_grandparent_selected():
-	if get_tree().get_nodes_in_group("selected").has(parent.get_parent()):
+	if get_tree().get_nodes_in_group("selected").has(getParent().get_parent()):
 		return true
 	return false
 
 func doSelect():
-	parent.add_to_group("selected")
+	getParent().add_to_group("selected")
 	selected = true
 	update()
 
 func deselect():	
 	selected = false
-	if parent.is_in_group("selected"):
-		parent.remove_from_group("selected")
+	if getParent().is_in_group("selected"):
+		getParent().remove_from_group("selected")
 	update()
 
 func _draw():
@@ -59,3 +65,8 @@ func _draw():
 		sb.draw_center = false
 		draw_style_box(sb, Rect2(rect_position, rect_size))
 		
+func getParent():
+	if !is_instance_valid(parent):
+		parent = get_parent()
+	return parent
+	
