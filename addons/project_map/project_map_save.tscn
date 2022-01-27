@@ -1,0 +1,228 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://addons/project_map/project_map.gd" type="Script" id=1]
+[ext_resource path="res://addons/project_map/pm_file_node.gd" type="Script" id=2]
+[ext_resource path="res://addons/project_map/pm_file_node.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/project_map/node.stylebox" type="StyleBox" id=4]
+[ext_resource path="res://addons/project_map/node_selected.stylebox" type="StyleBox" id=5]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.2, 0.231373, 0.309804, 1 )
+
+[node name="ProjectMap" type="GraphEdit"]
+visible = false
+margin_right = 1790.0
+margin_bottom = 1060.0
+rect_min_size = Vector2( 500, 500 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 1 )
+scroll_offset = Vector2( -514.64, -797.56 )
+snap_distance = 32
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="FileNode9" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 802.64
+margin_top = 509.56
+margin_right = 974.64
+margin_bottom = 571.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( 288, -288 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://addons/AnimationEditorPlugin/TimelineEditor.tscn"
+icon_class = "ColorRect"
+script_path = "res://addons/AnimationEditorPlugin/TimelineEditor.gd"
+script_name = "TimelineEditor.gd"
+
+[node name="FileNode5" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 770.64
+margin_top = 765.56
+margin_right = 976.64
+margin_bottom = 827.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( 256, -32 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://addons/AnimationEditorPlugin/AnimationTemplate.tscn"
+icon_class = "HSplitContainer"
+script_path = "res://addons/AnimationEditorPlugin/ExtraAnimation.gd"
+script_name = "ExtraAnimation.gd"
+
+[node name="FileNode8" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 770.64
+margin_top = 829.56
+margin_right = 880.64
+margin_bottom = 891.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( 256, 32 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://addons/AnimationEditorPlugin/Track.tscn"
+icon_class = "ColorRect"
+script_path = "res://addons/AnimationEditorPlugin/Track.gd"
+script_name = "Track.gd"
+
+[node name="FileNode10" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 770.64
+margin_top = 893.56
+margin_right = 908.64
+margin_bottom = 955.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( 256, 96 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://addons/AnimationEditorPlugin/Keyframe.tscn"
+icon_class = "ColorRect"
+script_path = "res://addons/AnimationEditorPlugin/keyframe.gd"
+script_name = "keyframe.gd"
+
+[node name="FileNode" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 802.64
+margin_top = 477.56
+margin_right = 1018.64
+margin_bottom = 509.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( 288, -320 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://addons/AnimationEditorPlugin/AnimationEditorPlugin.gd"
+resource_type = 2
+icon_class = "Script"
+
+[node name="FileNode3" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 450.64
+margin_top = 317.56
+margin_right = 617.64
+margin_bottom = 379.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( -64, -480 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://Animations/Run.tscn"
+icon_class = "HSplitContainer"
+script_path = "res://addons/AnimationEditorPlugin/ExtraAnimation.gd"
+script_name = "ExtraAnimation.gd"
+
+[node name="FileNode2" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 418.64
+margin_top = 445.56
+margin_right = 588.64
+margin_bottom = 507.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( -96, -352 )
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://RuntimeExample/RuntimeDemo.tscn"
+icon_class = "Control"
+script_path = "res://RuntimeExample/RuntimeDemo.gd"
+script_name = "RuntimeDemo.gd"
+
+[node name="FileNode12" type="GraphNode" parent="." instance=ExtResource( 3 )]
+margin_left = 578.64
+margin_top = 733.56
+margin_right = 722.64
+margin_bottom = 795.56
+mouse_filter = 1
+custom_constants/port_offset = 0
+custom_styles/frame = ExtResource( 4 )
+custom_styles/selectedframe = ExtResource( 5 )
+offset = Vector2( 64, -64 )
+selected = true
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+path = "res://addons/AnimationEditorPlugin/TrackMeta.tscn"
+icon_class = "Control"
+script_path = "res://addons/AnimationEditorPlugin/TrackMeta.gd"
+script_name = "TrackMeta.gd"
+
+[connection signal="delete_nodes_request" from="." to="." method="_on_GraphEdit_delete_nodes_request"]

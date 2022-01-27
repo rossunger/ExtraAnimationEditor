@@ -1,0 +1,83 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://addons/project_map/pm_comment_node.gd" type="Script" id=1]
+[ext_resource path="res://addons/project_map/comment_focus.stylebox" type="StyleBox" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="StyleBoxEmpty" id=7]
+
+[sub_resource type="Image" id=11]
+data = {
+"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"format": "LumAlpha8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id=10]
+flags = 4
+flags = 4
+image = SubResource( 11 )
+size = Vector2( 16, 16 )
+
+[sub_resource type="StyleBoxEmpty" id=8]
+
+[node name="CommentNode" type="GraphNode"]
+margin_right = 400.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 400, 200 )
+custom_styles/commentfocus = SubResource( 6 )
+custom_styles/comment = SubResource( 7 )
+comment = true
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 384.0
+margin_bottom = 184.0
+rect_min_size = Vector2( 340, 160 )
+custom_constants/margin_right = -10
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer"]
+margin_right = 378.0
+margin_bottom = 160.0
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBox"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 28 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = SubResource( 10 )
+stretch_mode = 4
+
+[node name="TextBox" type="TextEdit" parent="MarginContainer/HBox"]
+margin_left = 24.0
+margin_right = 378.0
+margin_bottom = 160.0
+size_flags_horizontal = 3
+custom_styles/focus = ExtResource( 3 )
+custom_styles/normal = SubResource( 8 )
+text = "Comment 
+
+ Use the handle to resize"
+wrap_enabled = true
+
+[connection signal="gui_input" from="MarginContainer/HBox/Icon" to="." method="_on_Icon_gui_input"]
+[connection signal="focus_entered" from="MarginContainer/HBox/TextBox" to="." method="_on_TextBox_focus_entered"]
+[connection signal="focus_exited" from="MarginContainer/HBox/TextBox" to="." method="_on_TextBox_focus_exited"]
+[connection signal="mouse_entered" from="MarginContainer/HBox/TextBox" to="." method="_on_TextBox_mouse_entered"]
+[connection signal="mouse_exited" from="MarginContainer/HBox/TextBox" to="." method="_on_TextBox_mouse_exited"]
+[connection signal="text_changed" from="MarginContainer/HBox/TextBox" to="." method="_on_TextBox_text_changed"]

@@ -3,9 +3,9 @@
 [ext_resource path="res://RuntimeExample/RuntimeDemo.gd" type="Script" id=1]
 [ext_resource path="res://new scene2.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Animations/Run.tscn" type="PackedScene" id=3]
-[ext_resource path="res://AnimationController.gd" type="Script" id=4]
+[ext_resource path="res://addons/AnimationEditorPlugin/AnimationController.gd" type="Script" id=4]
 [ext_resource path="res://addons/ExtraGui/fonts/defaultFont.tres" type="DynamicFont" id=5]
-[ext_resource path="res://playhead.gd" type="Script" id=8]
+[ext_resource path="res://addons/AnimationEditorPlugin/playhead.gd" type="Script" id=8]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -16,9 +16,8 @@ __meta__ = {
 }
 
 [node name="Control" parent="." instance=ExtResource( 2 )]
-
-[node name="ExtraAnimation" parent="Control" index="0"]
-defaultPreviewScene = null
+margin_top = 1.0
+margin_bottom = 1.0
 
 [node name="Polygon2D" parent="Control/CanvasLayer" index="0"]
 position = Vector2( 86, 30 )

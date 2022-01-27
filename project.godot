@@ -12,12 +12,17 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "AnimationController",
 "language": "GDScript",
-"path": "res://AnimationController.gd"
+"path": "res://addons/AnimationEditorPlugin/AnimationController.gd"
 }, {
 "base": "Control",
 "class": "ChildAdder",
 "language": "GDScript",
 "path": "res://addons/ExtraGui/ChildAdder.gd"
+}, {
+"base": "GraphNode",
+"class": "CommonNode",
+"language": "GDScript",
+"path": "res://addons/project_map/pm_common_node.gd"
 }, {
 "base": "Control",
 "class": "Draggable",
@@ -32,12 +37,12 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "ExtraAnimation",
 "language": "GDScript",
-"path": "res://ExtraAnimation.gd"
+"path": "res://addons/AnimationEditorPlugin/ExtraAnimation.gd"
 }, {
 "base": "ColorRect",
 "class": "Keyframe",
 "language": "GDScript",
-"path": "res://keyframe.gd"
+"path": "res://addons/AnimationEditorPlugin/keyframe.gd"
 }, {
 "base": "BaseButton",
 "class": "OpacityButton",
@@ -112,7 +117,7 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "Track",
 "language": "GDScript",
-"path": "res://Track.gd"
+"path": "res://addons/AnimationEditorPlugin/Track.gd"
 }, {
 "base": "Control",
 "class": "Undoable",
@@ -122,6 +127,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "AnimationController": "",
 "ChildAdder": "",
+"CommonNode": "",
 "Draggable": "res://addons/ExtraGui/move_icon.png",
 "EnumDropdown": "",
 "ExtraAnimation": "",
@@ -151,8 +157,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-aes="*res://AnimationEditorSingleton.gd"
 egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
+TimelineEditor="*res://addons/AnimationEditorPlugin/TimelineEditor.tscn"
 
 [display]
 
@@ -163,12 +169,36 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg", "res://addons/project_map/plugin.cfg" )
 
 [gui]
 
 theme/use_hidpi=true
 theme/custom="res://addons/ExtraGui/ExtraGui1.theme"
+
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": true,
+"flags/anisotropic": false,
+"flags/filter": true,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/normal_map_invert_y": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 4.0
+}
 
 [rendering]
 

@@ -2,19 +2,19 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/icon_edit.svg-4f1f21e6a3b22b15cbab863b660cfc49.stex"
+path="res://.import/icon_time.svg-57dec85fcd85cb3fe766a03411a42cb5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icons/icon_edit.svg"
-dest_files=[ "res://.import/icon_edit.svg-4f1f21e6a3b22b15cbab863b660cfc49.stex" ]
+source_file="res://icons/icon_time.svg"
+dest_files=[ "res://.import/icon_time.svg-57dec85fcd85cb3fe766a03411a42cb5.stex" ]
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0

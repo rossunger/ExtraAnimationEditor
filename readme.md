@@ -1,61 +1,69 @@
-# ExtraAnimationEditor
-An alternate animation editor/player for Godot engine. 
-WIP
+=======================
+#EXTRA ANIMATION EDITOR
+=======================
 
-# Features
-[x] Timeline editing, with keyframes
+This is an animation editor and player for GODOT engine, an alternative to the built in one.
+
+Main differences:
+- Animate properties in a relative way, rather than absolute (e.g. set position.x to +5 relative to inital position, rather than set position.x = 5)
+- Apply the same animation to different objects
+- Preview animations in different contexts without overwriting scene data accidentally
+- Drag/Copy/Paste keyframes onto different tracks
+
+## Features
+###### - [x] Timeline editing, with keyframes: 
 
 Classic timeline editing with keyframes and curves. 
 
-[x]. Live preview without affecting the original
+###### - [x]. Live preview without affecting the original
 
 In the animation editor, you can select a "preview context" which loads an instance of the scene you want to animate.
 Any changes that are made here won't affect the original .tscn file.
 
-[x]. Relative value keyframes
+###### - [x]. Relative value keyframes
 
 Keyframes can set absolute values (e.g. position.x = 30) or relative value (e.g. position.x += 30)
 
-[x]. Easily change who each track is animating (parameterised)
+###### - [x]. Easily change who each track is animating (parameterised)
 
 Apply the same animation to different objects. Combined with relative value keyframes, you can apply e.g. the same a walk cycle animation to all your characters
 
-[x] Set parameters from code.
+###### - [x] Set parameters from code.
 
 Easily change who the animation is affecting, or what property is affected at runtime
 Set keyframe values based on scripted logic. 
 
-[x]. Modifiable playrate (play backwards, play speed modifier
+###### - [x]. Modifiable playrate (play backwards, play speed modifier
 Playback speed,
 
-[x]. Preview in different contexts
+###### - [x]. Preview in different contexts
 
-[x]. Drag keyframes onto different tracks
+###### - [x]. Drag keyframes onto different tracks
 Move, copy/paste, duplicate across tracks without hesitation
 
-[_]. undo/redo 
+###### - [_]. undo/redo 
 Robust undo system that won't accidentally delete your work
 
-[_]. Emit signals / call functions?
+###### - [_]. Emit signals / call functions?
 Keyframes can emit signals and call functions
 
-[_]. Can have keyframes that are driven by other objects (as with Inverse Kinematics) 
+###### - [_]. Can have keyframes that are driven by other objects (as with Inverse Kinematics) 
 Keyframes can be relative to other objects. E.g. look_at target 
 
-[_]. Nested animations
+###### - [_]. Nested animations
 Animations playing other animations. Parameters driving other parameters
 
-[_]. Expression
+###### - [_]. Expression
 Use of expressions/functions instead of keyframes e.g. sin(time) or noise functions to animate 
 
-[_]. Onion skinning
+###### - [_]. Onion skinning
 
-[_]. Dope sheet with curves
+###### - [_]. Dope sheet with curves
 
-[_]. Snapping and Grid
+###### - [_]. Snapping and Grid
 
-[_]. Zoom and Pan while editing
+###### - [_]. Zoom and Pan while editing
 
-[_]. Preview Audio/Video while editing
+###### - [_]. Preview Audio/Video while editing
 
-[_]. Auto-keyframe LocationRotationScale
+###### - [_]. Auto-keyframe LocationRotationScale

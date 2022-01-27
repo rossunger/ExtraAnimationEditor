@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://ExtraAnimation.gd" type="Script" id=1]
+[gd_scene format=2]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -8,19 +6,6 @@ anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="ExtraAnimation" type="Control" parent="."]
-visible = false
-anchor_right = 1.0
-script = ExtResource( 1 )
-speed = 1
-AutoDuration = true
-Duration = 1
-Zoom = 100.0
-Grid = false
-Snap = false
-SnapIncriment = 1
-looping = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 8

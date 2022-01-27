@@ -3,7 +3,6 @@ extends Control
 class_name Selectable, "select_icon.png"
 
 # This component makes it's parent selectable 
-
 var parent
 var selected = false
 

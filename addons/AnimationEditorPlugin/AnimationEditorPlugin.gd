@@ -1,5 +1,3 @@
-
-# Overlay for 2d viewport
 tool
 extends EditorPlugin
 
@@ -11,16 +9,14 @@ var dragging=null
 var dragStartX = null
 var drawGrid = false
 var timelineEditor
+var timelineEditorParent
 	
-var timelineEditorScene = preload("TimelineEditor.tscn")
-var TrackScene = preload("res://Track.tscn")
-var KeyframeScene = preload("res://Keyframe.tscn")
 var previewContainer = Control.new()
 var contextCanvas
 
 var previousMainScreen = null
-
-
+#var objectSelectorScene = preload("res://addons/AnimationEditorPlugin/ObjectPicker.tscn")
+#var propertySelectorScene = preload("res://addons/AnimationEditorPlugin/PropertyPicker.tscn")
 ############################
 ##PLUGIN RELATED FUNCTIONS##
 ############################
@@ -32,39 +28,50 @@ func get_plugin_name():
 func _enter_tree():
 	##REGISTER MAIN SCREEN
 	get_editor_interface().get_editor_viewport().add_child(previewContainer)	
-	
 	if !is_in_group("AnimationEditorPlugin"):
-		add_to_group("AnimationEditorPlugin")
+		add_to_group("AnimationEditorPlugin")	
 	
-	if !is_instance_valid(timelineEditor):
-		timelineEditor = timelineEditorScene.instance()	
+	add_autoload_singleton("TimelineEditor", "res://addons/AnimationEditorPlugin/TimelineEditor.tscn")	
+	#call_deferred("initTimeline")
+	
+	
+func initTimeline(timeline):
+	if is_instance_valid(timelineEditor):
+		return
+	timelineEditor = timeline
+	timelineEditorParent = timelineEditor.get_parent()
+	timelineEditorParent.remove_child(timelineEditor)	
 	add_control_to_bottom_panel(timelineEditor, "Timeline")
+	timelineEditor.rect_position = Vector2(0,0)	
 	
 func _exit_tree():
 	#UNREGISTER MAIN SCREEN
-	previewContainer.queue_free()
-	
-	if is_instance_valid(timelineEditor):
+	previewContainer.queue_free()	
+			
+	if is_instance_valid(timelineEditor):		
 		remove_control_from_bottom_panel(timelineEditor)
-		timelineEditor.queue_free()
-		
+		timelineEditorParent.add_child(timelineEditor)
+		#timelineEditor.queue_free()
+		remove_autoload_singleton("TimelineEditor")
+	else:
+		print("NO TIMELINE EDITOR")
 func make_visible(visible: bool) -> void:
 	if is_instance_valid(previewContainer):		
 		previewContainer.show()
 	update_overlays()	
 	
 
-func handles(object: Object) -> bool:	
+func handles(object: Object) -> bool:		
 	var selection = get_editor_interface().get_selection().get_selected_nodes()
-	if selection.size() == 1:				
-		var obj = selection[0]				
-		if obj is ExtraAnimation:
+	if selection.size() == 1:	
+		if timelineEditor.handleSelection(selection[0]):			
 			var s = get_current_main_screen_name() 
 			if s != "Animation": previousMainScreen = s
 			get_editor_interface().call_deferred("set_main_screen_editor", "Animation")
+			
 			#LOAD ANIMATION DATA
-			currentAnimation = obj				
-			timelineEditor.setAnimation(currentAnimation)
+			currentAnimation = selection[0]		
+			timelineEditor.setAnimation(currentAnimation)					
 			if File.new().file_exists(currentAnimation.defaultPreviewScene):
 				loadPreviewFromFile(currentAnimation.defaultPreviewScene)				
 			return true	
@@ -75,7 +82,7 @@ func handles(object: Object) -> bool:
 	if is_instance_valid(currentAnimation):		
 		currentAnimation = null
 	if is_instance_valid(timelineEditor):	
-		timelineEditor.clearAnimation()
+		timelineEditor.clearAnimation() #clearAnimation()
 	clearPreview()	
 	return false
 
@@ -84,30 +91,12 @@ func handles(object: Object) -> bool:
 ################################
 
 func newAnimation():	
-	#TO DO:
-	# - figure out how to instance a packed scene so it stays linked the original file			
-	var newAnimation = ExtraAnimation.new()			
-	newAnimation.name = "NewAnimation"
-	var packedScene = PackedScene.new()
-	packedScene.pack(newAnimation) 
+	timelineEditor.newAnimation(get_editor_interface().get_edited_scene_root())	
 	
-	var path = "res://Animations/" + newAnimation.name + ".tscn"
-	var file2Check = File.new()
-	var i = 0
-	if file2Check.file_exists(path):
-		while file2Check.file_exists("res://Animations/" + newAnimation.name + "_" + str(i) + ".tscn"):		
-			i += 1
-		path = "res://Animations/" + newAnimation.name + "_" + str(i) + ".tscn"	
-	ResourceSaver.save(path, packedScene)
-	newAnimation.filename = path
-	get_editor_interface().get_edited_scene_root().add_child(newAnimation)		
-	newAnimation.owner = get_editor_interface().get_edited_scene_root()
-	
-
 func saveChanges(anim):
-	var packedScene = PackedScene.new()
-	packedScene.pack(anim) 
-	#anim.owner = get_editor_interface().get_edited_scene_root()
+	var packedScene = PackedScene.new()	
+	packedScene.pack(anim) 	
+	#packedScene.owner = get_editor_interface().get_edited_scene_root()
 	ResourceSaver.save(anim.filename, packedScene)
 	
 func changeContext():	
@@ -157,7 +146,8 @@ func getZoom(node):
 
 
 func showTrackOptions():
-	pass
+	return
+	#trackOptionsScene	
 
 func selectKeyframes(keys):
 	get_editor_interface().get_selection().clear()
@@ -175,19 +165,6 @@ func editKeyframe(data):
 	if "curve" in data:
 		pass
 		
-
-func addKeyframe(parent):
-	var k = KeyframeScene.instance()
-	parent.add_child(k)	
-	k.owner = currentAnimation #get_editor_interface().get_edited_scene_root()	
-	timelineEditor.setAnimation(currentAnimation)
-	
-func addTrack():
-	var t = TrackScene.instance()	
-	currentAnimation.add_child(t)	
-	t.owner = currentAnimation #get_editor_interface().get_edited_scene_root()	
-	timelineEditor.setAnimation(currentAnimation)
-	
 func editTrack():
 	pass
 	

@@ -1,0 +1,83 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/ExtraGui/ExtraGui1.theme" type="Theme" id=1]
+[ext_resource path="res://addons/ExtraGui/TabController.gd" type="Script" id=2]
+[ext_resource path="res://addons/ExtraGui/TabgroupButton.gd" type="Script" id=3]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ObjectSelectTab" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.14902, 0.172549, 0.231373, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PropertySelectTab" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.14902, 0.172549, 0.231373, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TabController" type="Control" parent="."]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+tabParent = NodePath("..")
+
+[node name="TabButtonContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+margin_bottom = 36.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ObjectTabButton2" type="Button" parent="TabButtonContainer"]
+margin_left = 1135.0
+margin_right = 1219.0
+margin_bottom = 36.0
+text = "Object"
+flat = true
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+tab = NodePath("../../ObjectSelectTab")
+closeable = false
+
+[node name="ObjectTabButton" type="Button" parent="TabButtonContainer"]
+margin_left = 1227.0
+margin_right = 1311.0
+margin_bottom = 36.0
+text = "Object"
+flat = true
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+tab = NodePath("../../ObjectSelectTab")
+closeable = false
+
+[node name="PropertyTabButton" type="Button" parent="TabButtonContainer"]
+margin_left = 1319.0
+margin_right = 1425.0
+margin_bottom = 36.0
+text = "Property"
+flat = true
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+tab = NodePath("../../PropertySelectTab")
+closeable = false

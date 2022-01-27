@@ -101,7 +101,11 @@ func click(event:InputEvent):
 				egs.selectionController.interrupt()		
 			if !get_tree().get_nodes_in_group("selected").has(getParent()):
 				if Input.is_key_pressed(KEY_SHIFT):
-					get_tree().call_group("selectable", "doSelect")
+					#ADD TO SELECTION:
+					parent.get_node("Selectable").doSelect()
+					
+					#SELECT ALL:
+					#get_tree().call_group("selectable", "doSelect")
 				else:
 					get_tree().call_group("selectable", "select_one", getParent())
 			get_tree().call_group("draggable", "startMove")			
