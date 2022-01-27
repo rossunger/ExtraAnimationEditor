@@ -63,9 +63,10 @@ script = ExtResource( 4 )
 margin_right = 2316.0
 
 [node name="Playhead" type="ColorRect" parent="Timeline/Control"]
+margin_left = 731.85
 margin_top = 5.0
-margin_right = 1.0
-margin_bottom = 105.0
+margin_right = 732.85
+margin_bottom = 2005.0
 rect_min_size = Vector2( 1, 2000 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -79,22 +80,22 @@ margin_right = 2316.0
 margin_bottom = 41.0
 
 [node name="Keyframe1" parent="Timeline/Track" instance=ExtResource( 5 )]
-margin_left = 40.0
-margin_right = 60.0
+margin_left = 42.0
+margin_right = 62.0
 time = 0.4
 value = 22
 curve = SubResource( 2 )
 
 [node name="Keyframe2" parent="Timeline/Track" instance=ExtResource( 5 )]
-margin_left = 221.0
-margin_right = 241.0
+margin_left = 232.05
+margin_right = 252.05
 time = 2.21
 value = 12
 curve = SubResource( 3 )
 
 [node name="Keyframe3" parent="Timeline/Track" instance=ExtResource( 5 )]
-margin_left = 543.0
-margin_right = 563.0
+margin_left = 570.15
+margin_right = 590.15
 time = 5.43
 value = 13
 curve = SubResource( 3 )
@@ -106,15 +107,15 @@ margin_right = 2316.0
 margin_bottom = 82.0
 
 [node name="Keyframe0" parent="Timeline/Track2" instance=ExtResource( 5 )]
-margin_left = 80.0
-margin_right = 100.0
+margin_left = 84.0
+margin_right = 104.0
 time = 0.8
 curve = SubResource( 1 )
 
 [node name="Keyframe1" parent="Timeline/Track2" instance=ExtResource( 5 )]
 anchor_left = 0.0790378
 anchor_right = 0.0790378
-margin_left = 154.0
-margin_right = 174.0
+margin_left = 170.853
+margin_right = 190.853
 time = 3.37052
 curve = SubResource( 1 )

@@ -60,8 +60,7 @@ func _ready():
 			if !is_connected("frameChanged", child, "frameChanged"):
 				connect("frameChanged", child, "frameChanged")	
 	
-func togglePlay():
-	print("toggling play")
+func togglePlay():	
 	if playing:
 		stop()
 	else:
@@ -77,21 +76,29 @@ func play(playSpeed=speed, start=position):
 func stop():
 	playing = false
 	
-func _physics_process(delta):
+func _physics_process(delta):	
 	if !playing: 
 		return
 	position+=delta*speed
 	if !looping:
-		position = min(position, duration)
-	elif position+ delta * speed >= duration:
-		position = 0
-		
+		if speed > 0:
+			position = min(position, duration)
+		else:
+			position = max(position, 0)
+	elif speed > 0:
+		if position+ delta * speed >= duration:
+			position = 0
+	else:
+		if position+ delta * speed <= 0:
+			position = duration
 	applyValues()
 
 func applyValues():
 	if !is_instance_valid(timeline):
 		return
 	emit_signal("frameChanged")
+	return
+	
 	for track in timeline.get_children():	
 		if !track is Track:
 			continue
@@ -151,13 +158,12 @@ func getPropertyValue(track):
 	return value
 			
 func setDurationToLatestKeyframe():
-	if !is_instance_valid(timeline):
-		print("no timeline")
-		return						
+	if !is_instance_valid(timeline):			
+		return				
+	duration = 0		
 	for child in timeline.get_children():		
-		if child is Track:
-			duration = max(duration, child.get_child(child.get_child_count()-1).time)			
-			print(duration)
+		if child is Track:			
+			duration = max(duration, child.get_child(child.get_child_count()-1).time)						
 func play_backwards(anim):
 	play(-1, 1)
 
@@ -166,8 +172,7 @@ func _set(prop, value):
 	if prop == "Duration":
 		duration = value		
 		return true
-	if prop == "AutoDuration":
-		print("setting AutoDuration")
+	if prop == "AutoDuration":		
 		autoDuration = value
 		if autoDuration:		
 			setDurationToLatestKeyframe()

@@ -12,4 +12,4 @@ func _ready():
 	
 	
 func updatePosition():	
-	rect_position.x = TimelineEditor.animation.position * TimelineEditor.zoom.x
+	rect_position.x = TimelineEditor.animation.position * TimelineEditor.zoom.x -  TimelineEditor.scroll.x

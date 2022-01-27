@@ -7,6 +7,7 @@ class_name SelectBox,"select_icon.png"
 var start
 var end
 var color =  Color.cornflower #the color of the selectBox outline
+var sb
 func _input(event):
 	if event is InputEventMouseMotion:
 		end += event.relative
@@ -23,13 +24,14 @@ func _input(event):
 		
 		
 func _draw():
-	var sb = StyleBoxFlat.new()
-	sb.border_color =  color
-	sb.border_width_left = 2
-	sb.border_width_right = 2
-	sb.border_width_top = 2
-	sb.border_width_bottom = 2
-	sb.draw_center = false
+	if !sb:
+		sb = StyleBoxFlat.new()
+		sb.border_color =  color
+		sb.border_width_left = 2
+		sb.border_width_right = 2
+		sb.border_width_top = 2
+		sb.border_width_bottom = 2
+		sb.draw_center = false
 	draw_style_box(sb, make_rect())
 	
 func make_rect():

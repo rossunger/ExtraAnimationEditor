@@ -6,6 +6,7 @@
 anchor_right = 1.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
 color = Color( 1, 1, 1, 0.0392157 )
 script = ExtResource( 1 )
 __meta__ = {

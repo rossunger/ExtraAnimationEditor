@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://addons/AnimationEditorPlugin/PlayStopButton.gd" type="Script" id=1]
 [ext_resource path="res://icons/icon_snap_grid.svg" type="Texture" id=2]
@@ -14,7 +14,9 @@
 [ext_resource path="res://icons/icon_environment.svg" type="Texture" id=12]
 [ext_resource path="res://icons/icon_play.svg" type="Texture" id=13]
 [ext_resource path="res://addons/ExtraGui/ExtraGui1.theme" type="Theme" id=14]
-[ext_resource path="res://icons/icon_edit.svg" type="Texture" id=15]
+[ext_resource path="res://icons/status_icon.svg" type="Texture" id=15]
+[ext_resource path="res://icons/icon_loop.svg" type="Texture" id=16]
+[ext_resource path="res://icons/icon_speed.svg" type="Texture" id=17]
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0, 0, 0, 1 )
@@ -57,16 +59,84 @@ custom_styles/normal = SubResource( 1 )
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
 anchor_right = 1.0
 margin_bottom = 36.0
-custom_constants/separation = 2
+custom_constants/separation = 3
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Control" type="Control" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
+margin_left = 960.0
+margin_right = 1044.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 84, 0 )
+rect_clip_content = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/StatusBarBackground/HBoxContainer/Control"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -148.0
+margin_top = -22.0
+margin_bottom = 22.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+min_value = -10.0
+max_value = 10.0
+step = 0.1
+value = 1.0
+allow_greater = true
+allow_lesser = true
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpeedLabel" type="TextureRect" parent="VBoxContainer/StatusBarBackground/HBoxContainer/Control"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 4.0
+margin_top = -16.0
+margin_right = 34.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 30, 36 )
+texture = ExtResource( 17 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
+margin_left = 1047.0
+margin_right = 1059.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 12, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LoopButton2" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
+margin_left = 1062.0
+margin_right = 1114.0
+margin_bottom = 40.0
+toggle_mode = true
+icon = ExtResource( 16 )
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
+margin_left = 1117.0
+margin_right = 1197.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 80, 0 )
+
 [node name="TimeLabel" type="TextureRect" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 984.0
-margin_right = 1014.0
-margin_bottom = 36.0
+margin_left = 1200.0
+margin_right = 1230.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 3 )
 expand = true
@@ -76,9 +146,10 @@ __meta__ = {
 }
 
 [node name="TimeValue" type="Label" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1016.0
-margin_right = 1052.0
-margin_bottom = 36.0
+margin_left = 1233.0
+margin_top = 2.0
+margin_right = 1269.0
+margin_bottom = 38.0
 rect_min_size = Vector2( 36, 36 )
 text = "0"
 align = 1
@@ -88,9 +159,9 @@ __meta__ = {
 }
 
 [node name="TimeLabel2" type="TextureRect" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1054.0
-margin_right = 1084.0
-margin_bottom = 36.0
+margin_left = 1272.0
+margin_right = 1302.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 15 )
 expand = true
@@ -100,9 +171,10 @@ __meta__ = {
 }
 
 [node name="ValueValue" type="Label" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1086.0
-margin_right = 1122.0
-margin_bottom = 36.0
+margin_left = 1305.0
+margin_top = 2.0
+margin_right = 1341.0
+margin_bottom = 38.0
 rect_min_size = Vector2( 36, 36 )
 text = "0"
 align = 1
@@ -112,9 +184,9 @@ __meta__ = {
 }
 
 [node name="SaveButton" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1124.0
-margin_right = 1164.0
-margin_bottom = 36.0
+margin_left = 1344.0
+margin_right = 1384.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
 theme = ExtResource( 14 )
 icon = ExtResource( 11 )
@@ -128,9 +200,9 @@ margin_bottom = 130.0
 filters = PoolStringArray( "\"*.tscn, PackedScene\"" )
 
 [node name="LoadButton" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1166.0
-margin_right = 1206.0
-margin_bottom = 36.0
+margin_left = 1387.0
+margin_right = 1427.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
 icon = ExtResource( 9 )
 __meta__ = {
@@ -138,9 +210,9 @@ __meta__ = {
 }
 
 [node name="SnapButton" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1208.0
-margin_right = 1248.0
-margin_bottom = 36.0
+margin_left = 1430.0
+margin_right = 1470.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
 icon = ExtResource( 2 )
 __meta__ = {
@@ -148,9 +220,9 @@ __meta__ = {
 }
 
 [node name="NewAnimationButton" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1250.0
-margin_right = 1290.0
-margin_bottom = 36.0
+margin_left = 1473.0
+margin_right = 1513.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
 icon = ExtResource( 10 )
 __meta__ = {
@@ -158,9 +230,9 @@ __meta__ = {
 }
 
 [node name="PlayButton" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1292.0
-margin_right = 1332.0
-margin_bottom = 36.0
+margin_left = 1516.0
+margin_right = 1556.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
 toggle_mode = true
 icon = ExtResource( 13 )
@@ -170,39 +242,42 @@ __meta__ = {
 }
 
 [node name="ChangeContextButton" type="Button" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1334.0
-margin_right = 1374.0
-margin_bottom = 36.0
+margin_left = 1559.0
+margin_right = 1599.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
 icon = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/StatusBarBackground/HBoxContainer"]
-margin_left = 1376.0
-margin_right = 1576.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 200, 0 )
-
-[node name="ZoomOutButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
 anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -165.0
-margin_right = -125.0
+anchor_bottom = 0.5
+margin_left = -183.0
+margin_top = -20.0
+margin_right = -38.0
+margin_bottom = 20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ZoomOutButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground/HBoxContainer2"]
+margin_right = 40.0
+margin_bottom = 40.0
 custom_constants/hseparation = 0
 icon = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ZoomLabel" type="Label" parent="VBoxContainer/StatusBarBackground"]
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -130.0
-margin_right = -81.0
+[node name="ZoomLabel" type="Label" parent="VBoxContainer/StatusBarBackground/HBoxContainer2"]
+margin_left = 48.0
+margin_top = 8.0
+margin_right = 97.0
+margin_bottom = 32.0
 text = "100%"
 align = 1
 valign = 1
@@ -210,12 +285,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ZoomInButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground"]
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -90.0
-margin_right = -50.0
+[node name="ZoomInButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground/HBoxContainer2"]
+margin_left = 105.0
+margin_right = 145.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 30, 30 )
 icon = ExtResource( 6 )
 __meta__ = {
@@ -263,9 +336,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="value_changed" from="VBoxContainer/StatusBarBackground/HBoxContainer/Control/SpinBox" to="." method="_on_SpinBox_value_changed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/HBoxContainer/LoopButton2" to="." method="_on_LoopButton2_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/HBoxContainer/NewAnimationButton" to="." method="_on_NewAnimationButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/HBoxContainer/PlayButton" to="VBoxContainer/StatusBarBackground/HBoxContainer/PlayButton" method="_on_PlayButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/StatusBarBackground/ZoomOutButton" to="." method="_on_ZoomOutButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/StatusBarBackground/ZoomInButton" to="." method="_on_ZoomInButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/HBoxContainer2/ZoomOutButton" to="." method="_on_ZoomOutButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/HBoxContainer2/ZoomInButton" to="." method="_on_ZoomInButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/toggleTimelineButton" to="." method="_on_toggleTimelineButton_pressed"]

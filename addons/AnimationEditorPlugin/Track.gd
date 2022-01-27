@@ -115,6 +115,6 @@ func _gui_input(event):
 			k.owner = owner #get_editor_interface().get_edited_scene_root()	
 			#for child in k.get_children():
 			#	child.owner = owner
-		elif event.button_index == 1:			
-			owner.setTime(event.position.x / TimelineEditor.zoom.x) #.zoom.x ) #TODO: fix magic number...
+		elif event.button_index == 1 and event.is_pressed():			
+			#owner.setTime(event.position.x / TimelineEditor.zoom.x) #.zoom.x ) #TODO: fix magic number...
 			owner.applyValues()

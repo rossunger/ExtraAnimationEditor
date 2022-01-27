@@ -43,6 +43,7 @@ func is_grandparent_selected():
 func doSelect():
 	getParent().add_to_group("selected")
 	selected = true
+	TimelineEditor.selectionChanged(parent)
 	update()
 
 func deselect():	

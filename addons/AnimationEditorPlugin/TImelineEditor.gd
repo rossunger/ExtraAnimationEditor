@@ -8,6 +8,7 @@ signal zoomChanged
 
 var grid = true		
 var zoom = Vector2(100,1)
+var scroll = Vector2(0,0)
 var offset = Vector2(-12,-12)
 var showTimeline = false
 var timeline = null
@@ -16,7 +17,7 @@ var animation
 
 func _enter_tree():
 	get_tree().call_group("AnimationEditorPlugin", "initTimeline", self)
-	_on_toggleTimelineButton_pressed()
+	#_on_toggleTimelineButton_pressed()
 	
 func handleSelection(obj):	
 	if obj is ExtraAnimation: 		
@@ -41,6 +42,7 @@ func newAnimation(editedSceneRoot):
 	newAnimation.owner = editedSceneRoot
 	
 func setAnimation(obj= animation):
+	scroll = Vector2(0,0)
 	if !obj:
 		return
 	if is_instance_valid(animation):
@@ -53,6 +55,9 @@ func setAnimation(obj= animation):
 	trackContainer = get_node("VBoxContainer/" + animation.name + "/TrackMeta")		
 	timeline = get_node("VBoxContainer/" + animation.name + "/Timeline")		
 	animation.connect("frameChanged", self, "frameChanged")
+	
+	$VBoxContainer/StatusBarBackground/HBoxContainer/Control/SpinBox.value = animation.speed
+	$VBoxContainer/StatusBarBackground/HBoxContainer/LoopButton2.pressed = animation.looping
 	
 func clearAnimation():			
 	if is_instance_valid(animation):
@@ -92,12 +97,12 @@ func _on_PlayButton_pressed():
 
 func _on_ZoomInButton_pressed():
 	zoom.x *= 1.05
-	$VBoxContainer/StatusBarBackground/ZoomLabel.text = str(floor(zoom.x)) + "%"
+	$VBoxContainer/StatusBarBackground/HBoxContainer2/ZoomLabel.text = str(floor(zoom.x)) + "%"
 	emit_signal("zoomChanged")
 
 func _on_ZoomOutButton_pressed():
 	zoom.x /= 1.05
-	$VBoxContainer/StatusBarBackground/ZoomLabel.text = str(floor(zoom.x)) + "%"
+	$VBoxContainer/StatusBarBackground/HBoxContainer2/ZoomLabel.text = str(floor(zoom.x)) + "%"
 	emit_signal("zoomChanged")	
 	
 func frameChanged():
@@ -108,3 +113,17 @@ func frameChanged():
 	else:
 		$VBoxContainer/StatusBarBackground/HBoxContainer/ValueValue.text = "--"
 
+func keyframeChanged():
+	animation.setDurationToLatestKeyframe()
+
+
+func _on_SpinBox_value_changed(value):
+	animation.speed = value
+
+
+func _on_LoopButton2_pressed():
+	animation.looping = $VBoxContainer/StatusBarBackground/HBoxContainer/LoopButton2.pressed
+
+func selectionChanged(who):
+	if who is Keyframe:
+		$VBoxContainer/StatusBarBackground/HBoxContainer/ValueValue.text = str( who.value )
