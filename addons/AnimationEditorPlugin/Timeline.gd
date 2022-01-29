@@ -3,18 +3,31 @@ extends Control
 var grid = true
 var font
 var scrolling = false
+var tracks setget , getTracks
 
-func _ready():
+func getTracks():
+	if tracks:
+		return tracks
+	else:
+		tracks = get_node("Tracks")	
+		return tracks
+
+func _ready():	
 	if ! TimelineEditor.is_connected("zoomChanged", self, "zoomChanged"):
 		TimelineEditor.connect("zoomChanged", self, "zoomChanged")
-		
+	mouse_filter = Control.MOUSE_FILTER_PASS
+	
 func zoomChanged():
 	update()
 	
-func _gui_input(event):
-	if event is InputEventMouseButton:
+func _gui_input(event):	
+	if event is InputEventMouseButton:		
+		if event.doubleclick and event.control:			
+			get_tree().call_group("SelectionController", "interrupt")
+			get_tree().call_deferred("call_group", "selectable", "doSelect")
+			return
 		if event.button_index == 1 and event.is_pressed():
-			owner.setTime((event.position.x - TimelineEditor.scroll.x) / TimelineEditor.zoom.x )
+			owner.setTime( min(owner.duration, (event.position.x - TimelineEditor.scroll.x) / TimelineEditor.zoom.x ))
 			owner.applyValues()
 		elif event.button_index == 2:
 			if event.is_pressed():

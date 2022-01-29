@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "Draggable",
 "language": "GDScript",
-"path": "res://addons/ExtraGui/Draggable.gd"
+"path": "res://addons/AnimationEditorPlugin/ExtraGui/Draggable.gd"
 }, {
 "base": "OptionButton",
 "class": "EnumDropdown",
@@ -47,7 +47,12 @@ _global_script_classes=[ {
 "base": "BaseButton",
 "class": "OpacityButton",
 "language": "GDScript",
-"path": "res://addons/ExtraGui/OpacityButton.gd"
+"path": "res://addons/AnimationEditorPlugin/ExtraGui/OpacityButton.gd"
+}, {
+"base": "ColorRect",
+"class": "Playhead",
+"language": "GDScript",
+"path": "res://addons/AnimationEditorPlugin/playhead.gd"
 }, {
 "base": "Control",
 "class": "RemoteHide",
@@ -82,22 +87,27 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "SelectBox",
 "language": "GDScript",
-"path": "res://addons/ExtraGui/SelectBox.gd"
+"path": "res://addons/AnimationEditorPlugin/ExtraGui/SelectBox.gd"
 }, {
 "base": "Control",
 "class": "Selectable",
 "language": "GDScript",
-"path": "res://addons/ExtraGui/Selectable.gd"
+"path": "res://addons/AnimationEditorPlugin/ExtraGui/Selectable.gd"
 }, {
 "base": "Node",
 "class": "SelectionController",
 "language": "GDScript",
-"path": "res://addons/ExtraGui/SelectionController.gd"
+"path": "res://addons/AnimationEditorPlugin/ExtraGui/SelectionController.gd"
 }, {
 "base": "Control",
 "class": "SplashAndFade",
 "language": "GDScript",
 "path": "res://addons/ExtraGui/SplashAndFade.gd"
+}, {
+"base": "Reference",
+"class": "TYPES",
+"language": "GDScript",
+"path": "res://addons/AnimationEditorPlugin/TYPES.gd"
 }, {
 "base": "Control",
 "class": "TabController",
@@ -128,21 +138,23 @@ _global_script_class_icons={
 "AnimationController": "",
 "ChildAdder": "",
 "CommonNode": "",
-"Draggable": "res://addons/ExtraGui/move_icon.png",
+"Draggable": "res://addons/AnimationEditorPlugin/ExtraGui/move_icon.png",
 "EnumDropdown": "",
 "ExtraAnimation": "",
 "Keyframe": "",
 "OpacityButton": "",
+"Playhead": "",
 "RemoteHide": "",
 "Renameable": "",
 "SaveController": "",
 "Saveable": "",
 "Scrollable": "",
 "SearchBox": "",
-"SelectBox": "res://addons/ExtraGui/select_icon.png",
-"Selectable": "res://addons/ExtraGui/select_icon.png",
-"SelectionController": "res://addons/ExtraGui/select_icon.png",
+"SelectBox": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
+"Selectable": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
+"SelectionController": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
 "SplashAndFade": "",
+"TYPES": "",
 "TabController": "",
 "TabgroupButton": "",
 "ToggleVisible": "",
@@ -153,6 +165,7 @@ _global_script_class_icons={
 [application]
 
 config/name="ExtraAnimationEditor"
+run/main_scene="res://DefaultAnimationContext.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -164,7 +177,6 @@ TimelineEditor="*res://addons/AnimationEditorPlugin/TimelineEditor.tscn"
 
 window/size/width=2560
 window/size/height=1440
-window/size/fullscreen=true
 window/dpi/allow_hidpi=true
 
 [editor_plugins]
@@ -174,7 +186,7 @@ enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res:/
 [gui]
 
 theme/use_hidpi=true
-theme/custom="res://addons/ExtraGui/ExtraGui1.theme"
+theme/custom="res://addons/AnimationEditorPlugin/ExtraGui/ExtraGui1.theme"
 
 [importer_defaults]
 
@@ -198,6 +210,14 @@ texture={
 "size_limit": 0,
 "stream": false,
 "svg/scale": 4.0
+}
+
+[input]
+
+Click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
 }
 
 [rendering]

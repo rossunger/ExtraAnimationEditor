@@ -11,28 +11,32 @@ var parent
 var selectBox
 export var color = Color.cornflower
 var interrupted = false
-onready var timer = Timer.new() #used for interrupting the select box
+var timer #used for interrupting the select box
 var startPosition
 
-func _enter_tree():
+func _enter_tree():	
+	#register ourselves as the only selection controller singleton in the EGS (extra gui singleton)	
+	if !is_in_group("SelectionController"):
+		add_to_group("SelectionController")
 	if Engine.editor_hint:
 		_ready()
-		
+			
 func _ready():
 	if !is_inside_tree():
 		return
 	add_to_group("draggable")
-	add_child(timer)
-	timer.connect("timeout", self, "startSelection")	
-	#register ourselves as the only selection controller singleton in the EGS (extra gui singleton)
-#	if !is_instance_valid(egs.selectionController):
-#		egs.selectionController = self
-	#else:				
-	#	if egs.selectionController != self:
-			#egs.selectionController.queue_free()
-	egs.selectionController=self		
+	if !has_node("Timer"):
+		timer = Timer.new()
+		add_child(timer)
+		timer.name = "Timer"
+	else:
+		timer = get_node("Timer")
+	if not timer.is_connected("timeout", self, "startSelection"):
+		timer.connect("timeout", self, "startSelection")	
+	
+	
 		
-func _input(event):		
+func _input(event):			
 	if !event is InputEventMouse:
 		return	
 	if !getParent().get_global_rect().has_point(event.position):		
@@ -52,12 +56,11 @@ func startSelection():
 	selectBox.end = startPosition
 	add_child(selectBox)		
 	
-func interrupt():
-	if !timer.is_stopped():
+func interrupt():	
+	if is_instance_valid(timer) and !timer.is_stopped():
 		timer.stop()
 	elif !interrupted:
-		if is_instance_valid(selectBox):
-			selectBox.getParent().remove_child(selectBox)
+		if is_instance_valid(selectBox):			
 			selectBox.queue_free()
 		interrupted = true
 
@@ -66,10 +69,8 @@ func getParent():
 		parent = get_parent()
 	return parent
 		
-		
-		
-		
-		
-		
-		
-		
+func selectBoxFinished(rect):
+	if !interrupted:
+		if get_tree().get_nodes_in_group("selected").size() > 0:		
+			get_tree().call_group("selectable", "deselect")					
+	get_tree().call_group("selectable", "drag_select", rect)		

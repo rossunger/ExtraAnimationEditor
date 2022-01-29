@@ -11,8 +11,8 @@ bg_color = Color( 0.2, 0.231373, 0.309804, 1 )
 
 [node name="ProjectMap" type="GraphEdit"]
 visible = false
-margin_right = 1790.0
-margin_bottom = 1060.0
+margin_right = 1881.0
+margin_bottom = 1058.0
 rect_min_size = Vector2( 500, 500 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -148,31 +148,6 @@ __meta__ = {
 path = "res://addons/AnimationEditorPlugin/AnimationEditorPlugin.gd"
 resource_type = 2
 icon_class = "Script"
-
-[node name="FileNode3" type="GraphNode" parent="." instance=ExtResource( 3 )]
-margin_left = 450.64
-margin_top = 317.56
-margin_right = 617.64
-margin_bottom = 379.56
-mouse_filter = 1
-custom_constants/port_offset = 0
-custom_styles/frame = ExtResource( 4 )
-custom_styles/selectedframe = ExtResource( 5 )
-offset = Vector2( -64, -480 )
-slot/0/left_enabled = false
-slot/0/left_type = 0
-slot/0/left_color = Color( 1, 1, 1, 1 )
-slot/0/right_enabled = false
-slot/0/right_type = 0
-slot/0/right_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-path = "res://Animations/Run.tscn"
-icon_class = "HSplitContainer"
-script_path = "res://addons/AnimationEditorPlugin/ExtraAnimation.gd"
-script_name = "ExtraAnimation.gd"
 
 [node name="FileNode2" type="GraphNode" parent="." instance=ExtResource( 3 )]
 margin_left = 418.64

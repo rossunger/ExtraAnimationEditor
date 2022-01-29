@@ -7,6 +7,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Control2" type="Control" parent="."]
+margin_left = 171.0
+margin_top = 75.0
+margin_right = 211.0
+margin_bottom = 115.0
+
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = 171.0
 margin_top = 75.0
@@ -16,3 +22,11 @@ color = Color( 0.447059, 0.0862745, 0.0862745, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ItemList" type="ItemList" parent="ColorRect"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Control" type="Control" parent="ColorRect"]
+margin_right = 40.0
+margin_bottom = 40.0

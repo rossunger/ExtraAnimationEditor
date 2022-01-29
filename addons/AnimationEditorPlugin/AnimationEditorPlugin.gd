@@ -15,6 +15,7 @@ var previewContainer = Control.new()
 var contextCanvas
 
 var previousMainScreen = null
+
 #var objectSelectorScene = preload("res://addons/AnimationEditorPlugin/ObjectPicker.tscn")
 #var propertySelectorScene = preload("res://addons/AnimationEditorPlugin/PropertyPicker.tscn")
 ############################
@@ -74,6 +75,8 @@ func handles(object: Object) -> bool:
 			timelineEditor.setAnimation(currentAnimation)					
 			if File.new().file_exists(currentAnimation.defaultPreviewScene):
 				loadPreviewFromFile(currentAnimation.defaultPreviewScene)				
+			else:
+				print("context file doesn't exist: ", currentAnimation.name, " : ", currentAnimation.defaultPreviewScene)
 			return true	
 	if previousMainScreen:		
 		get_editor_interface().call_deferred("set_main_screen_editor", previousMainScreen)
@@ -98,14 +101,15 @@ func saveChanges(anim):
 	packedScene.pack(anim) 	
 	#packedScene.owner = get_editor_interface().get_edited_scene_root()
 	ResourceSaver.save(anim.filename, packedScene)
+	get_editor_interface().get_edited_scene_root().property_list_changed_notify()	
+	#get_editor_interface().reload_scene_from_path(anim.filename)
 	
-func changeContext():	
+func changeContext():		
 	var dialog: FileDialog	
 	if !is_instance_valid(contextCanvas):
 		contextCanvas = CanvasLayer.new()
 		contextCanvas.layer = 100
-	previewContainer.add_child(contextCanvas)
-
+		previewContainer.add_child(contextCanvas)	
 	dialog = FileDialog.new()
 	dialog.mode = FileDialog.MODE_OPEN_FILE
 	dialog.invalidate()
@@ -113,7 +117,7 @@ func changeContext():
 	dialog.set_anchors_and_margins_preset(Control.PRESET_WIDE)
 	dialog.add_filter("*.tscn ; PackedScene")
 	dialog.connect("file_selected", self, "loadPreviewFromFile")
-	dialog.popup()
+	dialog.popup()	
 	
 func clearPreview():
 	for child in previewContainer.get_children():		
@@ -122,6 +126,7 @@ func clearPreview():
 func loadPreviewFromFile(path):			
 	var newScene = load(path).instance()
 	loadPreview(newScene)
+	timelineEditor.previewContextChanged(path)
 
 func loadPreviewFromScene(obj):	
 	var p = PackedScene.new()
@@ -131,7 +136,8 @@ func loadPreviewFromScene(obj):
 func loadPreview(obj):
 	clearPreview()
 	previewContainer.add_child(obj)
-	get_editor_interface().set_main_screen_editor("Animation")
+	timelineEditor.animation.currentScene = obj
+	get_editor_interface().set_main_screen_editor("Animation")	
 
 func getRect(node):
 	var transform_viewport = node.get_viewport_transform()			
@@ -142,12 +148,6 @@ func getRect(node):
 
 func getZoom(node):
 	return node.get_viewport_transform().get_scale() * node.get_canvas_transform().get_scale()
-
-
-
-func showTrackOptions():
-	return
-	#trackOptionsScene	
 
 func selectKeyframes(keys):
 	get_editor_interface().get_selection().clear()

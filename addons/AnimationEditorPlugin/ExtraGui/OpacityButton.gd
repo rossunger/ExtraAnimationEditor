@@ -1,3 +1,4 @@
+tool
 extends BaseButton
 class_name OpacityButton
 export var opacityNormal = 0.35

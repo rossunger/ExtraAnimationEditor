@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/select_icon.png-226bb8b8325caf699ab0ef41319d8891.stex"
+path="res://.import/select_icon.png-417c20047072fad1f39d33ddcde8d0ca.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/ExtraGui/select_icon.png"
-dest_files=[ "res://.import/select_icon.png-226bb8b8325caf699ab0ef41319d8891.stex" ]
+source_file="res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png"
+dest_files=[ "res://.import/select_icon.png-417c20047072fad1f39d33ddcde8d0ca.stex" ]
 
 [params]
 

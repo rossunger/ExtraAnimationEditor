@@ -1,83 +1,244 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://addons/ExtraGui/ExtraGui1.theme" type="Theme" id=1]
-[ext_resource path="res://addons/ExtraGui/TabController.gd" type="Script" id=2]
-[ext_resource path="res://addons/ExtraGui/TabgroupButton.gd" type="Script" id=3]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/ExtraGui1.theme" type="Theme" id=1]
+[ext_resource path="res://Addons/ExtraGui/fonts/Alice-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/AnimationEditorPlugin/TYPESSelector.gd" type="Script" id=3]
+[ext_resource path="res://addons/AnimationEditorPlugin/TrackOptions.gd" type="Script" id=4]
 
-[node name="Control" type="Control"]
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 0.301961 )
+
+[sub_resource type="StyleBoxEmpty" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="DynamicFont" id=7]
+size = 40
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 0.298039 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 1, 1, 1, 0.027451 )
+
+[node name="Control" type="PopupDialog"]
+visible = true
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 4 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="ObjectSelectTab" type="ColorRect" parent="."]
+[node name="Dimmer" type="Button" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.14902, 0.172549, 0.231373, 1 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/focus = SubResource( 5 )
+custom_styles/disabled = SubResource( 6 )
+custom_styles/normal = SubResource( 2 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="PropertySelectTab" type="ColorRect" parent="."]
+[node name="Modal" type="ColorRect" parent="."]
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+color = Color( 0.14902, 0.172549, 0.231373, 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.14902, 0.172549, 0.231373, 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Control2" type="Control" parent="Modal/VBoxContainer"]
+margin_right = 1536.0
+margin_bottom = 95.0
+rect_min_size = Vector2( 0, 95 )
+
+[node name="TrackName" type="LineEdit" parent="Modal/VBoxContainer/Control2"]
+margin_left = 19.0
+margin_top = 11.0
+margin_right = 1517.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+text = "TrackName"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TabController" type="Control" parent="."]
-script = ExtResource( 2 )
+[node name="Body" type="Control" parent="Modal/VBoxContainer"]
+margin_top = 103.0
+margin_right = 1536.0
+margin_bottom = 864.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HBoxContainer" type="HSplitContainer" parent="Modal/VBoxContainer/Body"]
+margin_left = 19.0
+margin_top = 11.0
+margin_right = 1517.0
+margin_bottom = 784.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 15
 __meta__ = {
 "_edit_use_anchors_": false
 }
-tabParent = NodePath("..")
 
-[node name="TabButtonContainer" type="HBoxContainer" parent="."]
+[node name="ColorRect" type="ColorRect" parent="Modal/VBoxContainer/Body/HBoxContainer"]
+margin_right = 741.0
+margin_bottom = 773.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 1, 1, 1, 0.0196078 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect"]
 anchor_right = 1.0
-margin_bottom = 36.0
-alignment = 1
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ObjectTabButton2" type="Button" parent="TabButtonContainer"]
-margin_left = 1135.0
-margin_right = 1219.0
-margin_bottom = 36.0
+[node name="Label" type="Label" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer"]
+margin_right = 741.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_styles/normal = SubResource( 9 )
 text = "Object"
-flat = true
-script = ExtResource( 3 )
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-tab = NodePath("../../ObjectSelectTab")
-closeable = false
 
-[node name="ObjectTabButton" type="Button" parent="TabButtonContainer"]
-margin_left = 1227.0
-margin_right = 1311.0
-margin_bottom = 36.0
+[node name="CustomProperty2" type="HBoxContainer" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer"]
+margin_top = 58.0
+margin_right = 741.0
+margin_bottom = 102.0
+rect_min_size = Vector2( 0, 44 )
+
+[node name="Label" type="Label" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer/CustomProperty2"]
+margin_top = 10.0
+margin_right = 71.0
+margin_bottom = 34.0
+text = "Search: "
+
+[node name="ObjectName" type="LineEdit" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer/CustomProperty2"]
+margin_left = 79.0
+margin_right = 741.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+custom_styles/normal = SubResource( 8 )
 text = "Object"
-flat = true
-script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-tab = NodePath("../../ObjectSelectTab")
-closeable = false
 
-[node name="PropertyTabButton" type="Button" parent="TabButtonContainer"]
-margin_left = 1319.0
-margin_right = 1425.0
-margin_bottom = 36.0
+[node name="ObjectList" type="ItemList" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer"]
+margin_top = 110.0
+margin_right = 741.0
+margin_bottom = 773.0
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 8 )
+
+[node name="ColorRect2" type="ColorRect" parent="Modal/VBoxContainer/Body/HBoxContainer"]
+margin_left = 757.0
+margin_right = 1498.0
+margin_bottom = 773.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 1, 1, 1, 0.0196078 )
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2"]
+margin_right = 741.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_styles/normal = SubResource( 9 )
 text = "Property"
-flat = true
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomProperty" type="HBoxContainer" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2"]
+margin_top = 58.0
+margin_right = 741.0
+margin_bottom = 102.0
+rect_min_size = Vector2( 0, 44 )
+
+[node name="Label" type="Label" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/CustomProperty"]
+margin_top = 10.0
+margin_right = 80.0
+margin_bottom = 34.0
+text = "Custom: "
+
+[node name="PropertyName" type="LineEdit" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/CustomProperty"]
+margin_left = 88.0
+margin_right = 629.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+custom_styles/normal = SubResource( 8 )
+text = "Property"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TrackType" type="OptionButton" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/CustomProperty"]
+margin_left = 637.0
+margin_right = 741.0
+margin_bottom = 44.0
+text = "Float"
+items = [ "Bool", null, false, 0, null, "Float", null, false, 1, null, "Res", null, false, 2, null, "Str", null, false, 3, null, "Vec2", null, false, 4, null, "Vec3", null, false, 5, null, "Vec4", null, false, 6, null ]
+selected = 1
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-tab = NodePath("../../PropertySelectTab")
-closeable = false
+
+[node name="PropertyList" type="ItemList" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2"]
+margin_top = 110.0
+margin_right = 741.0
+margin_bottom = 773.0
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 8 )
+
+[connection signal="pressed" from="Dimmer" to="." method="_on_Dimmer_pressed"]
+[connection signal="item_selected" from="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer/ObjectList" to="." method="_on_ObjectList_item_selected"]
+[connection signal="item_selected" from="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/PropertyList" to="." method="_on_PropertyList_item_selected"]

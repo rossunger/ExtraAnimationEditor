@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://addons/ExtraGui/Selectable.gd" type="Script" id=1]
-[ext_resource path="res://addons/ExtraGui/Draggable.gd" type="Script" id=2]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/Selectable.gd" type="Script" id=1]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/Draggable.gd" type="Script" id=2]
 [ext_resource path="res://addons/AnimationEditorPlugin/keyframe.gd" type="Script" id=3]
 
 [sub_resource type="Curve" id=1]
@@ -11,6 +11,7 @@ margin_top = 5.0
 margin_right = 20.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 20, 20 )
+color = Color( 0.713726, 0.713726, 0.713726, 1 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false

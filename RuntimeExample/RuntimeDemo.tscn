@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://RuntimeExample/RuntimeDemo.gd" type="Script" id=1]
 [ext_resource path="res://new scene2.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Animations/Run.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/AnimationEditorPlugin/AnimationController.gd" type="Script" id=4]
 [ext_resource path="res://addons/ExtraGui/fonts/defaultFont.tres" type="DynamicFont" id=5]
-[ext_resource path="res://addons/AnimationEditorPlugin/playhead.gd" type="Script" id=8]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -19,9 +18,6 @@ __meta__ = {
 margin_top = 1.0
 margin_bottom = 1.0
 
-[node name="Polygon2D" parent="Control/CanvasLayer" index="0"]
-position = Vector2( 86, 30 )
-
 [node name="Button" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -33,15 +29,6 @@ margin_right = 251.0
 margin_bottom = 117.5
 custom_fonts/font = ExtResource( 5 )
 text = "PLAY"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Playhead" type="ColorRect" parent="."]
-margin_right = 2.0
-margin_bottom = 300.0
-color = Color( 1, 1, 1, 0.541176 )
-script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

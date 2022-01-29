@@ -4,14 +4,10 @@ class_name ExtraAnimation
 
 var debug = true
 
-#this enum is defined here AND in track.gd
-enum TYPES {
-	Bool, Float, Res, Str, Vec2, Vec3, Vec4, 
-}
-
 #RUNTIME SIGNALS
 signal frameChanged
-
+signal stop
+signal play
 
 ##RUNTIME EXPORT VARS
 var speed = 1
@@ -22,6 +18,7 @@ var looping = false
 
 #EDITING EXPORT VARS
 export (String, FILE, "*.tscn, PackedScene") var defaultPreviewScene = ""
+var currentScene
 
 #INTERNAL VARS
 var position:float = 0
@@ -35,11 +32,12 @@ var trackMeta
 #INTERNAL EDITOR VARS
 var TrackScene = preload("Track.tscn")
 var TrackMetaScene = preload("TrackMeta.tscn")
+
 func _init():
 	pass
 	
 func _enter_tree():	
-	pass
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	#if there's no context, then we're in runtime, so hide the interface
 	if !debug or !Engine.editor_hint:
 		hide()
@@ -53,14 +51,25 @@ func _ready():
 		hide()		
 		
 	timeline = get_node("Timeline")
+	if !timeline.has_node("Playhead"):
+		var playhead = Playhead.new()
+		timeline.add_child(playhead)
+		playhead.owner = self
+		
+	if !timeline.has_node("SelectionController"):
+		var sc = SelectionController.new()
+		sc.name = "SelectionController"
+		timeline.add_child(sc)	
+		sc.owner = self
+		
 	trackMeta = get_node("TrackMeta")
 		
-	for child in timeline.get_children():		
-		if child is Track:
+	for child in timeline.tracks.get_children():		
+		if child.get_script().get_path().find("Track.gd") != -1:		
 			if !is_connected("frameChanged", child, "frameChanged"):
 				connect("frameChanged", child, "frameChanged")	
 	
-func togglePlay():	
+func togglePlay():		
 	if playing:
 		stop()
 	else:
@@ -72,9 +81,13 @@ func play(playSpeed=speed, start=position):
 	playing = true
 	speed = playSpeed
 	position = start
+	if start == duration:
+		position = 0
+	emit_signal("play")
 
 func stop():
 	playing = false
+	emit_signal("stop")
 	
 func _physics_process(delta):	
 	if !playing: 
@@ -83,6 +96,8 @@ func _physics_process(delta):
 	if !looping:
 		if speed > 0:
 			position = min(position, duration)
+			if position == duration:
+				stop()
 		else:
 			position = max(position, 0)
 	elif speed > 0:
@@ -94,13 +109,13 @@ func _physics_process(delta):
 	applyValues()
 
 func applyValues():
-	if !is_instance_valid(timeline):
+	if !is_instance_valid(timeline) or !is_instance_valid(timeline.tracks):
 		return
 	emit_signal("frameChanged")
 	return
 	
-	for track in timeline.get_children():	
-		if !track is Track:
+	for track in timeline.tracks.get_children():	
+		if track.get_script().get_path().find("Track.gd") == -1:		
 			continue
 		if getTrackObject(track) and getPropertyValue(track):			
 	
@@ -158,12 +173,13 @@ func getPropertyValue(track):
 	return value
 			
 func setDurationToLatestKeyframe():
-	if !is_instance_valid(timeline):			
+	if !is_instance_valid(timeline) or !is_instance_valid(timeline.tracks):			
 		return				
 	duration = 0		
-	for child in timeline.get_children():		
-		if child is Track:			
-			duration = max(duration, child.get_child(child.get_child_count()-1).time)						
+	for track in timeline.tracks.get_children():
+		if track.get_child_count() == 0: 
+			continue			
+		duration = max(duration, track.get_child(track.get_child_count()-1).time)						
 func play_backwards(anim):
 	play(-1, 1)
 
@@ -235,7 +251,7 @@ func _get_property_list():	# overridden function
 	})
 	
 	for track in get_children():
-		if track is Track:			
+		if track.get_script().get_path().find("Track.gd") != -1:		
 			property_list.append({
 				"name": "Tracks/" + track.name +"/obj",
 				"hint": PROPERTY_HINT_NONE,
@@ -266,12 +282,18 @@ func _get_property_list():	# overridden function
 
 
 func addTrack():
-	var ts = TrackScene.instance()	
+	var t = TrackScene.instance()	
 	var tm = TrackMetaScene.instance()
-	$Timeline.add_child(ts)	
-	$TrackMeta.add_child(tm)		
-	ts.owner = self
+	timeline.tracks.add_child(t)	
+	trackMeta.add_child(tm)	
+	t.owner = self
 	tm.owner = self
+	tm.track = get_path_to(t)
+	
+
+func removeTrack(meta):
+	get_node(meta.track).queue_free()
+	meta.queue_free()
 
 func setTime(newTime):
 	position = newTime

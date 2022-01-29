@@ -8,6 +8,7 @@ var start
 var end
 var color =  Color.cornflower #the color of the selectBox outline
 var sb
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		end += event.relative
@@ -16,10 +17,7 @@ func _input(event):
 	#On mouse up do the selection, deselcting-all first if neededl, and then delete this selectbox
 	if event is InputEventMouseButton && event.button_index==1 && !event.pressed:		
 		if !Input.is_key_pressed(KEY_SHIFT):
-			if !egs.selectionController.interrupted:
-				if get_tree().get_nodes_in_group("selected").size() > 0:		
-					get_tree().call_group("selectable", "deselect")					
-			get_tree().call_group("selectable", "drag_select", make_rect())		
+			get_tree().call_group("SelectionController", "selectBoxFinished", make_rect())			
 		queue_free()
 		
 		

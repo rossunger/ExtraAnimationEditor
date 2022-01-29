@@ -29,6 +29,8 @@ var closeButton:Button
 
 var small = false
 
+var dragXAccumulated = 0
+
 func _enter_tree():
 	if Engine.editor_hint:
 		_ready()
@@ -37,7 +39,6 @@ func _ready():
 	if has_node(resizeHandlePath) and !resizeHandle:
 		resizeHandle = get_node(resizeHandlePath)	
 		resizeHandle.connect("gui_input", self, "resize")	
-		
 		
 	if has_node(moveHandlePath) and !moveHandle:
 		moveHandle = get_node(moveHandlePath)	
@@ -97,8 +98,8 @@ func click(event:InputEvent):
 			if moving:
 				get_tree().call_group("draggable", "endMove")				
 		if event.button_index == 1 and event.is_pressed():			
-			if is_instance_valid(egs.selectionController):
-				egs.selectionController.interrupt()		
+			if get_tree().get_nodes_in_group("SelectionController").size()>0:
+				get_tree().call_group("SelectionController", "interrupt")		
 			if !get_tree().get_nodes_in_group("selected").has(getParent()):
 				if Input.is_key_pressed(KEY_SHIFT):
 					#ADD TO SELECTION:
@@ -108,6 +109,16 @@ func click(event:InputEvent):
 					#get_tree().call_group("selectable", "doSelect")
 				else:
 					get_tree().call_group("selectable", "select_one", getParent())
+			else:
+				if Input.is_key_pressed(KEY_SHIFT):
+					parent.get_node("Selectable").deselect()
+					if get_tree().get_nodes_in_group("selected").size() == 0:
+						TimelineEditor.deselect()
+			if Input.is_key_pressed(KEY_CONTROL):
+				for key in get_tree().get_nodes_in_group("selected"):
+					var newkey = key.duplicate()
+					key.get_parent().add_child(newkey)
+					newkey.get_node("Selectable").deselect()					
 			get_tree().call_group("draggable", "startMove")			
 		
 #called when you click on the resize handle
@@ -123,7 +134,7 @@ func resize(event):
 				else:
 					get_tree().call_group("selectable", "select_one", getParent())
 			get_tree().call_group("draggable", "startResizing")
-			egs.selectionController.interrupt()	#interrupt the selection controller because we're actually resizing, not selecting
+			get_tree().call_group("SelectionController", "interrupt")	#interrupt the selection controller because we're actually resizing, not selecting
 		#on Mouse Up...	
 		else:
 			get_tree().call_group("draggable", "endResizing")
@@ -150,27 +161,41 @@ func endMove():
 	moving = false
 	getParent().emit_signal("endMoveResize")
 
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		if resizing:		
 			if canResizeX:
 				getParent().rect_min_size.x = max(getParent().rect_min_size.x+event.relative.x, minWidth) 				
-			if canResizeY:
-				print("resizing Y")
+			if canResizeY:				
 				getParent().rect_min_size.y = max(getParent().rect_min_size.y+event.relative.y, minHeight) 
 			grow_parent_as_needed()		
 			validate_size()	
 		elif moving:
 			if canMoveX:
-				getParent().rect_position.x += event.relative.x				
+				getParent().rect_position.x += event.relative.x
+				return 
+					
+				print(parent.rect_position.x)			
+				var newX = event.position.x - parent.rect_position.x
+				if TimelineEditor.snap > 0:
+					newX = round(newX / TimelineEditor.zoom.x / TimelineEditor.snap) * TimelineEditor.snap * TimelineEditor.zoom.x
+				if getParent().rect_position.x != newX:					
+					getParent().rect_position.x = newX									
 			if canMoveY:
 				getParent().rect_position.y += event.relative.y
 			grow_parent_as_needed()
 			
-	if Input.is_key_pressed(KEY_DELETE):
-		if getParent().is_in_group("selected"):			
-			getParent().emit_signal("doRemove")
-			
+	if event is InputEventKey:				
+		if TimelineEditor.has_focus():									
+			if Input.is_key_pressed(KEY_DELETE):		
+				accept_event()
+				get_tree().call_group("selected", "emit_signal", "doRemove")
+				
+				#ToDo: Add nudge left/right keyboard actions...
+				#if Input.is_action_pressed()
+				return				
+		
 # As we move/resize, adjust the parent so that we are always completely inside our parent 
 # ie. push the parent's boundaries as needed
 # p.s. parent = this component's parent, and par is technically the grandparent

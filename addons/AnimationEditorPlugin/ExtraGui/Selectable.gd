@@ -31,31 +31,27 @@ func drag_select(box: Rect2):
 	if !is_visible_in_tree():
 		return
 	var r = Rect2(getParent().rect_global_position, getParent().rect_size)	
-	if box.intersects(r) && !r.encloses(box) && !is_grandparent_selected():				
+	if box.intersects(r) && !r.encloses(box):				
 		doSelect()
 
-# parent is the parent's parent... not the "selectable" node's parent
-func is_grandparent_selected():
-	if get_tree().get_nodes_in_group("selected").has(getParent().get_parent()):
-		return true
-	return false
 
 func doSelect():
 	getParent().add_to_group("selected")
 	selected = true
+	TimelineEditor.grab_focus()
 	TimelineEditor.selectionChanged(parent)
 	update()
 
-func deselect():	
-	selected = false
+func deselect():		
+	selected = false	
 	if getParent().is_in_group("selected"):
 		getParent().remove_from_group("selected")
+	if get_tree().get_nodes_in_group("selected").size() == 0:
+		TimelineEditor.selectionChanged(null)
 	update()
 
 func _draw():
 	if selected:
-		if is_grandparent_selected():
-			deselect()
 		var sb = StyleBoxFlat.new()
 		sb.border_color = Color.cornflower
 		sb.border_width_left = 2

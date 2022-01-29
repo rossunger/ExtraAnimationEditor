@@ -4,6 +4,18 @@ extends Control
 var dragging = false
 var minHeight = 36
 var resizeHandle
+export (String) var track #NODE PATH relative to the animation
+var nameLabel
+var trackOptionsDialogScene = preload("res://addons/AnimationEditorPlugin/TrackOptions.tscn")
+var trackOptionsDialog
+
+func _enter_tree():	
+	call_deferred("doInit")
+	
+func doInit():
+	nameLabel = $Label
+	name = owner.get_node(track).name
+	nameLabel.text = name
 
 func _gui_input(event):
 	return
@@ -27,5 +39,17 @@ func getResizeHandle():
 	return resizeHandle
 
 
-func _on_ToolButton_pressed():	
-	owner.showTrackOptions(get_index())
+func _on_ToolButton_pressed():		
+	trackOptionsDialog = trackOptionsDialogScene.instance()
+	var t = owner.get_node(track)
+	if is_instance_valid(t):
+		trackOptionsDialog.track = t
+		trackOptionsDialog.trackMeta = self
+	else:
+		print("ERROR: this track meta has no track")
+	get_viewport().add_child(trackOptionsDialog)
+	trackOptionsDialog.popup()	
+
+
+func _on_RemoveTrackButton_pressed():
+	owner.removeTrack(self)

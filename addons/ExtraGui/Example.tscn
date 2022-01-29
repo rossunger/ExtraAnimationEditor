@@ -1,16 +1,17 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://addons/ExtraGui/SelectionController.gd" type="Script" id=1]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/SelectionController.gd" type="Script" id=1]
 [ext_resource path="res://addons/ExtraGui/ToggleVisible.gd" type="Script" id=2]
 [ext_resource path="res://addons/ExtraGui/EnumDropdown.gd" type="Script" id=3]
 [ext_resource path="res://addons/ExtraGui/Scrollable.gd" type="Script" id=4]
-[ext_resource path="res://addons/ExtraGui/ExtraGui1.theme" type="Theme" id=5]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/ExtraGui1.theme" type="Theme" id=5]
 [ext_resource path="res://addons/ExtraGui/TabController.gd" type="Script" id=7]
 [ext_resource path="res://addons/ExtraGui/TabgroupButton.gd" type="Script" id=8]
 [ext_resource path="res://addons/ExtraGui/exampleRecursiveChildToBeAdded.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/ExtraGui/Undoable.gd" type="Script" id=11]
 [ext_resource path="res://addons/ExtraGui/ChildAdder.gd" type="Script" id=12]
 [ext_resource path="res://addons/ExtraGui/SaveController.gd" type="Script" id=13]
+
 
 
 [sub_resource type="StyleBoxEmpty" id=1]
