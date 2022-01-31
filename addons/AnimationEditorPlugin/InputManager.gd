@@ -213,13 +213,15 @@ func _input(event): # handleInput(event, timelineEditor):
 	var t = OS.get_system_time_msecs()
 	if abs(timelineEditor.lastKeyCommandTime - t) < 500:
 		return	
-		
+				
 	if not event is InputEventKey:
-		return
+		return	
+		
 	elif Input.is_key_pressed(KEY_SPACE):	
 		timelineEditor.animation.togglePlay()
 		timelineEditor.lastKeyCommandTime = OS.get_system_time_msecs()		
-	elif timelineEditor.get_global_rect().has_point(timelineEditor.get_global_mouse_position()):	
+	
+	elif true: # timelineEditor.get_global_rect().has_point(timelineEditor.get_global_mouse_position()):	
 		if Input.is_action_pressed("Delete"):					
 			timelineEditor.accept_event()
 			for key in get_tree().get_nodes_in_group("selected"):
@@ -286,11 +288,12 @@ func _input(event): # handleInput(event, timelineEditor):
 			timelineEditor.lastKeyCommandTime = OS.get_system_time_msecs()	
 			get_tree().call_group("Tracks", "validateKeyframeOrder")		
 		#ToDo: Add nudge left/right keyboard actions...
-		elif Input.is_action_just_pressed("NudgeLeft"):
+		elif Input.is_action_pressed("NudgeLeft"):
+			print("NUDGE LEFT")
 			for key in get_tree().get_nodes_in_group("selected"):
 				key.time -= 10/timelineEditor.zoom.x	
 		
-		elif Input.is_action_just_pressed("NudgeRight"):
+		elif Input.is_action_pressed("NudgeRight"):
 			for key in get_tree().get_nodes_in_group("selected"):
 				key.time += 10/timelineEditor.zoom.x	
 			
