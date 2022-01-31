@@ -10,35 +10,32 @@ func setValue(key):
 	hint_tooltip = ""
 	var track = key.get_parent()
 	
-	var control
-	if get_child_count() > 0:	
-		control = get_child(0)
-		if currentType != track.type:		
-			get_child(0).queue_free()		
-	if track.type == TYPES.Bool:
-		if not is_instance_valid(control):
-			control = CheckBox.new()	
-			add_child(control)		
-		control.pressed = bool(key.value)	
+	var control	
+	for child in get_children():		
+		child.queue_free()		
+	if track.type == TYPES.Bool:		
+		control = CheckBox.new()	
+		add_child(control)		
+		control.pressed = key.value
 	elif track.type in [TYPES.Float,TYPES.Str, TYPES.Vec2,TYPES.Vec3]:
-		if not is_instance_valid(control):
-			control = Label.new()	
-			add_child(control)		
+		control = Label.new()	
+		add_child(control)		
 		control.text = str(key.value)
 		hint_tooltip = control.text
 	elif track.type == TYPES.Res:			
-		if not is_instance_valid(control):
-			control = Button.new()
-			add_child(control)		
-			#Is resource displayed as a str of filepath?
-		pass
-	elif track.type == TYPES.Vec4:
-		if not control is ColorRect:
-			control = ColorRect.new()
-			add_child(control)		
-		control.color = key.value
-		control.rect_size = Vector2(40, 40)
+		control = Button.new()
+		add_child(control)		
+		#TO DO: implement resource picker
+		#Is resource displayed as a str of filepath?	
+	elif track.type == TYPES.Vec4:		
+		control = ColorRect.new()
+		add_child(control)	
+		if key.valid:
+			control.color = key.value
+			control.rect_size = Vector2(40, 40)
+			hint_tooltip = str(control.color)
 	currentType = track.type		
+	track.validateValueType(key.value)
 	
 func showSelector():
 	var	valuePicker = valuePickerScene.instance()

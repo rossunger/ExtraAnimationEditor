@@ -225,7 +225,6 @@ margin_left = 637.0
 margin_right = 741.0
 margin_bottom = 44.0
 text = "Float"
-items = [ "Bool", null, false, 0, null, "Float", null, false, 1, null, "Res", null, false, 2, null, "Str", null, false, 3, null, "Vec2", null, false, 4, null, "Vec3", null, false, 5, null, "Vec4", null, false, 6, null ]
 selected = 1
 script = ExtResource( 3 )
 __meta__ = {

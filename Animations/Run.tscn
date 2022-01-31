@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://addons/AnimationEditorPlugin/playhead.gd" type="Script" id=1]
 [ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=2]
@@ -11,7 +11,10 @@
 
 [sub_resource type="Curve" id=1]
 
+[sub_resource type="Curve" id=2]
+
 [node name="Run" type="HSplitContainer"]
+visible = false
 margin_top = 44.0
 margin_right = 1868.0
 margin_bottom = 250.0
@@ -25,8 +28,15 @@ __meta__ = {
 defaultPreviewScene = "res://DefaultAnimationContext.tscn"
 speed = 1
 AutoDuration = true
-Duration = 1.85
+Duration = 2.22
 looping = true
+autoPlay = false
+"Tracks/Reds Position/obj" = "./Polygon2D"
+"Tracks/Reds Position/prop" = "position"
+trackObjects = {
+}
+trackProperties = {
+}
 
 [node name="TrackMeta" type="VBoxContainer" parent="."]
 margin_right = 220.0
@@ -71,22 +81,22 @@ object = "./Polygon2D"
 property = "position"
 type = 4
 
-[node name="Keyframe0" parent="Timeline/Tracks/Reds Position" instance=ExtResource( 6 )]
+[node name="Keyframe2" parent="Timeline/Tracks/Reds Position" instance=ExtResource( 6 )]
+curve = SubResource( 1 )
 relative = true
 value = Vector2( 0, 0 )
-curve = SubResource( 1 )
 
-[node name="Keyframe1" parent="Timeline/Tracks/Reds Position" instance=ExtResource( 6 )]
-margin_left = 185.0
-margin_right = 205.0
-time = 1.85
+[node name="Keyframe0" parent="Timeline/Tracks/Reds Position" instance=ExtResource( 6 )]
+margin_left = 222.0
+margin_right = 242.0
+curve = SubResource( 2 )
+time = 2.22
 relative = true
-value = Vector2( 100, 100 )
-curve = SubResource( 1 )
+value = Vector2( 50, 50 )
 
 [node name="Playhead" type="ColorRect" parent="Timeline"]
-margin_left = 12.0
-margin_right = 13.0
+margin_left = 110.0
+margin_right = 111.0
 margin_bottom = 3000.0
 mouse_filter = 2
 color = Color( 1, 1, 1, 0.3 )

@@ -15,6 +15,7 @@ var autoDuration = true
 var playing = false
 var duration = 1 
 var looping = false
+var autoPlay = false
 
 #EDITING EXPORT VARS
 export (String, FILE, "*.tscn, PackedScene") var defaultPreviewScene = ""
@@ -32,14 +33,14 @@ var trackMeta
 #INTERNAL EDITOR VARS
 var TrackScene = preload("Track.tscn")
 var TrackMetaScene = preload("TrackMeta.tscn")
-
+var playheadScene = preload("Playhead.tscn")
 func _init():
 	pass
 	
 func _enter_tree():	
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	#if there's no context, then we're in runtime, so hide the interface
-	if !debug or !Engine.editor_hint:
+	if !debug or !Engine.editor_hint or !get_parent().get_parent() == TimelineEditor:
 		hide()
 	else:				
 		if not is_in_group("animations"):
@@ -49,10 +50,13 @@ func _enter_tree():
 func _ready():				
 	if !Engine.editor_hint and !debug:
 		hide()		
+	
+	if autoPlay:
+		play()
 		
 	timeline = get_node("Timeline")
 	if !timeline.has_node("Playhead"):
-		var playhead = Playhead.new()
+		var playhead = playheadScene.instance
 		timeline.add_child(playhead)
 		playhead.owner = self
 		
@@ -77,12 +81,18 @@ func togglePlay():
 			setDurationToLatestKeyframe()
 		play()
 		
-func play(playSpeed=speed, start=position):
+func play(playSpeed=speed, start=position, loop=looping):
 	playing = true
 	speed = playSpeed
 	position = start
-	if start == duration:
-		position = 0
+	looping = loop
+	setDurationToLatestKeyframe()
+	if speed>0:
+		if start == duration:
+			position = 0
+	else:
+		if start == 0:
+			position =duration
 	emit_signal("play")
 
 func stop():
@@ -106,41 +116,9 @@ func _physics_process(delta):
 	else:
 		if position+ delta * speed <= 0:
 			position = duration
-	applyValues()
-
-func applyValues():
-	if !is_instance_valid(timeline) or !is_instance_valid(timeline.tracks):
-		return
 	emit_signal("frameChanged")
-	return
-	
-	for track in timeline.tracks.get_children():	
-		if track.get_script().get_path().find("Track.gd") == -1:		
-			continue
-		if getTrackObject(track) and getPropertyValue(track):			
-	
-			var keys = track.findNearestKeyframes(position)
-					
-			if [TYPES.Bool, TYPES.Res].has(track.type):			
-				if position >= keys[1].time:				
-					setPropertyValue(track, keys[1].value)			
-				else:
-					setPropertyValue(track, keys[0].value)			
-			else:		
-				var weight = keys[0].curve.interpolate( (position - keys[0].time) / (keys[1].time - keys[0].time) )			
-				var value			
-				if keys[0].absolute:
-					if keys[1].absolute:					
-						value = lerp(keys[0].value, keys[1].value, weight)
-					else:
-						value = lerp(keys[0].value, keys[0].value + keys[1].value, weight)
-				else:
-					if keys[1].absolute:
-						value = lerp(keys[0].startingValue, keys[0].value, weight)
-					else:
-						value = lerp(keys[0].startingValue, keys[0].value + keys[1].value, weight)				
-				setPropertyValue(track, value)
 
+	
 func getTrackObject(track):
 	if !trackObjects.has(track.name):
 		return
@@ -172,18 +150,28 @@ func getPropertyValue(track):
 		value = value[a]
 	return value
 			
-func setDurationToLatestKeyframe():
-	if !is_instance_valid(timeline) or !is_instance_valid(timeline.tracks):			
-		return				
+func setDurationToLatestKeyframe():	
+	if !is_instance_valid(timeline):		
+		if has_node("Timeline"):
+			timeline = get_node("Timeline")
+		else:
+			print("No timeline")
+			return			
+	if !is_instance_valid(timeline.tracks):				
+		print("No tracks")	
+		return			
 	duration = 0		
+	print(timeline.tracks.get_child_count())
 	for track in timeline.tracks.get_children():
-		if track.get_child_count() == 0: 
+		if track.get_child_count() == 0: 			
 			continue			
-		duration = max(duration, track.get_child(track.get_child_count()-1).time)						
+		duration = max(duration, track.get_child(track.get_child_count()-1).time)			
+		
 func play_backwards(anim):
 	play(-1, 1)
 
 func _set(prop, value):
+	
 	#RUNTIME VARS	
 	if prop == "Duration":
 		duration = value		
@@ -197,12 +185,13 @@ func _set(prop, value):
 	
 	if prop.find("Tracks/") == -1:
 		return
-		
-	for track in get_children():
-		if prop == "Tracks/" + track.name + "/obj":
-			trackObjects[track.name] =  value
-		if prop == "Tracks/" + track.name + "/prop":
-			trackProperties[track.name] = value			
+			
+	if timeline and timeline.tracks:
+		for track in timeline.tracks.get_children():
+			if prop == "Tracks/" + track.name + "/obj":
+				track.object = value
+			if prop == "Tracks/" + track.name + "/prop":
+				track.property = value			
 	
 	
 func _get(prop):	
@@ -214,13 +203,12 @@ func _get(prop):
 		
 	if prop.find("Tracks/") == -1:
 		return
-	for track in get_children():
-		if prop == track.name + "/obj":			
-			if trackObjects.has(track.name):
-				return trackObjects[track.name]
-		if prop == track.name + "/prop":											
-			if trackProperties.has(track.name):
-				return trackProperties[track.name]		
+	if timeline and timeline.tracks:
+		for track in timeline.tracks.get_children():
+			if prop == "Tracks/" + track.name + "/obj":			
+				return track.object				
+			if prop == "Tracks/" + track.name + "/prop":											
+				return track.property
 	return
 	
 func _get_property_list():	# overridden function
@@ -249,35 +237,43 @@ func _get_property_list():	# overridden function
 		"type": TYPE_BOOL,	
 		"usage": PROPERTY_USAGE_DEFAULT			
 	})
+	property_list.append({
+		"name": "autoPlay",				
+		"type": TYPE_BOOL,	
+		"usage": PROPERTY_USAGE_DEFAULT			
+	})
 	
-	for track in get_children():
-		if track.get_script().get_path().find("Track.gd") != -1:		
-			property_list.append({
-				"name": "Tracks/" + track.name +"/obj",
-				"hint": PROPERTY_HINT_NONE,
-				"usage": PROPERTY_USAGE_DEFAULT,    	
-				"type": TYPE_NODE_PATH,
-				"hint_string": ""		
-			})
-			property_list.append({
-				"name": "Tracks/" + track.name +"/prop",
-				"hint": PROPERTY_HINT_NONE,
-				"usage": PROPERTY_USAGE_DEFAULT,    	
-				"type": TYPE_STRING,
-				"hint_string": ""		
-			})
-			property_list.append({
-				"name": "trackObjects",
-				"hint": PROPERTY_HINT_NONE,
-				"usage": PROPERTY_USAGE_STORAGE,    	
-				"type": TYPE_DICTIONARY,			
-			})
-			property_list.append({
-				"name": "trackProperties",
-				"hint": PROPERTY_HINT_NONE,
-				"usage": PROPERTY_USAGE_STORAGE,    	
-				"type": TYPE_DICTIONARY,			
-			})
+	if not is_instance_valid(timeline) and has_node("Timeline"):
+		timeline = get_node("Timeline")
+	if timeline and timeline.tracks:
+		for track in timeline.tracks.get_children():		
+			if track.get_script().get_path().find("Track.gd") != -1:		
+				property_list.append({
+					"name": "Tracks/" + track.name +"/obj",
+					"hint": PROPERTY_HINT_NONE,
+					"usage": PROPERTY_USAGE_DEFAULT,    	
+					"type": TYPE_NODE_PATH,
+					"hint_string": ""		
+				})
+				property_list.append({
+					"name": "Tracks/" + track.name +"/prop",
+					"hint": PROPERTY_HINT_NONE,
+					"usage": PROPERTY_USAGE_DEFAULT,    	
+					"type": TYPE_STRING,
+					"hint_string": ""		
+				})
+				property_list.append({
+					"name": "trackObjects",
+					"hint": PROPERTY_HINT_NONE,
+					"usage": PROPERTY_USAGE_STORAGE,    	
+					"type": TYPE_DICTIONARY,			
+				})
+				property_list.append({
+					"name": "trackProperties",
+					"hint": PROPERTY_HINT_NONE,
+					"usage": PROPERTY_USAGE_STORAGE,    	
+					"type": TYPE_DICTIONARY,			
+				})
 	return property_list
 
 

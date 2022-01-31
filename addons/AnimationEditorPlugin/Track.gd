@@ -12,12 +12,11 @@ var lastKeyframe
 var absoluteValueAtLastKeyframe
 var absoluteValueAtNextKeyframe
 var trackStartingValue
+var trackOriginalStartingValue
 var nextKeyframe
 var nextKeyframeTime = 0
 
 #EDITOR VARS
-var objectPickerDialog = preload("ObjectPicker.tscn")
-var propertyPickerDialog = preload("PropertyPicker.tscn")
 var dialog
 var canvas
 var KeyframeScene = preload("Keyframe.tscn")
@@ -26,115 +25,169 @@ var keyframesAreDragging = false
 ##### TO DO: first keyframe should default to time 0, with a relative value 0...
 
 func _enter_tree():
-	if !is_in_group("draggable"):
-		add_to_group("draggable")
+	if !is_in_group("Tracks"):
+		add_to_group("Tracks")
 
-func reorderKeyByTime(key):
+func _ready():	
+	var hasStartingKey = false
+	var hasEndingKey = false
 	for child in get_children():
-		if child == key:
-			continue
-		if child.time < key.time:
-			key.move_child(child.get_index())
-
-func frameChanged(position = TimelineEditor.animation.position):
-	if not is_instance_valid(TimelineEditor.animation.currentScene):
+		if child.time == 0:
+			hasStartingKey = true				
+	if not hasStartingKey:
+		addKeyframe(0)
+		
+func frameChanged(position = owner.position): # #TimelineEditor.animation.position):
+	if Engine.editor_hint and not is_instance_valid(TimelineEditor.animation.currentScene):
 		return
+	
+	#TO DO: implement a reset button that resets the trackStartingValue to original
+	#if !trackOriginalStartingValue:		
+	#	trackOriginalStartingValue = obj[property]
 
+	var lastChildIndex = get_child_count()-1
+
+	#If only one keyframe, then set the value and stop.
+	if owner.duration == 0:		
+		lastKeyframe = get_child(0)
+		nextKeyframe = get_child(0)
+		if !lastKeyframe.relative:
+			applyKeyframeValues(0)
+		owner.stop()
+		return
+		
 	#Object is a NodePath. When playing, make sure we've got object and put it in Obj
 	if not is_instance_valid(obj):
 		if Engine.editor_hint:
-			obj = TimelineEditor.animation.currentScene.get_node(object)					
-			print("setting obj: ", obj.get_path())
+			obj = TimelineEditor.animation.currentScene.get_node(object)								
 		else:	
-			print("not editor?")						
-			#implement runtime animation... who is the root?
+			if owner.owner.has_node(object):
+				obj = owner.owner.get_node(object)				
+			else:
+				print("error: ", name, " can't find it's object: ", object, " doesnt exist in relation to this animation's owner")
 			pass
 	
+	#Figure out if we're playing forwards or backwards
 	var directionModifier
 	if owner.speed < 0:
 		directionModifier = -1
 	else:
 		directionModifier = 1
-	#Record the starting value at 0 for use with "relative" keyframes
-
+	
+	#Record the starting value at 0 for use with "relative" keyframes	
 	var shouldUpdateStartingValue
 	if directionModifier == -1:
-		shouldUpdateStartingValue = position > owner.duration - 0.1
+		shouldUpdateStartingValue = position == owner.duration	
 	else:
-		shouldUpdateStartingValue = position < 0.1
-	if shouldUpdateStartingValue:
-		print("updating startvalue: ", obj[property])
+		shouldUpdateStartingValue = position == 0
+	if !validateValueType(trackStartingValue):
+		shouldUpdateStartingValue = true
+	
+	if shouldUpdateStartingValue:		
 		trackStartingValue = obj[property]
 
 	var needToUpdateKeyframes
-	#Check if playing forwards or backwards
-	if owner.speed < 0:
-		needToUpdateKeyframes = nextKeyframeTime > position
+	
+	#Check if we've reached the next keyframe in the direction of playback
+	if directionModifier < 0:
+		needToUpdateKeyframes = shouldUpdateStartingValue or nextKeyframeTime > position
 	else:
-		needToUpdateKeyframes = nextKeyframeTime < position
+		needToUpdateKeyframes = shouldUpdateStartingValue or nextKeyframeTime < position	
 
-	#if the keyframe has changed...
-	if needToUpdateKeyframes:
-		for key in get_children():		
-			if !key.is_in_group("Keyframe"):
-				continue
-			var foundTheNextKey 			
-			if owner.speed < 0:
-				foundTheNextKey = key.time < position and key.get_index() < (get_child_count()-1)
-			else:
-				foundTheNextKey = key.time > position and key.get_index() > 0		
+	#if we've moved to the next keyframe (+ other safety check)
+	if needToUpdateKeyframes or not is_instance_valid(nextKeyframe) or not is_instance_valid(lastKeyframe):		
+		#let's assume there's only 2 keys to start with
+		if directionModifier < 0:
+			lastKeyframe = get_child(lastChildIndex)
+			nextKeyframe = get_child(0)
+		else:
+			lastKeyframe = get_child(0)
+			nextKeyframe = get_child(lastChildIndex)
+		nextKeyframeTime = nextKeyframe.time		
+		#if there's more than two keyframes, then it's more complicated...
+		if lastChildIndex !=1:							
+			#Let's go over each key (which should be siblings in chronological order)
+			for i in lastChildIndex:		
+				var key				
+				var foundTheNextKey 			
+				if owner.speed < 0:
+					key = get_child(lastChildIndex - i)
+					foundTheNextKey = key.time < position or key.get_index() == 0 
+				else:
+					key = get_child(i)
+					foundTheNextKey = key.time > position or key.get_index() == lastChildIndex 
 			
-			if foundTheNextKey:				
-				var previousChild = get_child(key.get_index() - directionModifier)
-				if !previousChild.is_in_group("keyframe"):
-					continue
-				if !lastKeyframe == previousChild:			
+				if foundTheNextKey:				
+					var previousChild
+					var prevChildIndex = key.get_index() - directionModifier
+					if prevChildIndex >= 0 and prevChildIndex <= lastChildIndex:
+						previousChild = get_child(prevChildIndex)						
+					else:
+						previousChild = key
+																
 					lastKeyframe = previousChild
 					nextKeyframe = key
-					nextKeyframeTime = key.time
-					absoluteValueAtLastKeyframe = lastKeyframe.value
-					absoluteValueAtNextKeyframe = nextKeyframe.value
-					break
-	
-		if type in [TYPES.Bool, TYPES.Float, TYPES.Vec2, TYPES.Vec3, TYPES.Vec4] and nextKeyframe.relative:
-			print("Relative. TSV: " , trackStartingValue ,". AVALK: ",absoluteValueAtLastKeyframe, ". AVANK: ", absoluteValueAtNextKeyframe )
-			var dif
+					nextKeyframeTime = key.time							
+						
+		if not is_instance_valid(lastKeyframe) or not is_instance_valid(nextKeyframe):
+			print("Error: lastkeyframe or nextkeyframe doesnt exist when it should")
+			return
+			
+		absoluteValueAtLastKeyframe = lastKeyframe.value
+		absoluteValueAtNextKeyframe = nextKeyframe.value
+			
+		if type in [TYPES.Bool, TYPES.Float, TYPES.Vec2, TYPES.Vec3, TYPES.Vec4] and nextKeyframe.relative:			
+			#init delta as the correct type
+			var delta
 			if type == TYPES.Bool:
-				dif = false
-			if type == TYPES.float:
-				dif = 0
-			if type == TYPES.Vec2:
-				dif = Vector2(0,0)
-			if type == TYPES.Vec3:
-				dif = Vector3(0,0,0)
-			if type == TYPES.Vec4:
-				dif = Color(1,1,1,1)
+				delta = false
+			elif type == TYPES.Float:
+				delta = 0
+			elif type == TYPES.Vec2:
+				delta = Vector2(0,0)
+			elif type == TYPES.Vec3:
+				delta = Vector3(0,0,0)
+			elif type == TYPES.Vec4:
+				delta = Color(1,1,1,1)
 			var k = lastKeyframe
 			while k.relative:		
 				var reachedEnd
 				if directionModifier == 1:	
 					reachedEnd = k.get_index() == 0
 				else:
-					reachedEnd = k.get_index() == get_child_count()-1
+					reachedEnd = k.get_index() == lastChildIndex
 				if reachedEnd:
 					if type == TYPES.Bool:
-						dif = !trackStartingValue
+						delta = !trackStartingValue
 					else:
-						dif += trackStartingValue
+						delta += trackStartingValue
 					break
 				if type == TYPES.Bool:
-					dif = !k.value
+					delta = !k.value
 				else:
-					dif += k.value
+					delta += k.value
 				k = get_child(k.get_index() - directionModifier)
 				
-			if type == TYPES.Bool and dif:
+			if type == TYPES.Bool and delta:
 				absoluteValueAtLastKeyframe = !k.value 
-				absoluteValueAtNextKeyframe = dif 
-			else:
-				absoluteValueAtLastKeyframe = k.value + dif
-				absoluteValueAtNextKeyframe = dif 
-		
+				absoluteValueAtNextKeyframe = delta
+			else:								
+				absoluteValueAtLastKeyframe = k.value + delta
+				absoluteValueAtNextKeyframe = k.value + delta + nextKeyframe.value
+	
+	#print(owner.position, " : ", owner.position - lastKeyframe.time, nextKeyframe.time - lastKeyframe.time)
+	#print("Relative. TSV: " , trackStartingValue ,". AVALK: ",absoluteValueAtLastKeyframe, ". AVANK: ", absoluteValueAtNextKeyframe )
+	var lerpWeight
+	if nextKeyframe.time - lastKeyframe.time == 0:		
+		print("ERROR: two keyframes at the same time position")	
+		return
+	if owner.position - lastKeyframe.time == 0:
+		lerpWeight = 0
+	else:
+		lerpWeight = clamp( (owner.position - lastKeyframe.time) / (nextKeyframe.time - lastKeyframe.time), 0,1)	
+	applyKeyframeValues(lerpWeight)	
+	
+func applyKeyframeValues(lerpWeight):
 	#SET THE VALUES
 	if type == TYPES.Bool:
 		if lastKeyframe.value is bool:
@@ -146,9 +199,6 @@ func frameChanged(position = TimelineEditor.animation.position):
 				return
 		else:
 			print("last key should be type Bool, but it is: ", lastKeyframe.value, " : type: ", typeof(lastKeyframe.value))			
-					
-	
-	var lerpWeight = clamp( (owner.position - lastKeyframe.time) / (nextKeyframe.time - lastKeyframe.time), 0,1)	
 	
 	if type == TYPES.Float:
 		if lastKeyframe.value is float:			
@@ -157,16 +207,34 @@ func frameChanged(position = TimelineEditor.animation.position):
 		else:
 			print("last key should be type Float, but it is: ", lastKeyframe.value, " : type: ", typeof(lastKeyframe.value))					
 	if type == TYPES.Vec2:
-		if lastKeyframe.value is Vector2:
+		if lastKeyframe.value is Vector2:			
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)			
 		else:
 			print("last key should be type Vec2, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
-			
+	if type == TYPES.Vec3:
+		if lastKeyframe.value is Vector3:						
+			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
+		else:
+			print("last key should be type Vec3, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
+
+	if type == TYPES.Vec4:
+		if lastKeyframe.value is Color:						
+			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
+		else:
+			print("last key should be type Vec4, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
+
+	if type == TYPES.Str:
+		if lastKeyframe.value is Color:						
+			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
+		else:
+			print("last key should be type Vec4, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
+
+	#TO DO:
+	#implement str, and res... also reference to an object's param?
+
 func findNearestKeyframes(time) -> Array:
 	for i in get_child_count():
 		var child = get_child(i)
-		if !child.is_in_group("keyframe"):
-			continue
 		if child.time > time and i > 0:
 			var previousChild = get_child(i-1)
 			if !previousChild.is_in_group("keyframe"):
@@ -174,41 +242,6 @@ func findNearestKeyframes(time) -> Array:
 			return [get_child(i-1), get_child(i)]				
 	var last = get_child( max(0, get_child_count()-1))
 	return [last, last]
-	
-func select_from_context(what = "object"):
-	if !canvas:
-		canvas = CanvasLayer.new()
-		canvas.layer = 20
-	owner.add_child(canvas)
-	
-	if what == "property":		
-		dialog = propertyPickerDialog.instance()
-		dialog.connect("tree_exiting", self, "prop_selected")
-		#dialog.context = aes.previewContext.instance().get_node(object)
-	elif what == "object":
-		dialog = objectPickerDialog.instance()
-		dialog.connect("tree_exiting", self, "obj_selected")
-		#dialog.context = aes.previewContext
-	canvas.add_child(dialog)
-	dialog.set_anchors_and_margins_preset(Control.PRESET_WIDE)	
-	dialog.popup()
-
-func obj_selected():	
-	#remove_child(canvas)
-	if dialog.selectedObject:
-		object = dialog.selectedObject
-		var button = find_node("ObjectButton")
-		button.text = object
-		button.hint_tooltip = object		
-
-func prop_selected():
-	#remove_child(canvas)
-	if dialog.selectedProperty:
-		property = dialog.selectedProperty
-		var button = find_node("PropertyButton")
-		button.text = property
-		button.hint_tooltip = property
-
 
 func _get_property_list():
 	var property_list = []
@@ -220,41 +253,134 @@ func _get_property_list():
 		"hint_string": TYPES
 
 	})		
-	
 	return property_list
-
-func _gui_input(event):
-	if event is InputEventMouseButton:
-		if event.doubleclick:				
-			if event.control:
-				#SELECT ALL:
-				get_tree().call_group("SelectionController", "interrupt")
-				for key in get_children():
-					key.get_node("Selectable").doSelect()	
-				print("track stealing doubleclick")				
-				accept_event()
-				return
-								
-			var k = KeyframeScene.instance()
-			k.rect_position.x = event.position.x
-			add_child(k)	
-			k.owner = owner #get_editor_interface().get_edited_scene_root()	
+	
+func _input(event):
+	if event is InputEventMouse and event.button_mask == 1:			
+		if get_global_rect().has_point(event.position):			
+			TimelineEditor.focusedTrack = self			
+			if event is InputEventMouseButton and event.doubleclick:				
+				if event.control:
+					#SELECT ALL:
+					get_tree().call_group("SelectionController", "interrupt")
+					for key in get_children():
+						key.doSelect()					
+					accept_event()
+				else:
+					var x = (event.position.x-rect_global_position.x) / TimelineEditor.zoom.x -  TimelineEditor.scroll.x					
+					#print(event.position.x-rect_global_position.x)
+					addKeyframe(max(0, x))					
+			
 			#for child in k.get_children():
 			#	child.owner = owner
-		elif event.button_index == 1 and event.is_pressed():			
-			#owner.setTime(event.position.x / TimelineEditor.zoom.x) #.zoom.x ) #TODO: fix magic number...
-			owner.applyValues()
-		elif keyframesAreDragging and event.button_index == 1 and !event.is_pressed():			
-			get_tree().call_group("selected", "reparent", self)
-	#if event is InputEventMouseMotion:	
-		#print("name is dragging: ", keyframesAreDragging)
-		#if keyframesAreDragging:
-		#	get_tree().call_group("selected", "reparent", self)
-		
-func startMove():
-	keyframesAreDragging = true
-	#print("starting drag for ", name)
 
-func endMove():	
-	keyframesAreDragging = false
-	#print("end drag for ", name)
+func _gui_input(event):
+	if event is InputEventMouseButton:		
+		if event.button_index == 1 and event.is_pressed():			
+			#owner.setTime(event.position.x / TimelineEditor.zoom.x) #.zoom.x ) #TODO: fix magic number...
+			owner.emit_signal("frameChanged")		
+
+func addKeyframe(time, value=null, relative = false, curve= null):		
+	var k = KeyframeScene.instance()				
+	if value == null:
+		setDefaultKeyValue(k)
+	else:
+		k.value = value	
+	k.relative = relative	
+	k.time = time	
+	if curve:
+		k.curve = curve
+	add_child(k)
+	k.owner = owner #get_editor_interface().get_edited_scene_root()	
+	k.call_deferred("setXFromTime")
+		
+	validateKeyframeOrder()
+	return k
+
+func setDefaultKeyValue(k):
+	if type == TYPES.Bool:
+		k.value = false
+		k.relative = true
+	if type == TYPES.Float:
+		k.value = 0
+		k.relative = true
+	if type == TYPES.Vec2:		
+		k.value = Vector2(0,0)
+		k.relative = true
+	if type == TYPES.Vec3:
+		k.value = Vector3(0,0,0)
+		k.relative = true
+	if type == TYPES.Vec4:
+		k.value = Color(0,0,0,0)
+		k.relative = true
+	if type == TYPES.Str:
+		k.value = ""
+		
+func validateValueType(value):
+	if type == TYPES.Bool:
+		if typeof(value) == TYPE_BOOL:
+			return true
+		else:
+			return false
+	if type == TYPES.Float:
+		if typeof(value) == TYPE_REAL or typeof(value) == TYPE_INT:
+			return true
+		else:			
+			return false
+	if type == TYPES.Vec2:
+		if typeof(value) == TYPE_VECTOR2:
+			return true
+		else:
+			return false
+	if type == TYPES.Vec3:
+		if typeof(value) == TYPE_VECTOR3:
+			return true
+		else:
+			return false
+	if type == TYPES.Vec4:
+		if typeof(value) == TYPE_COLOR:
+			return true
+		else:
+			return false
+	if type == TYPES.Str:
+		if typeof(value) == TYPE_STRING:
+			return true
+		else:
+			return false
+
+#This function makes sure that keyframes are in
+#chronological order, and that no 2 keys overlap
+func validateKeyframeOrder():	
+	var lastKeyIndex = 0	
+	var keys = get_children()
+	for i in keys.size():
+		if i == lastKeyIndex:
+			continue
+		var j = i
+		while j >0 and keys[i].time <= keys[j-1].time:		
+			if keys[i].time == keys[j-1].time:	
+				keys[j-1].time += TimelineEditor.snap
+			j -= 1
+		move_child(keys[i], j)		
+		
+	#UNIT TESTING this function:	
+	#var children = get_children()
+	#for i in get_child_count()-2:	#
+	#	if children(i+1).time <= children(i).time:
+	#		return false
+	#return true	
+
+func reorderKeyByTime(key):
+	for child in get_children():
+		if child == key:
+			continue
+		if child.time > key.time:
+			move_child(key, child.get_index())
+
+func getKeyframeAtTime(time, keyframeToIgnore = null):
+	for child in get_children():
+		if child.time == time and child != keyframeToIgnore:
+			return child
+
+
+	

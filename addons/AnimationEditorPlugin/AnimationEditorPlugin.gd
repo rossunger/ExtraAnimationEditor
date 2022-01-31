@@ -10,11 +10,16 @@ var dragStartX = null
 var drawGrid = false
 var timelineEditor
 var timelineEditorParent
+var timelineButton
+var debug
+	
+
 	
 var previewContainer = Control.new()
 var contextCanvas
 
 var previousMainScreen = null
+
 
 #var objectSelectorScene = preload("res://addons/AnimationEditorPlugin/ObjectPicker.tscn")
 #var propertySelectorScene = preload("res://addons/AnimationEditorPlugin/PropertyPicker.tscn")
@@ -26,26 +31,39 @@ func has_main_screen():
 func get_plugin_name():
 	return "Animation"
 
-func _enter_tree():
+func _enter_tree():	
+		
 	##REGISTER MAIN SCREEN
 	get_editor_interface().get_editor_viewport().add_child(previewContainer)	
 	if !is_in_group("AnimationEditorPlugin"):
 		add_to_group("AnimationEditorPlugin")	
 	
 	add_autoload_singleton("TimelineEditor", "res://addons/AnimationEditorPlugin/TimelineEditor.tscn")	
+	#add_autoload_singleton("debug", "res://addons/AnimationEditorPlugin/DebugPanel.tscn")	
+	add_autoload_singleton("inputManager", "res://addons/AnimationEditorPlugin/InputManager.gd")	
+	
+	
 	#call_deferred("initTimeline")
 	
 	
 func initTimeline(timeline):
-	if is_instance_valid(timelineEditor):
+	if is_instance_valid(timelineEditor):		
 		return
 	timelineEditor = timeline
 	timelineEditorParent = timelineEditor.get_parent()
 	timelineEditorParent.remove_child(timelineEditor)	
-	add_control_to_bottom_panel(timelineEditor, "Timeline")
-	timelineEditor.rect_position = Vector2(0,0)	
+	timelineButton = add_control_to_bottom_panel(timelineEditor, "Timeline")
+	timelineEditor.rect_position = Vector2(0,0)		
 	
-func _exit_tree():
+func initDebug(who):
+	if is_instance_valid(debug):
+		return
+	debug = who
+	debug.get_parent().remove_child(debug)	
+	add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_UL, debug)
+	debug.show()
+	
+func _exit_tree():		
 	#UNREGISTER MAIN SCREEN
 	previewContainer.queue_free()	
 			
@@ -56,6 +74,14 @@ func _exit_tree():
 		remove_autoload_singleton("TimelineEditor")
 	else:
 		print("NO TIMELINE EDITOR")
+		
+	if is_instance_valid(debug):		
+		remove_control_from_docks(debug)	
+		debug.add_child(debug)
+		remove_autoload_singleton("debug")
+	
+	remove_autoload_singleton("inputManager")
+		
 func make_visible(visible: bool) -> void:
 	if is_instance_valid(previewContainer):		
 		previewContainer.show()
@@ -68,13 +94,13 @@ func handles(object: Object) -> bool:
 		if timelineEditor.handleSelection(selection[0]):			
 			var s = get_current_main_screen_name() 
 			if s != "Animation": previousMainScreen = s
-			get_editor_interface().call_deferred("set_main_screen_editor", "Animation")
-			
+			get_editor_interface().call_deferred("set_main_screen_editor", "Animation")			
+			timelineButton.pressed = true
 			#LOAD ANIMATION DATA
 			currentAnimation = selection[0]		
 			timelineEditor.setAnimation(currentAnimation)					
-			if File.new().file_exists(currentAnimation.defaultPreviewScene):
-				loadPreviewFromFile(currentAnimation.defaultPreviewScene)				
+			if File.new().file_exists(timelineEditor.animation.defaultPreviewScene):
+				loadPreviewFromFile(timelineEditor.animation.defaultPreviewScene)
 			else:
 				print("context file doesn't exist: ", currentAnimation.name, " : ", currentAnimation.defaultPreviewScene)
 			return true	
@@ -128,6 +154,7 @@ func loadPreviewFromFile(path):
 	loadPreview(newScene)
 	timelineEditor.previewContextChanged(path)
 
+#I dont think we do this anymore...
 func loadPreviewFromScene(obj):	
 	var p = PackedScene.new()
 	p.pack(obj)
@@ -148,11 +175,6 @@ func getRect(node):
 
 func getZoom(node):
 	return node.get_viewport_transform().get_scale() * node.get_canvas_transform().get_scale()
-
-func selectKeyframes(keys):
-	get_editor_interface().get_selection().clear()
-	for key in keys:
-		get_editor_interface().get_selection().add_node(key)
 
 func editKeyframe(data):
 	if "time" in data:		

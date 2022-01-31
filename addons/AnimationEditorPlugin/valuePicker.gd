@@ -8,6 +8,7 @@ onready var parent = $Modal
 
 func _exit_tree():
 	updateKeyframeValues()
+	queue_free()
 
 func updateKeyframeValues():	
 	var prop

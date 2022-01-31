@@ -1,0 +1,137 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraAnimation.gd" type="Script" id=1]
+[ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=2]
+[ext_resource path="res://addons/AnimationEditorPlugin/TrackMetaContainer.gd" type="Script" id=3]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/ExtraGui1.theme" type="Theme" id=4]
+[ext_resource path="res://addons/AnimationEditorPlugin/TrackMeta.tscn" type="PackedScene" id=5]
+[ext_resource path="res://addons/AnimationEditorPlugin/Track.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/AnimationEditorPlugin/Track.gd" type="Script" id=7]
+[ext_resource path="res://addons/AnimationEditorPlugin/keyframe.gd" type="Script" id=8]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/SelectionController.gd" type="Script" id=9]
+[ext_resource path="res://addons/AnimationEditorPlugin/playhead.gd" type="Script" id=10]
+[ext_resource path="res://addons/AnimationEditorPlugin/Keyframe.tscn" type="PackedScene" id=11]
+[ext_resource path="res://addons/AnimationEditorPlugin/TrackMeta.gd" type="Script" id=12]
+
+[sub_resource type="Curve" id=3]
+
+[sub_resource type="Curve" id=1]
+
+[node name="NewAnimation" type="HSplitContainer"]
+margin_top = 44.0
+margin_right = 1934.0
+margin_bottom = 250.0
+mouse_filter = 1
+size_flags_vertical = 3
+split_offset = 104
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+defaultPreviewScene = "res://DefaultAnimationContext.tscn"
+speed = 1.5
+AutoDuration = true
+Duration = 4.75
+looping = true
+autoPlay = false
+Tracks/Track/obj = "./Polygon2D"
+Tracks/Track/prop = "color"
+trackObjects = {
+}
+trackProperties = {
+}
+
+[node name="TrackMeta" type="VBoxContainer" parent="."]
+margin_right = 224.0
+margin_bottom = 206.0
+rect_min_size = Vector2( 120, 0 )
+rect_clip_content = true
+mouse_filter = 0
+custom_constants/separation = 5
+script = ExtResource( 3 )
+
+[node name="Track" type="Control" parent="TrackMeta" instance=ExtResource( 5 )]
+margin_right = 224.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 36 )
+rect_pivot_offset = Vector2( -478, -234 )
+theme = ExtResource( 4 )
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+track = NodePath("Timeline/Tracks/Track")
+
+[node name="Timeline" type="Control" parent="."]
+margin_left = 232.0
+margin_right = 1934.0
+margin_bottom = 206.0
+rect_min_size = Vector2( 200, 0 )
+rect_clip_content = true
+mouse_filter = 1
+script = ExtResource( 2 )
+
+[node name="Tracks" type="VBoxContainer" parent="Timeline"]
+margin_top = 5.0
+margin_right = 1540.0
+margin_bottom = 5.0
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Track" type="ColorRect" parent="Timeline/Tracks" instance=ExtResource( 6 )]
+margin_right = 1540.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+color = Color( 1, 1, 1, 0.0392157 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+type = 6
+object = "./Polygon2D"
+property = "color"
+
+[node name="Keyframe2" type="ColorRect" parent="Timeline/Tracks/Track" instance=ExtResource( 11 )]
+margin_top = 5.0
+margin_right = 20.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 20, 20 )
+mouse_filter = 1
+color = Color( 0.713726, 0.713726, 0.713726, 1 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+time = 0.0
+value = Color( 0.47168, 0.133121, 0.133121, 1 )
+curve = SubResource( 3 )
+
+[node name="Keyframe1" type="ColorRect" parent="Timeline/Tracks/Track" instance=ExtResource( 11 )]
+margin_left = 300.0
+margin_top = 5.0
+margin_right = 320.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 20, 20 )
+mouse_filter = 1
+color = Color( 0.713726, 0.713726, 0.713726, 1 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+time = 3.0
+value = Color( 0.39969, 0.749531, 0.750977, 1 )
+curve = SubResource( 1 )
+
+[node name="Playhead" type="ColorRect" parent="Timeline"]
+margin_left = 16.0
+margin_right = 17.0
+margin_bottom = 3000.0
+mouse_filter = 2
+color = Color( 1, 1, 1, 0.3 )
+script = ExtResource( 10 )
+
+[node name="SelectionController" type="Node" parent="Timeline"]
+script = ExtResource( 9 )

@@ -14,25 +14,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/AnimationEditorPlugin/AnimationController.gd"
 }, {
-"base": "Control",
-"class": "ChildAdder",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/ChildAdder.gd"
-}, {
 "base": "GraphNode",
 "class": "CommonNode",
 "language": "GDScript",
 "path": "res://addons/project_map/pm_common_node.gd"
-}, {
-"base": "Control",
-"class": "Draggable",
-"language": "GDScript",
-"path": "res://addons/AnimationEditorPlugin/ExtraGui/Draggable.gd"
-}, {
-"base": "OptionButton",
-"class": "EnumDropdown",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/EnumDropdown.gd"
 }, {
 "base": "Control",
 "class": "ExtraAnimation",
@@ -55,36 +40,6 @@ _global_script_classes=[ {
 "path": "res://addons/AnimationEditorPlugin/playhead.gd"
 }, {
 "base": "Control",
-"class": "RemoteHide",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/RemoteHide.gd"
-}, {
-"base": "Node",
-"class": "Renameable",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/Renameable.gd"
-}, {
-"base": "Node",
-"class": "SaveController",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/SaveController.gd"
-}, {
-"base": "Node",
-"class": "Saveable",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/Saveable.gd"
-}, {
-"base": "Control",
-"class": "Scrollable",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/Scrollable.gd"
-}, {
-"base": "LineEdit",
-"class": "SearchBox",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/SearchBox.gd"
-}, {
-"base": "Control",
 "class": "SelectBox",
 "language": "GDScript",
 "path": "res://addons/AnimationEditorPlugin/ExtraGui/SelectBox.gd"
@@ -99,67 +54,28 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/AnimationEditorPlugin/ExtraGui/SelectionController.gd"
 }, {
-"base": "Control",
-"class": "SplashAndFade",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/SplashAndFade.gd"
-}, {
 "base": "Reference",
 "class": "TYPES",
 "language": "GDScript",
 "path": "res://addons/AnimationEditorPlugin/TYPES.gd"
 }, {
 "base": "Control",
-"class": "TabController",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/TabController.gd"
-}, {
-"base": "Button",
-"class": "TabgroupButton",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/TabgroupButton.gd"
-}, {
-"base": "Button",
-"class": "ToggleVisible",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/ToggleVisible.gd"
-}, {
-"base": "Control",
 "class": "Track",
 "language": "GDScript",
 "path": "res://addons/AnimationEditorPlugin/Track.gd"
-}, {
-"base": "Control",
-"class": "Undoable",
-"language": "GDScript",
-"path": "res://addons/ExtraGui/Undoable.gd"
 } ]
 _global_script_class_icons={
 "AnimationController": "",
-"ChildAdder": "",
 "CommonNode": "",
-"Draggable": "res://addons/AnimationEditorPlugin/ExtraGui/move_icon.png",
-"EnumDropdown": "",
 "ExtraAnimation": "",
 "Keyframe": "",
 "OpacityButton": "",
 "Playhead": "",
-"RemoteHide": "",
-"Renameable": "",
-"SaveController": "",
-"Saveable": "",
-"Scrollable": "",
-"SearchBox": "",
 "SelectBox": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
 "Selectable": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
 "SelectionController": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
-"SplashAndFade": "",
 "TYPES": "",
-"TabController": "",
-"TabgroupButton": "",
-"ToggleVisible": "",
-"Track": "",
-"Undoable": ""
+"Track": ""
 }
 
 [application]
@@ -170,8 +86,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-egs="*res://addons/ExtraGui/extraGuiSingleton.gd"
 TimelineEditor="*res://addons/AnimationEditorPlugin/TimelineEditor.tscn"
+inputManager="*res://addons/AnimationEditorPlugin/InputManager.gd"
 
 [display]
 
@@ -181,7 +97,7 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/ExtraGui/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg", "res://addons/project_map/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg", "res://addons/project_map/plugin.cfg" )
 
 [gui]
 

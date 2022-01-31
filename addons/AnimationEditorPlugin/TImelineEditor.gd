@@ -8,7 +8,7 @@ signal zoomChanged
 signal animationChanged
 
 var grid = true		
-var snap = 0
+var snap = 0.25
 var zoom = Vector2(100,1)
 var scroll = Vector2(0,0)
 var offset = Vector2(-12,-12)
@@ -18,20 +18,37 @@ var trackContainer = null
 var animation
 
 #STATUS BAR
+onready var KeyframeData = $VBoxContainer/StatusBarBackground/KeyframeData
 onready var keyframeTime = $VBoxContainer/StatusBarBackground/KeyframeData/KeyframeTime
-onready var animationSpeed = $VBoxContainer/StatusBarBackground/AnimationSettings/Control/AnimationSpeed
-onready var loopButton = $VBoxContainer/StatusBarBackground/AnimationSettings/LoopButton
 onready var keyframeValue = $VBoxContainer/StatusBarBackground/KeyframeData/KeyframeValue
 onready var keyframeRelative = $VBoxContainer/StatusBarBackground/KeyframeData/KeyframeRelative
+
+onready var animationSpeed = $VBoxContainer/StatusBarBackground/AnimationSettings/Control/AnimationSpeed
+onready var loopButton = $VBoxContainer/StatusBarBackground/AnimationSettings/LoopButton
+onready var autoPlayButton = $VBoxContainer/StatusBarBackground/AnimationSettings/AutoPlayButton
+onready var previewContextLabel = $VBoxContainer/StatusBarBackground/AnimationSettings/previewContextLabel
+
+#EDITING VARS
+var clipboard = [] #for copy and paste
+var focusedTrack #for copy paste and drag-duplicate 
+var lastKeyCommandTime = 0
+var clickedKey = null
+var draggingKeys = false
+var scrolling =false
+var undos = []
+var redos = []
+enum undoTypes{ 	create, delete, keyframe, track, animation 		}
+
 #func debugGuiFocus(who):
 	#print(who.name, " : ", who.get_path())
 	
-func _enter_tree():
+func _enter_tree():	
 	#if not get_viewport().is_connected("gui_focus_changed", self, "debugGuiFocus"):
 	#	get_viewport().connect("gui_focus_changed", self, "debugGuiFocus")
 	set_focus_mode(Control.FOCUS_ALL)
 	if !Engine.editor_hint:
 		queue_free()
+	
 	get_tree().call_group("AnimationEditorPlugin", "initTimeline", self)	
 	
 func handleSelection(obj):	
@@ -74,11 +91,18 @@ func setAnimation(obj= animation):
 	
 	animationSpeed.text = str(animation.speed)
 	loopButton.pressed = animation.looping
+	autoPlayButton.pressed = animation.autoPlay
+	previewContextLabel.text = animation.defaultPreviewScene
+	animation.show()
 	emit_signal("animationChanged")
 		
 func clearAnimation():			
 	if is_instance_valid(animation):
 		animation.queue_free()			
+	if is_instance_valid(previewContextLabel):
+		previewContextLabel.text = ""
+		
+	KeyframeData.hide()
 
 
 
@@ -112,20 +136,23 @@ func _on_PlayButton_pressed():
 	animation.togglePlay()	
 	
 func _on_ZoomInButton_pressed():
-	zoom.x *= 1.05
-	$VBoxContainer/StatusBarBackground/ZoomControls/ZoomLabel.text = str(floor(zoom.x)) + "%"
-	emit_signal("zoomChanged")
+	setZoom(zoom.x * 1.05)		
 
 func _on_ZoomOutButton_pressed():
-	zoom.x /= 1.05
+	setZoom(zoom.x / 1.05)
+	
+func setZoom(value):
+	zoom.x = max(2, min(200, value))
 	$VBoxContainer/StatusBarBackground/ZoomControls/ZoomLabel.text = str(floor(zoom.x)) + "%"
 	emit_signal("zoomChanged")	
 	
 func frameChanged():	
 	$VBoxContainer/StatusBarBackground/AnimationSettings/TimeValue.text = str(stepify(animation.position, 0.1))
 	
-func keyframeChanged(who):
-	who.get_parent().reorderKeyByTime(who)	
+func keyframeChanged(who):	
+	#addUndo(undoTypes.keyframe, who)
+	
+	who.get_parent().validateKeyframeOrder()	
 	animation.setDurationToLatestKeyframe()
 	keyframeTime.text = str(who.time)
 	keyframeValue.setValue(who)
@@ -136,21 +163,17 @@ func _on_SpinBox_value_changed(value):
 
 func selectionChanged(who):	
 	if who and who.get_script() and who.get_script().get_path().find("keyframe.gd") != -1:
-		$VBoxContainer/StatusBarBackground/KeyframeData.show()
+		KeyframeData.show()
 		keyframeValue.setValue(who)
 		keyframeTime.text = str( who.time )
 		keyframeRelative.pressed = who.relative
 	else:
 		#print(who.get_script().get_path())
-		$VBoxContainer/StatusBarBackground/KeyframeData.hide()
+		KeyframeData.hide()
 
 func previewContextChanged(path):
 	animation.defaultPreviewScene = path	
-	$VBoxContainer/StatusBarBackground/AnimationSettings/previewContextLabel.text = path
-
-
-
-
+	previewContextLabel.text = path
 
 func _on_KeyframeValue_gui_input(event):
 	if not is_instance_valid(animation) or not get_tree().get_nodes_in_group("selected").size()>0:
@@ -201,18 +224,111 @@ func _on_LoopButton_pressed():
 	animation.looping = loopButton.pressed
 	grab_focus()
 
-func _input(event):
-	if Input.is_key_pressed(KEY_SPACE):
-		if has_focus():
-			animation.togglePlay()
-		
+#func _input(event):
+#	inputManager.handleInput(event, self)
+	
 func _gui_input(event):
 	if event is InputEventMouse and event.is_pressed():
 		grab_focus()		
-
-
 
 func _on_KeyframeRelative_toggled(button_pressed):
 	for key in get_tree().get_nodes_in_group("selected"):
 		key.relative = button_pressed
 
+
+
+func _on_AutoPlayButton_pressed():
+	animation.autoPlay = autoPlayButton.pressed
+	grab_focus()
+
+
+func _on_ZoomLabel_gui_input(event):
+	if event is InputEventMouseButton and event.is_pressed():
+		setZoom(100)
+		scroll.x = 0 
+
+func addUndo(type, who, undo=true):	
+	if not is_instance_valid(who):
+		return
+	var data = {}
+	if type == undoTypes.animation:
+		data.looping = animation.looping
+		data.autoPlay = animation.autoPlay
+		data.speed = animation.speed
+		data.defaultPreviewScene = animation.defaultPreviewScene
+		
+	elif type == undoTypes.track:		
+		data.name = who.name
+		data.index = who.get_index()
+		data.type = who.type
+		data.object = who.object
+		data.property = who.property
+		
+	elif type == undoTypes.keyframe:		
+		
+		data.time = who.time
+		data.value = who.value
+		data.relative = who.relative
+		data.curve = who.curve
+		data.parent = who.get_parent()
+		data.index = who.get_index()		
+	
+	if undo:
+		undos.push_back({
+			time = OS.get_system_time_msecs(),
+			who = who,
+			type = type,	
+			data = data
+		})
+	else:
+		redos.push_back({			
+			time = OS.get_system_time_msecs(),
+			who = who,
+			type = type,	
+			data = data
+		})
+	
+func doUndo(doUndo = true):
+	if undos.size() == 0:
+		return
+	var currentTime = OS.get_system_time_msecs()	
+
+	var undoRedo
+	if doUndo:
+		undoRedo = undos
+	else:
+		undoRedo = redos
+	while undoRedo.size() > 0 and undoRedo.back().time - currentTime < 100:	
+		var undo = undoRedo.pop_back()		
+		if not is_instance_valid(undo.who):
+			continue
+		var data = undo.data		
+		#Add to redo
+		addUndo(undo.type, undo.who, false)		
+		
+		if undo.type == undoTypes.animation:
+			animation.looping = data.looping
+			animation.autoPlay = data.autoPlay
+			animation.speed = data.speed
+			animation.defaultPreviewScene = data.defaultPreviewScene
+					
+		elif undo.type == undoTypes.track:
+			var who = undo.who
+			who.name = data.name			
+			#TODO: allow reordering tracks
+			#elif data.index != who.get_index():
+			#	who.get_parent().move_child().data.index = data.get_index()
+			who.type = data.type
+			who.object = data.object
+			who.property = data.property
+			
+		elif undo.type == undoTypes.keyframe:
+			var who = undo.who
+			var parent = data.parent			
+			data.value = data.value
+			data.relative = data.relative
+			data.curve = data.curve					
+			data.time = data.time
+			if who.get_parent() != parent:
+				who.reparent(parent)
+		

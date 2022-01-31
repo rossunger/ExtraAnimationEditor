@@ -14,15 +14,9 @@ var propertyPathBox
 func _exit_tree():
 	if not track:
 		return
-	updateTrackOptions( track, trackTitleBox.text,objectPathBox.text, propertyPathBox.text, trackTypeBox.selected)
-
-func updateTrackOptions(track, title, object, property, type):		
-	track.name = title
-	track.object = object
-	track.property = property
-	track.type = type
-	trackMeta.track = track.owner.get_path_to(track)
-	trackMeta._enter_tree()
+	trackMeta.updateTrackInfo(track, trackTitleBox.text,objectPathBox.text, propertyPathBox.text, trackTypeBox.selected)
+	queue_free()
+	
 
 func _ready():		
 	if not track:
@@ -58,14 +52,18 @@ func _on_Dimmer_pressed():
 func _on_ObjectList_item_selected(index):	
 	objectPathBox.text = objectListBox.get_item_text(index)
 		
-	propertyListBox.clear()			
+	propertyListBox.clear()				
 	var obj = ClassDB.instance(previewScene.get_state().get_node_type(index))
 	for i in obj.get_property_list(): 
 		if i.name.left(1) == i.name.left(1).to_upper():
 			continue
-		propertyListBox.add_item(i.name)	
+		propertyListBox.add_item(i.name)		
+		propertyListBox.set_item_metadata(propertyListBox.get_item_count()-1, i.type)
 	obj.queue_free()	
-	propertyListBox.sort_items_by_text()
+	propertyListBox.sort_items_by_text()	
 	
 func _on_PropertyList_item_selected(index):
-	propertyPathBox.text = propertyListBox.get_item_text(index)
+	propertyPathBox.text = propertyListBox.get_item_text(index)			
+	var type = propertyListBox.get_item_metadata(index)	
+	trackTypeBox.select(TYPES.GodotTypesToRossTypes(type))
+	

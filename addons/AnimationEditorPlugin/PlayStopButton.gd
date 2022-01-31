@@ -17,8 +17,7 @@ func play():
 	pressed = true	
 	_on_PlayButton_pressed()
 	
-func stop():
-	print("stopping playbutton")
+func stop():	
 	pressed = false
 	_on_PlayButton_pressed()
 

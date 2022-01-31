@@ -53,3 +53,13 @@ func _on_ToolButton_pressed():
 
 func _on_RemoveTrackButton_pressed():
 	owner.removeTrack(self)
+
+func updateTrackInfo(theTrack, title, object, property, type):
+	#TimelineEditor.addUndo(TimelineEditor.undoTypes.track, theTrack)	
+	theTrack.name = title
+	theTrack.object = object
+	theTrack.property = property
+	theTrack.type = type
+	track = theTrack.owner.get_path_to(theTrack)
+	_enter_tree()
+	

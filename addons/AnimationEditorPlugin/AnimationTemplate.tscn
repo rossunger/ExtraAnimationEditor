@@ -1,23 +1,28 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/SelectionController.gd" type="Script" id=1]
 [ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=2]
 [ext_resource path="res://addons/AnimationEditorPlugin/ExtraAnimation.gd" type="Script" id=3]
+[ext_resource path="res://addons/AnimationEditorPlugin/playhead.gd" type="Script" id=4]
 [ext_resource path="res://addons/AnimationEditorPlugin/TrackMetaContainer.gd" type="Script" id=7]
 
 [node name="Animation" type="HSplitContainer"]
 margin_top = 44.0
 margin_right = 1784.0
 margin_bottom = 250.0
+mouse_filter = 1
 size_flags_vertical = 3
 split_offset = 100
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+defaultPreviewScene = ""
 speed = 1
 AutoDuration = true
 Duration = 1
 looping = false
+autoPlay = false
 
 [node name="TrackMeta" type="VBoxContainer" parent="."]
 margin_right = 220.0
@@ -34,6 +39,7 @@ margin_right = 1784.0
 margin_bottom = 206.0
 rect_min_size = Vector2( 200, 0 )
 rect_clip_content = true
+mouse_filter = 1
 script = ExtResource( 2 )
 
 [node name="Tracks" type="VBoxContainer" parent="Timeline"]
@@ -44,3 +50,13 @@ size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Playhead" type="ColorRect" parent="Timeline"]
+margin_right = 1.0
+margin_bottom = 3000.0
+mouse_filter = 2
+color = Color( 1, 1, 1, 0.3 )
+script = ExtResource( 4 )
+
+[node name="SelectionController" type="Node" parent="Timeline"]
+script = ExtResource( 1 )
