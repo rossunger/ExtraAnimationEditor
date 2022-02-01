@@ -20,7 +20,6 @@ func _ready():
 	if ! TimelineEditor.is_connected("zoomChanged", self, "zoomChanged"):
 		TimelineEditor.connect("zoomChanged", self, "zoomChanged")
 	mouse_filter = Control.MOUSE_FILTER_PASS
-	print("timeline Ready")
 	
 func zoomChanged():
 	update()

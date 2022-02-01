@@ -1,6 +1,10 @@
 tool
 extends Node
 
+var fullRect
+var timelineRect
+var trackMetaRect
+var statusBarRect
 #Clear input map
 func _exit_tree():
 	if !InputMap.has_action("Undo"):
@@ -93,7 +97,10 @@ func _enter_tree():
 	if !InputMap.has_action("Copy"):		
 		InputMap.add_action("Copy")
 		var event = InputEventKey.new()
-		#event.control = true		
+		if OS.get_name() == "OSX":	
+			event.command = true		
+		else:
+			event.control = true	
 		event.scancode = OS.find_scancode_from_string("c")
 		InputMap.action_add_event("Copy", event )	
 
@@ -156,9 +163,25 @@ func _enter_tree():
 		InputMap.action_add_event("FrameAll", event)			
 
 
-func _input(event): # handleInput(event, timelineEditor):
-	var timelineEditor = TimelineEditor
-	if not timelineEditor.has_focus():
+func _input(event): # handleInput(event, timelineEditor):	
+	var timelineEditor = TimelineEditor	
+	if not statusBarRect:
+		statusBarRect = timelineEditor.get_child(0).get_child(0).get_global_rect()
+	if not fullRect:
+		fullRect = Rect2(timelineEditor.rect_global_position.x, timelineEditor.rect_global_position.y + statusBarRect.size.y, timelineEditor.rect_size.x, timelineEditor.rect_size.y-statusBarRect.size.y)	
+	if not trackMetaRect:
+		trackMetaRect = fullRect
+		trackMetaRect.size.x = 100 #timelineEditor.animation.split_offset
+	if not timelineRect:
+		timelineRect = Rect2(fullRect.position.x, fullRect.position.y, fullRect.size.x - trackMetaRect.size.x, fullRect.size.y)
+	#print(statusBarRect)
+	#print(fullRect)
+	#print(timelineRect)
+	#print(trackMetaRect)	
+	
+	#if not timelineEditor.has_focus():
+	#	return	
+	if not timelineEditor.visible:
 		return	
 
 	if timelineEditor.draggingKeys:
@@ -192,20 +215,34 @@ func _input(event): # handleInput(event, timelineEditor):
 	else:
 		if event is InputEventMouseMotion and timelineEditor.scrolling:						
 			TimelineEditor.scroll.x = max(0, TimelineEditor.scroll.x - event.relative.x * 50 /  TimelineEditor.zoom.x)
+			TimelineEditor.scroll.y = max(0, TimelineEditor.scroll.y - event.relative.y * 50 /  TimelineEditor.zoom.y)			
 			TimelineEditor.emit_signal("zoomChanged")							
 	
-	if event is InputEventMouseButton and timelineEditor.get_global_rect().has_point(event.global_position):
+	#if fullRect.has_point(event.global_position):
+	if event is InputEventMouseButton and timelineEditor.get_global_rect().has_point(event.global_position): 
 		if event.button_index == 1 and !event.is_pressed():					
 			timelineEditor.clickedKey = null		
 			timelineEditor.draggingKeys = false	
 			get_tree().call_group("Tracks", "validateKeyframeOrder")
 		if event.button_index == BUTTON_WHEEL_UP:
-			timelineEditor._on_ZoomInButton_pressed()
+			if event.control:
+				timelineEditor.doZoomY(true)
+			else:
+				if timelineEditor.animation.trackMeta.get_global_rect().has_point(event.global_position):
+					timelineEditor.doScrollY(false)
+				else:
+					timelineEditor._on_ZoomInButton_pressed()
 			#TODO: fix scroll to mouse position
 			#timelineEditor.scroll.x = timelineEditor.scroll.x + (event.position.x - timelineEditor.rect_global_position.x) #* 100 / timelineEditor.zoom.x
 		if event.button_index == BUTTON_WHEEL_DOWN:
+			if event.control:
+				timelineEditor.doZoomY(false)
+			else:
+				if timelineEditor.animation.trackMeta.get_global_rect().has_point(event.global_position):
+					timelineEditor.doScrollY(true)
+				else:
+					timelineEditor._on_ZoomOutButton_pressed()			
 			#TODO: fix scroll to mouse position
-			timelineEditor._on_ZoomOutButton_pressed()
 			#timelineEditor.scroll.x = timelineEditor.scroll.x + (event.position.x - timelineEditor.rect_global_position.x) #* 100 / timelineEditor.zoom.x
 
 	
@@ -223,17 +260,19 @@ func _input(event): # handleInput(event, timelineEditor):
 	
 	elif true: # timelineEditor.get_global_rect().has_point(timelineEditor.get_global_mouse_position()):	
 		if Input.is_action_pressed("Delete"):					
-			timelineEditor.accept_event()
+			timelineEditor.accept_event()			
 			for key in get_tree().get_nodes_in_group("selected"):
 				if key.time != 0:
+					timelineEditor.addUndo(timelineEditor.undoTypes.delete, key)
+					#print("adding delete key undo")		
 					key.queue_free()
-				else:
+				else:					
 					key.deselect()
 			timelineEditor.lastKeyCommandTime = OS.get_system_time_msecs()
 			
 		elif Input.is_action_just_pressed("Copy"):				
 			timelineEditor.accept_event()
-			print("COPYING")
+			#print("COPYING")
 			if timelineEditor.clipboard.size() > 0:
 				timelineEditor.clipboard.clear()
 						
@@ -283,13 +322,12 @@ func _input(event): # handleInput(event, timelineEditor):
 				else:
 					parent = timelineEditor.focusedTrack.get_parent().get_child(timelineEditor.focusedTrack.get_index() + earliestTrack)
 				parent.addKeyframe(k.time+delta, k.value, k.relative, k.curve)
-					
+				
 				
 			timelineEditor.lastKeyCommandTime = OS.get_system_time_msecs()	
 			get_tree().call_group("Tracks", "validateKeyframeOrder")		
 		#ToDo: Add nudge left/right keyboard actions...
-		elif Input.is_action_pressed("NudgeLeft"):
-			print("NUDGE LEFT")
+		elif Input.is_action_pressed("NudgeLeft"):			
 			for key in get_tree().get_nodes_in_group("selected"):
 				key.time -= 10/timelineEditor.zoom.x	
 		
@@ -301,10 +339,11 @@ func _input(event): # handleInput(event, timelineEditor):
 			timelineEditor.scroll.x = 0
 			timelineEditor.setZoom(100 / timelineEditor.animation.duration * 15) #20 = 100  40 = 50	
 			
-		elif Input.is_action_just_pressed("Undo"):
-			timelineEditor.doUndo()
-			timelineEditor.accept_event()
-			
-		elif Input.is_action_just_pressed("Redo"):
+		elif Input.is_action_just_pressed("Redo"):	
+			#print("redo keys pressed")
 			timelineEditor.doUndo(false)			
 			timelineEditor.accept_event()
+			
+		elif Input.is_action_just_pressed("Undo"):			
+			timelineEditor.doUndo()
+			timelineEditor.accept_event()				

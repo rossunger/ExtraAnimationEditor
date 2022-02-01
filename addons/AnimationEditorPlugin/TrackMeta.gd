@@ -16,8 +16,22 @@ func doInit():
 	nameLabel = $Label
 	name = owner.get_node(track).name
 	nameLabel.text = name
+	if !is_in_group("Tracks"):
+		add_to_group("Tracks")
+
+func updateZoomY():
+	rect_min_size.y = 60 * TimelineEditor.zoom.y
+	
+func validateKeyframeOrder():
+	pass
 
 func _gui_input(event):
+	if event is InputEventMouseButton and event.button_index == 1:
+		if event.is_pressed():
+			dragging = true			
+		else:
+			dragging = false
+			
 	return
 	if event is InputEventMouseMotion:
 		if getResizeHandle().get_rect().has_point(event.position):
@@ -27,12 +41,7 @@ func _gui_input(event):
 			getResizeHandle().hide()
 		if dragging:
 			rect_min_size.y = max(minHeight, rect_min_size.y + event.relative.y)
-	if event is InputEventMouseButton and event.button_index == 1:
-		if event.is_pressed():
-			dragging = true			
-		else:
-			dragging = false
-			
+
 func getResizeHandle():
 	if !is_instance_valid(resizeHandle):
 		resizeHandle = $resizeHandle
@@ -61,5 +70,6 @@ func updateTrackInfo(theTrack, title, object, property, type):
 	theTrack.property = property
 	theTrack.type = type
 	track = theTrack.owner.get_path_to(theTrack)
+	theTrack.obj = null 	
 	_enter_tree()
 	

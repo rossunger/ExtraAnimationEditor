@@ -82,14 +82,16 @@ func reparent(newParent):
 			valid = true
 
 func prepareForDrag():
-	trackOffset = TimelineEditor.clickedKey.get_parent().get_index() - get_parent().get_index()
-
+	trackOffset = TimelineEditor.clickedKey.get_parent().get_index() - get_parent().get_index()	
+	TimelineEditor.addUndo(TimelineEditor.undoTypes.keyframe, self)
+	#print("preparing for drag undo")	
+	
 func _gui_input(event):		
 	#if Input.is_action_pressed("Click"):		
-	if event is InputEventMouseButton and event.is_pressed():
+	if event is InputEventMouseButton and event.is_pressed():					
 		TimelineEditor.clickedKey = self
-		TimelineEditor.draggingKeys = true
-		for k in get_tree().get_nodes_in_group("selected"):
+		TimelineEditor.draggingKeys = true		
+		for k in get_tree().get_nodes_in_group("selected"):			
 			k.prepareForDrag()
 		if get_tree().get_nodes_in_group("SelectionController").size()>0:
 			get_tree().call_group("SelectionController", "interrupt")		
@@ -102,7 +104,7 @@ func _gui_input(event):
 				doSelect()
 		else:
 			if Input.is_key_pressed(KEY_SHIFT):
-				deselect()				
+				deselect()								
 		if Input.is_key_pressed(KEY_CONTROL):
 			for key in get_tree().get_nodes_in_group("selected"):
 				var newkey = key.duplicate()				
@@ -111,6 +113,7 @@ func _gui_input(event):
 				newkey.time+=0.1
 				newkey.setXFromTime()
 				newkey.doSelect()
+				TimelineEditor.addUndo(TimelineEditor.undoTypes.create, newkey)
 		
 
 func _draw():
@@ -146,6 +149,8 @@ func doSelect():
 	selected = true
 	TimelineEditor.grab_focus()
 	TimelineEditor.selectionChanged(self)
+	TimelineEditor.addUndo(TimelineEditor.undoTypes.keyframe, self)	
+	#print("adding select undo")		
 	update()	
 
 func deselect():		
@@ -155,3 +160,6 @@ func deselect():
 	if get_tree().get_nodes_in_group("selected").size() == 0:
 		TimelineEditor.selectionChanged(null)
 	update()
+	TimelineEditor.addUndo(TimelineEditor.undoTypes.keyframe, self)	
+	#print("adding deselect undo")	
+	

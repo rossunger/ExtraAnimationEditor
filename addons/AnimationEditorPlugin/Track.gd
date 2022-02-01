@@ -6,6 +6,7 @@ class_name Track
 export var type = TYPES.Float
 export (String) var object #path to object from scene root
 export (String) var property
+#export (String) var subProperty = ""
 var obj
 var inputs
 var lastKeyframe
@@ -84,18 +85,18 @@ func frameChanged(position = owner.position): # #TimelineEditor.animation.positi
 		shouldUpdateStartingValue = true
 	
 	if shouldUpdateStartingValue:		
-		trackStartingValue = obj[property]
+		trackStartingValue = getObjPropValue() #obj[property]
 
-	var needToUpdateKeyframes
 	
 	#Check if we've reached the next keyframe in the direction of playback
+	var needToUpdateKeyframes
 	if directionModifier < 0:
-		needToUpdateKeyframes = shouldUpdateStartingValue or nextKeyframeTime > position
+		needToUpdateKeyframes = shouldUpdateStartingValue or nextKeyframeTime >= position
 	else:
-		needToUpdateKeyframes = shouldUpdateStartingValue or nextKeyframeTime < position	
-
+		needToUpdateKeyframes = shouldUpdateStartingValue or nextKeyframeTime <= position		
+		
 	#if we've moved to the next keyframe (+ other safety check)
-	if needToUpdateKeyframes or not is_instance_valid(nextKeyframe) or not is_instance_valid(lastKeyframe):		
+	if needToUpdateKeyframes or not is_instance_valid(nextKeyframe) or not is_instance_valid(lastKeyframe):				
 		#let's assume there's only 2 keys to start with
 		if directionModifier < 0:
 			lastKeyframe = get_child(lastChildIndex)
@@ -107,28 +108,33 @@ func frameChanged(position = owner.position): # #TimelineEditor.animation.positi
 		#if there's more than two keyframes, then it's more complicated...
 		if lastChildIndex !=1:							
 			#Let's go over each key (which should be siblings in chronological order)
-			for i in lastChildIndex:		
+			for i in lastChildIndex+1:					
 				var key				
-				var foundTheNextKey 			
+				var foundTheNextKey
+				#if the playhead is behind the key, continue 			
 				if owner.speed < 0:
 					key = get_child(lastChildIndex - i)
-					foundTheNextKey = key.time < position or key.get_index() == 0 
+					if key.time > position: # and key.get_index() != 0:
+						continue
 				else:
 					key = get_child(i)
-					foundTheNextKey = key.time > position or key.get_index() == lastChildIndex 
+					if key.time < position: # and key.get_index() != lastChildIndex:					
+						continue	
 			
-				if foundTheNextKey:				
-					var previousChild
-					var prevChildIndex = key.get_index() - directionModifier
-					if prevChildIndex >= 0 and prevChildIndex <= lastChildIndex:
-						previousChild = get_child(prevChildIndex)						
-					else:
-						previousChild = key
-																
-					lastKeyframe = previousChild
-					nextKeyframe = key
-					nextKeyframeTime = key.time							
-						
+				var previousChild
+				var prevChildIndex = key.get_index() - directionModifier
+				#print(prevChildIndex)
+				if prevChildIndex >= 0 and prevChildIndex <= lastChildIndex:
+					previousChild = get_child(prevChildIndex)						
+				else:
+					previousChild = key						
+				lastKeyframe = previousChild
+				nextKeyframe = key
+				nextKeyframeTime = key.time		
+								
+				#print("LK: ", lastKeyframe.name, " | NK: ", nextKeyframe.name)
+				break					
+			
 		if not is_instance_valid(lastKeyframe) or not is_instance_valid(nextKeyframe):
 			print("Error: lastkeyframe or nextkeyframe doesnt exist when it should")
 			return
@@ -177,55 +183,61 @@ func frameChanged(position = owner.position): # #TimelineEditor.animation.positi
 	
 	#print(owner.position, " : ", owner.position - lastKeyframe.time, nextKeyframe.time - lastKeyframe.time)
 	#print("Relative. TSV: " , trackStartingValue ,". AVALK: ",absoluteValueAtLastKeyframe, ". AVANK: ", absoluteValueAtNextKeyframe )
+	#print("LK: ", lastKeyframe.name, " | NK: ", nextKeyframe.name)
 	var lerpWeight
 	if nextKeyframe.time - lastKeyframe.time == 0:		
 		print("ERROR: two keyframes at the same time position")	
 		return
 	if owner.position - lastKeyframe.time == 0:
-		lerpWeight = 0
+		lerpWeight = 0		
 	else:
-		lerpWeight = clamp( (owner.position - lastKeyframe.time) / (nextKeyframe.time - lastKeyframe.time), 0,1)	
+		lerpWeight = clamp( (owner.position - lastKeyframe.time) / (nextKeyframe.time - lastKeyframe.time), 0,1)		
 	applyKeyframeValues(lerpWeight)	
 	
 func applyKeyframeValues(lerpWeight):
 	#SET THE VALUES
 	if type == TYPES.Bool:
 		if lastKeyframe.value is bool:
-			if lastKeyframe.relative and absoluteValueAtLastKeyframe == true:
+			if lastKeyframe.relative and absoluteValueAtLastKeyframe == true:				
 				obj[property] = !obj[property]
 				return
-			else:				
+			else:	
+				#setObjPropValue(absoluteValueAtLastKeyframe.value)
 				obj[property] = absoluteValueAtLastKeyframe.value
 				return
 		else:
 			print("last key should be type Bool, but it is: ", lastKeyframe.value, " : type: ", typeof(lastKeyframe.value))			
 	
 	if type == TYPES.Float:
-		if lastKeyframe.value is float:			
-			obj[property] = lerp(absoluteValueAtLastKeyframe, absoluteValueAtNextKeyframe, lerpWeight)
+		if lastKeyframe.value is float or lastKeyframe.value is int:			
+			setObjPropValue(lerp(absoluteValueAtLastKeyframe, absoluteValueAtNextKeyframe, lerpWeight))
+			#obj[property] = lerp(absoluteValueAtLastKeyframe, absoluteValueAtNextKeyframe, lerpWeight)
 			
 		else:
 			print("last key should be type Float, but it is: ", lastKeyframe.value, " : type: ", typeof(lastKeyframe.value))					
 	if type == TYPES.Vec2:
 		if lastKeyframe.value is Vector2:			
+			#setObjPropValue(absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight))
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)			
 		else:
 			print("last key should be type Vec2, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 	if type == TYPES.Vec3:
 		if lastKeyframe.value is Vector3:						
+			#setObjPropValue(absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight))
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
 		else:
 			print("last key should be type Vec3, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 
 	if type == TYPES.Vec4:
 		if lastKeyframe.value is Color:						
+			#setObjPropValue(absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight))
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
 		else:
 			print("last key should be type Vec4, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 
 	if type == TYPES.Str:
 		if lastKeyframe.value is Color:						
-			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
+			obj[property] = absoluteValueAtLastKeyframe 			
 		else:
 			print("last key should be type Vec4, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 
@@ -295,6 +307,7 @@ func addKeyframe(time, value=null, relative = false, curve= null):
 	k.call_deferred("setXFromTime")
 		
 	validateKeyframeOrder()
+	TimelineEditor.addUndo(TimelineEditor.undoTypes.create, k)
 	return k
 
 func setDefaultKeyValue(k):
@@ -316,7 +329,7 @@ func setDefaultKeyValue(k):
 	if type == TYPES.Str:
 		k.value = ""
 		
-func validateValueType(value):
+func validateValueType(value):	
 	if type == TYPES.Bool:
 		if typeof(value) == TYPE_BOOL:
 			return true
@@ -382,5 +395,21 @@ func getKeyframeAtTime(time, keyframeToIgnore = null):
 		if child.time == time and child != keyframeToIgnore:
 			return child
 
-
-	
+func getObjPropValue():
+	var props = property.split(".")
+	var size = props.size()
+	if size==1:
+		return obj[props[0]]
+	elif size==2:
+		return obj[props[0]][props[1]]
+			
+func setObjPropValue(value):
+	var props = property.split(".")
+	var size = props.size()
+	if size==1:
+		obj[props[0]] = value
+	elif size==2:
+		obj[props[0]][props[1]] = value
+		
+func updateZoomY():
+	rect_min_size.y = 60 * TimelineEditor.zoom.y

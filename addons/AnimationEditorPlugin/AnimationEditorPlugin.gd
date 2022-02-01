@@ -187,14 +187,6 @@ func editKeyframe(data):
 	if "curve" in data:
 		pass
 		
-func editTrack():
-	pass
-	
-func removeTrack():
-	pass
-
-
-
 
 func get_current_main_screen_name():
 	var editor_base = get_editor_interface().get_base_control()

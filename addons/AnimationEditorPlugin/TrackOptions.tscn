@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/ExtraGui1.theme" type="Theme" id=1]
-[ext_resource path="res://Addons/ExtraGui/fonts/Alice-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/fonts/Alice-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/AnimationEditorPlugin/TYPESSelector.gd" type="Script" id=3]
 [ext_resource path="res://addons/AnimationEditorPlugin/TrackOptions.gd" type="Script" id=4]
 
@@ -14,7 +14,7 @@ bg_color = Color( 0, 0, 0, 0.301961 )
 
 [sub_resource type="StyleBoxEmpty" id=6]
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=10]
 size = 40
 font_data = ExtResource( 2 )
 
@@ -79,8 +79,10 @@ margin_left = 19.0
 margin_top = 11.0
 margin_right = 1517.0
 margin_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 10 )
 custom_styles/normal = SubResource( 8 )
 text = "TrackName"
 align = 1
@@ -145,13 +147,13 @@ margin_bottom = 102.0
 rect_min_size = Vector2( 0, 44 )
 
 [node name="Label" type="Label" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer/CustomProperty2"]
-margin_top = 10.0
-margin_right = 71.0
+margin_top = 9.0
+margin_right = 86.0
 margin_bottom = 34.0
 text = "Search: "
 
 [node name="ObjectName" type="LineEdit" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect/VBoxContainer/CustomProperty2"]
-margin_left = 79.0
+margin_left = 94.0
 margin_right = 741.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
@@ -204,14 +206,14 @@ margin_bottom = 102.0
 rect_min_size = Vector2( 0, 44 )
 
 [node name="Label" type="Label" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/CustomProperty"]
-margin_top = 10.0
-margin_right = 80.0
+margin_top = 9.0
+margin_right = 95.0
 margin_bottom = 34.0
 text = "Custom: "
 
 [node name="PropertyName" type="LineEdit" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/CustomProperty"]
-margin_left = 88.0
-margin_right = 629.0
+margin_left = 103.0
+margin_right = 626.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 custom_styles/normal = SubResource( 8 )
@@ -221,11 +223,12 @@ __meta__ = {
 }
 
 [node name="TrackType" type="OptionButton" parent="Modal/VBoxContainer/Body/HBoxContainer/ColorRect2/VBoxContainer2/CustomProperty"]
-margin_left = 637.0
+margin_left = 634.0
 margin_right = 741.0
 margin_bottom = 44.0
-text = "Float"
-selected = 1
+text = "Bool"
+items = [ "Bool", null, false, 0, null, "Float", null, false, 1, null, "Res", null, false, 2, null, "Str", null, false, 3, null, "Vec2", null, false, 4, null, "Vec3", null, false, 5, null, "Vec4", null, false, 6, null ]
+selected = 0
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false

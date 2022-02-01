@@ -37,6 +37,8 @@ var draggingKeys = false
 var scrolling =false
 var undos = []
 var redos = []
+var groupTrack = false
+
 enum undoTypes{ 	create, delete, keyframe, track, animation 		}
 
 #func debugGuiFocus(who):
@@ -47,8 +49,7 @@ func _enter_tree():
 	#	get_viewport().connect("gui_focus_changed", self, "debugGuiFocus")
 	set_focus_mode(Control.FOCUS_ALL)
 	if !Engine.editor_hint:
-		queue_free()
-	
+		queue_free()	
 	get_tree().call_group("AnimationEditorPlugin", "initTimeline", self)	
 	
 func handleSelection(obj):	
@@ -83,7 +84,7 @@ func setAnimation(obj= animation):
 	clearAnimation()	
 	animation = load(obj.filename).instance()
 	animation.filename = obj.filename
-	$VBoxContainer.add_child(animation)
+	$VBoxContainer.add_child(animation)	
 	trackContainer = get_node("VBoxContainer/" + animation.name + "/TrackMeta")		
 	timeline = get_node("VBoxContainer/" + animation.name + "/Timeline")		
 	if not animation.is_connected("frameChanged", self, "frameChanged"):
@@ -94,7 +95,7 @@ func setAnimation(obj= animation):
 	autoPlayButton.pressed = animation.autoPlay
 	previewContextLabel.text = animation.defaultPreviewScene
 	animation.show()
-	emit_signal("animationChanged")
+	emit_signal("animationChanged")	
 		
 func clearAnimation():			
 	if is_instance_valid(animation):
@@ -150,8 +151,6 @@ func frameChanged():
 	$VBoxContainer/StatusBarBackground/AnimationSettings/TimeValue.text = str(stepify(animation.position, 0.1))
 	
 func keyframeChanged(who):	
-	#addUndo(undoTypes.keyframe, who)
-	
 	who.get_parent().validateKeyframeOrder()	
 	animation.setDurationToLatestKeyframe()
 	keyframeTime.text = str(who.time)
@@ -235,19 +234,17 @@ func _on_KeyframeRelative_toggled(button_pressed):
 	for key in get_tree().get_nodes_in_group("selected"):
 		key.relative = button_pressed
 
-
-
 func _on_AutoPlayButton_pressed():
 	animation.autoPlay = autoPlayButton.pressed
 	grab_focus()
-
 
 func _on_ZoomLabel_gui_input(event):
 	if event is InputEventMouseButton and event.is_pressed():
 		setZoom(100)
 		scroll.x = 0 
-
-func addUndo(type, who, undo=true):	
+#TO DO: fix undo system... deleting and creating especially...
+#works to undo, but redo does something weird
+func addUndo(type, who, undo=true, clearRedos=true):	
 	if not is_instance_valid(who):
 		return
 	var data = {}
@@ -264,23 +261,36 @@ func addUndo(type, who, undo=true):
 		data.object = who.object
 		data.property = who.property
 		
-	elif type == undoTypes.keyframe:		
-		
+	elif type == undoTypes.keyframe:				
 		data.time = who.time
 		data.value = who.value
 		data.relative = who.relative
 		data.curve = who.curve
 		data.parent = who.get_parent()
 		data.index = who.get_index()		
-	
-	if undo:
+		data.selected = who.selected
+	elif type == undoTypes.create:
+		data.parent = who.get_parent()		
+		data.who = who
+		if who.get_script().get_path().find("TrackMeta.gd") != -1:
+			data.who2 = who.owner.get_node(who.track)		
+			
+	elif type == undoTypes.delete:
+		data.parent = who.get_parent()
+		#print("Duplicating who: ", who.name)
+		data.who = who.duplicate(DUPLICATE_GROUPS + DUPLICATE_SIGNALS + DUPLICATE_SCRIPTS )						
+		if who.get_script().get_path().find("TrackMeta.gd") != -1:
+			data.who2 = who.owner.get_node(who.track).duplicate(DUPLICATE_GROUPS + DUPLICATE_SIGNALS + DUPLICATE_SCRIPTS )
+	if undo:	
+		if clearRedos:
+			redos.clear()				
 		undos.push_back({
 			time = OS.get_system_time_msecs(),
 			who = who,
 			type = type,	
 			data = data
 		})
-	else:
+	else:				
 		redos.push_back({			
 			time = OS.get_system_time_msecs(),
 			who = who,
@@ -288,47 +298,91 @@ func addUndo(type, who, undo=true):
 			data = data
 		})
 	
-func doUndo(doUndo = true):
-	if undos.size() == 0:
-		return
-	var currentTime = OS.get_system_time_msecs()	
-
+func doUndo(doUndo = true):	
 	var undoRedo
 	if doUndo:
 		undoRedo = undos
-	else:
+	else:		
 		undoRedo = redos
-	while undoRedo.size() > 0 and undoRedo.back().time - currentTime < 100:	
-		var undo = undoRedo.pop_back()		
-		if not is_instance_valid(undo.who):
-			continue
+	
+	if undoRedo.size() == 0:
+		return	
+	#print("redos left: ", redos.size())	
+	var first = undoRedo.back().time
+	while undoRedo.size() > 0 and abs(undoRedo.back().time - first) < 100:			
+		var undo = undoRedo.pop_back()				
 		var data = undo.data		
 		#Add to redo
-		addUndo(undo.type, undo.who, false)		
-		
-		if undo.type == undoTypes.animation:
-			animation.looping = data.looping
-			animation.autoPlay = data.autoPlay
-			animation.speed = data.speed
-			animation.defaultPreviewScene = data.defaultPreviewScene
-					
-		elif undo.type == undoTypes.track:
-			var who = undo.who
-			who.name = data.name			
-			#TODO: allow reordering tracks
-			#elif data.index != who.get_index():
-			#	who.get_parent().move_child().data.index = data.get_index()
-			who.type = data.type
-			who.object = data.object
-			who.property = data.property
-			
-		elif undo.type == undoTypes.keyframe:
-			var who = undo.who
-			var parent = data.parent			
-			data.value = data.value
-			data.relative = data.relative
-			data.curve = data.curve					
-			data.time = data.time
-			if who.get_parent() != parent:
-				who.reparent(parent)
-		
+		if undo.type == undoTypes.create:						
+			#print("undoing create") if doUndo else print("redoing delete")
+			addUndo(undoTypes.delete, undo.data.who, !doUndo, false)									
+			if undo.data.who.get_script().get_path().find("TrackMeta.gd") != -1:
+				undo.data.who2.queue_free()
+			undo.data.who.queue_free()			
+		elif undo.type == undoTypes.delete:					
+			#print("undoing delete") if doUndo else print("redoing create")
+			addUndo(undoTypes.create, undo.who, !doUndo, false)						
+			undo.data.parent.add_child(undo.data.who)
+			undo.data.who.owner = animation
+			if undo.data.who.get_script().get_path().find("TrackMeta.gd") != -1:
+				animation.timeline.add_child(undo.data.who2)
+				undo.data.who2.owner = animation
+		else:
+			if not is_instance_valid(undo.who):				
+				continue
+			addUndo(undo.type, undo.who, !doUndo)						
+			if undo.type == undoTypes.animation:
+				animation.looping = data.looping
+				animation.autoPlay = data.autoPlay
+				animation.speed = data.speed
+				animation.defaultPreviewScene = data.defaultPreviewScene
+						
+			elif undo.type == undoTypes.track:
+				var who = undo.who
+				who.name = data.name			
+				#TODO: allow reordering tracks
+				#elif data.index != who.get_index():
+				#	who.get_parent().move_child().data.index = data.get_index()
+				who.type = data.type
+				who.object = data.object
+				who.property = data.property
+				
+			elif undo.type == undoTypes.keyframe:			
+				var who = undo.who
+				var parent = data.parent			
+				who.value = data.value
+				who.relative = data.relative
+				who.curve = data.curve					
+				who.time = data.time
+				if who.selected:
+					if not data.selected:
+						who.deselect()
+				else:
+					if data.selected:
+						who.doSelect()
+				
+				if who.get_parent() != parent:
+					who.reparent(parent)
+
+func _on_groupTracksButton_pressed():
+	groupTrack = true
+
+func _on_TimelineEditor_visibility_changed():
+	if visible:
+		grab_focus()
+
+func doZoomY(out = false):
+	if out:
+		zoom.y *= 1.01
+	else:
+		zoom.y /= 1.01
+	get_tree().call_group("Tracks", "updateZoomY")
+
+func doScrollY(down = true):
+	if down:
+		scroll.y += 20
+	else:
+		scroll.y -= 20
+	scroll.y = max(0, scroll.y)	
+	#animation.trackMeta.rect_position.y = -scroll.y
+	#animation.timeline.rect_position.y = -scroll.y	

@@ -39,6 +39,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/AnimationEditorPlugin/playhead.gd"
 }, {
+"base": "Node",
+"class": "Scrollable",
+"language": "GDScript",
+"path": "res://addons/AnimationEditorPlugin/ExtraGui/Scrollable.gd"
+}, {
 "base": "Control",
 "class": "SelectBox",
 "language": "GDScript",
@@ -71,6 +76,7 @@ _global_script_class_icons={
 "Keyframe": "",
 "OpacityButton": "",
 "Playhead": "",
+"Scrollable": "",
 "SelectBox": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
 "Selectable": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
 "SelectionController": "res://addons/AnimationEditorPlugin/ExtraGui/select_icon.png",
@@ -97,7 +103,7 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg", "res://addons/project_map/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/AnimationEditorPlugin/plugin.cfg", "res://addons/QuickPluginManager/plugin.cfg", "res://addons/project_map/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg" )
 
 [gui]
 

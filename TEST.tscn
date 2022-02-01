@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "tool
+extends ColorRect
+
+
+func _enter_tree():
+	print(get_path())
+	get_viewport().add_child(self)
+	#self[\"rect_position\"][\"x\"] = 600
+	
+"
+
+[node name="CanvasLayer" type="CanvasLayer"]
+layer = 100
+
+[node name="Control" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 21.0
+margin_top = 171.0
+margin_right = -2481.0
+margin_bottom = -1214.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

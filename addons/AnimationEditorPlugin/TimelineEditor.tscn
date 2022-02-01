@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://addons/AnimationEditorPlugin/PlayStopButton.gd" type="Script" id=1]
 [ext_resource path="res://icons/icon_snap_grid.svg" type="Texture" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://icons/icon_speed.svg" type="Texture" id=17]
 [ext_resource path="res://addons/AnimationEditorPlugin/KeyframeValueDisplay.gd" type="Script" id=18]
 [ext_resource path="res://icons/icon_auto_play.svg" type="Texture" id=19]
+[ext_resource path="res://icons/icon_animation_track_group.svg" type="Texture" id=20]
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0, 0, 0, 1 )
@@ -47,11 +48,9 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_clip_content = true
 mouse_filter = 2
 theme = ExtResource( 14 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="StatusBarBackground" type="Button" parent="VBoxContainer"]
 margin_right = 2560.0
@@ -63,53 +62,80 @@ custom_styles/pressed = SubResource( 1 )
 custom_styles/focus = SubResource( 1 )
 custom_styles/normal = SubResource( 1 )
 
-[node name="FileButtons" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
+[node name="TrackControls" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -20.5
+margin_right = 297.0
+margin_bottom = 20.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="groupTracksButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground/TrackControls"]
+margin_right = 51.0
+margin_bottom = 43.0
+toggle_mode = true
+pressed = true
+icon = ExtResource( 20 )
+
+[node name="KeyframeData" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -358.0
-margin_top = -20.0
-margin_right = -198.0
-margin_bottom = 20.0
+margin_left = -1517.0
+margin_top = -18.0
+margin_right = -1357.0
+margin_bottom = 22.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NewAnimationButton" type="Button" parent="VBoxContainer/StatusBarBackground/FileButtons"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="TimeLabel" type="TextureRect" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
+margin_right = 30.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="KeyframeTime" type="LineEdit" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
+margin_left = 38.0
+margin_right = 74.0
+margin_bottom = 41.0
 rect_min_size = Vector2( 36, 36 )
-icon = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_constants/minimum_spaces = 0
+custom_styles/normal = SubResource( 3 )
+text = "0"
+align = 1
 
-[node name="DuplicateButton" type="Button" parent="VBoxContainer/StatusBarBackground/FileButtons"]
-margin_left = 48.0
-margin_right = 100.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 36, 36 )
-icon = ExtResource( 9 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ValueLabel" type="TextureButton" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
+margin_left = 82.0
+margin_right = 112.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 30, 0 )
+texture_normal = ExtResource( 15 )
+expand = true
+stretch_mode = 5
 
-[node name="SaveButton" type="Button" parent="VBoxContainer/StatusBarBackground/FileButtons"]
-margin_left = 108.0
-margin_right = 160.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 36, 36 )
-theme = ExtResource( 14 )
-icon = ExtResource( 11 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="KeyframeValue" type="Control" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
+margin_left = 120.0
+margin_right = 180.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 60, 36 )
+script = ExtResource( 18 )
 
-[node name="FileDialog" type="FileDialog" parent="VBoxContainer/StatusBarBackground/FileButtons/SaveButton"]
-margin_right = 315.0
-margin_bottom = 130.0
-filters = PoolStringArray( "\"*.tscn, PackedScene\"" )
+[node name="KeyframeRelative" type="ToolButton" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
+margin_left = 188.0
+margin_right = 297.0
+margin_bottom = 41.0
+toggle_mode = true
+pressed = true
+text = "Relative"
 
 [node name="AnimationSettings" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
 anchor_left = 1.0
@@ -118,8 +144,8 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_left = -1122.0
 margin_top = -20.0
-margin_right = -672.0
-margin_bottom = 20.0
+margin_right = -628.0
+margin_bottom = 24.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -250,63 +276,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="KeyframeData" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
+[node name="FileButtons" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -1517.0
-margin_top = -18.0
-margin_right = -1357.0
-margin_bottom = 22.0
+margin_left = -358.0
+margin_top = -20.0
+margin_right = -198.0
+margin_bottom = 20.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeLabel" type="TextureRect" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
-margin_right = 30.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 30, 0 )
-texture = ExtResource( 3 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="KeyframeTime" type="LineEdit" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
-margin_left = 38.0
-margin_right = 74.0
+[node name="NewAnimationButton" type="Button" parent="VBoxContainer/StatusBarBackground/FileButtons"]
+margin_right = 40.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 36, 36 )
-custom_constants/minimum_spaces = 0
-custom_styles/normal = SubResource( 3 )
-text = "0"
-align = 1
+icon = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="ValueLabel" type="TextureButton" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
-margin_left = 82.0
-margin_right = 112.0
+[node name="DuplicateButton" type="Button" parent="VBoxContainer/StatusBarBackground/FileButtons"]
+margin_left = 48.0
+margin_right = 100.0
 margin_bottom = 40.0
-rect_min_size = Vector2( 30, 0 )
-texture_normal = ExtResource( 15 )
-expand = true
-stretch_mode = 5
+rect_min_size = Vector2( 36, 36 )
+icon = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="KeyframeValue" type="Control" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
-margin_left = 120.0
-margin_right = 180.0
+[node name="SaveButton" type="Button" parent="VBoxContainer/StatusBarBackground/FileButtons"]
+margin_left = 108.0
+margin_right = 160.0
 margin_bottom = 40.0
-rect_min_size = Vector2( 60, 36 )
-script = ExtResource( 18 )
+rect_min_size = Vector2( 36, 36 )
+theme = ExtResource( 14 )
+icon = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="KeyframeRelative" type="ToolButton" parent="VBoxContainer/StatusBarBackground/KeyframeData"]
-margin_left = 188.0
-margin_right = 286.0
-margin_bottom = 40.0
-toggle_mode = true
-pressed = true
-text = "Relative"
+[node name="FileDialog" type="FileDialog" parent="VBoxContainer/StatusBarBackground/FileButtons/SaveButton"]
+margin_right = 315.0
+margin_bottom = 130.0
+filters = PoolStringArray( "\"*.tscn, PackedScene\"" )
 
 [node name="ZoomControls" type="HBoxContainer" parent="VBoxContainer/StatusBarBackground"]
 anchor_left = 1.0
@@ -323,7 +339,7 @@ __meta__ = {
 
 [node name="ZoomOutButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground/ZoomControls"]
 margin_right = 40.0
-margin_bottom = 40.0
+margin_bottom = 41.0
 custom_constants/hseparation = 0
 icon = ExtResource( 7 )
 __meta__ = {
@@ -333,8 +349,8 @@ __meta__ = {
 [node name="ZoomLabel" type="Label" parent="VBoxContainer/StatusBarBackground/ZoomControls"]
 margin_left = 48.0
 margin_top = 8.0
-margin_right = 97.0
-margin_bottom = 32.0
+margin_right = 107.0
+margin_bottom = 33.0
 mouse_filter = 1
 text = "100%"
 align = 1
@@ -344,9 +360,9 @@ __meta__ = {
 }
 
 [node name="ZoomInButton" type="ToolButton" parent="VBoxContainer/StatusBarBackground/ZoomControls"]
-margin_left = 105.0
-margin_right = 145.0
-margin_bottom = 40.0
+margin_left = 115.0
+margin_right = 155.0
+margin_bottom = 41.0
 rect_min_size = Vector2( 30, 30 )
 icon = ExtResource( 6 )
 __meta__ = {
@@ -383,31 +399,36 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/StatusBarBackground"]
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 1400.0
-margin_bottom = 1600.0
+margin_left = -5.0
+margin_top = -8.0
+margin_right = -5.0
+margin_bottom = 192.0
 rect_min_size = Vector2( 0, 200 )
 color = Color( 0.2, 0.227451, 0.309804, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="VBoxContainer/StatusBarBackground/FileButtons/NewAnimationButton" to="." method="_on_NewAnimationButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/StatusBarBackground/FileButtons/SaveButton" to="." method="_on_SaveButton_pressed"]
+[connection signal="visibility_changed" from="." to="." method="_on_TimelineEditor_visibility_changed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/TrackControls/groupTracksButton" to="." method="_on_groupTracksButton_pressed"]
+[connection signal="focus_entered" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeTime" to="." method="_on_KeyframeTime_focus_entered"]
+[connection signal="text_entered" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeTime" to="." method="_on_KeyframeTime_text_entered"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/KeyframeData/ValueLabel" to="." method="_on_ValueLabel_pressed"]
+[connection signal="gui_input" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeValue" to="." method="_on_KeyframeValue_gui_input"]
+[connection signal="toggled" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeRelative" to="." method="_on_KeyframeRelative_toggled"]
 [connection signal="text_entered" from="VBoxContainer/StatusBarBackground/AnimationSettings/Control/AnimationSpeed" to="." method="_on_AnimationSpeed_text_entered"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/AnimationSettings/LoopButton" to="." method="_on_LoopButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/AnimationSettings/AutoPlayButton" to="." method="_on_AutoPlayButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/AnimationSettings/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/AnimationSettings/PlayButton" to="VBoxContainer/StatusBarBackground/AnimationSettings/PlayButton" method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/AnimationSettings/ChangeContextButton" to="." method="_on_ChangeContextButton_pressed"]
-[connection signal="focus_entered" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeTime" to="." method="_on_KeyframeTime_focus_entered"]
-[connection signal="text_entered" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeTime" to="." method="_on_KeyframeTime_text_entered"]
-[connection signal="pressed" from="VBoxContainer/StatusBarBackground/KeyframeData/ValueLabel" to="." method="_on_ValueLabel_pressed"]
-[connection signal="gui_input" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeValue" to="." method="_on_KeyframeValue_gui_input"]
-[connection signal="toggled" from="VBoxContainer/StatusBarBackground/KeyframeData/KeyframeRelative" to="." method="_on_KeyframeRelative_toggled"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/FileButtons/NewAnimationButton" to="." method="_on_NewAnimationButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/StatusBarBackground/FileButtons/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/ZoomControls/ZoomOutButton" to="." method="_on_ZoomOutButton_pressed"]
 [connection signal="gui_input" from="VBoxContainer/StatusBarBackground/ZoomControls/ZoomLabel" to="." method="_on_ZoomLabel_gui_input"]
 [connection signal="pressed" from="VBoxContainer/StatusBarBackground/ZoomControls/ZoomInButton" to="." method="_on_ZoomInButton_pressed"]

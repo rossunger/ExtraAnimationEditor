@@ -16,7 +16,6 @@ var playing = false
 var duration = 1 
 var looping = false
 var autoPlay = false
-
 #EDITING EXPORT VARS
 export (String, FILE, "*.tscn, PackedScene") var defaultPreviewScene = ""
 var currentScene
@@ -66,7 +65,7 @@ func _ready():
 		timeline.add_child(sc)	
 		sc.owner = self
 		
-	trackMeta = get_node("TrackMeta")
+	trackMeta = get_node("TrackMeta")	
 		
 	for child in timeline.tracks.get_children():		
 		if child.get_script().get_path().find("Track.gd") != -1:		
@@ -160,8 +159,7 @@ func setDurationToLatestKeyframe():
 	if !is_instance_valid(timeline.tracks):				
 		print("No tracks")	
 		return			
-	duration = 0		
-	print(timeline.tracks.get_child_count())
+	duration = 0			
 	for track in timeline.tracks.get_children():
 		if track.get_child_count() == 0: 			
 			continue			
@@ -274,6 +272,7 @@ func _get_property_list():	# overridden function
 					"usage": PROPERTY_USAGE_STORAGE,    	
 					"type": TYPE_DICTIONARY,			
 				})
+	
 	return property_list
 
 
@@ -285,9 +284,10 @@ func addTrack():
 	t.owner = self
 	tm.owner = self
 	tm.track = get_path_to(t)
-	
+	TimelineEditor.addUndo(TimelineEditor.undoTypes.create, tm)
 
 func removeTrack(meta):
+	TimelineEditor.addUndo(TimelineEditor.undoTypes.create, meta)	
 	get_node(meta.track).queue_free()
 	meta.queue_free()
 

@@ -18,6 +18,7 @@ visible = false
 margin_top = 44.0
 margin_right = 1868.0
 margin_bottom = 250.0
+rect_clip_content = true
 mouse_filter = 1
 size_flags_vertical = 3
 split_offset = 100
@@ -82,17 +83,18 @@ property = "position"
 type = 4
 
 [node name="Keyframe2" parent="Timeline/Tracks/Reds Position" instance=ExtResource( 6 )]
-curve = SubResource( 1 )
+time = 0.0
 relative = true
 value = Vector2( 0, 0 )
+curve = SubResource( 1 )
 
 [node name="Keyframe0" parent="Timeline/Tracks/Reds Position" instance=ExtResource( 6 )]
-margin_left = 222.0
-margin_right = 242.0
-curve = SubResource( 2 )
-time = 2.22
+margin_left = 287.163
+margin_right = 307.163
+time = 2.25
 relative = true
 value = Vector2( 50, 50 )
+curve = SubResource( 2 )
 
 [node name="Playhead" type="ColorRect" parent="Timeline"]
 margin_left = 110.0
