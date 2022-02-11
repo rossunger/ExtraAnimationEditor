@@ -33,13 +33,13 @@ Playback speed,
 [x]. Drag keyframes onto different tracks
 Move, copy/paste, duplicate across tracks without hesitation
 
-[_]. undo/redo 
+[x]. undo/redo 
 Robust undo system that won't accidentally delete your work
 
 [_]. Emit signals / call functions?
 Keyframes can emit signals and call functions
 
-[_]. Can have keyframes that are driven by other objects (as with Inverse Kinematics) 
+[x]. Can have keyframes that are driven by other objects (as with Inverse Kinematics) 
 Keyframes can be relative to other objects. E.g. look_at target 
 
 [_]. Nested animations
@@ -52,9 +52,9 @@ Use of expressions/functions instead of keyframes e.g. sin(time) or noise functi
 
 [_]. Dope sheet with curves
 
-[_]. Snapping and Grid
+[x]. Snapping and Grid
 
-[_]. Zoom and Pan while editing
+[x]. Zoom and Pan while editing
 
 [_]. Preview Audio/Video while editing
 
