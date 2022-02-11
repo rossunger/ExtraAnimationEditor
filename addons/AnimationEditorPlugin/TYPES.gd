@@ -9,9 +9,10 @@ const Str = 3
 const Vec2 = 4
 const Vec3 = 5
 const Vec4 = 6
+const Var = 7
 
 static func getTypes():
-	return ["Bool", "Float", "Res", "Str", "Vec2", "Vec3", "Vec4"]
+	return ["Bool", "Float", "Res", "Str", "Vec2", "Vec3", "Vec4", "Var"]
 
 static func GodotTypesToRossTypes(type):
 	if type == TYPE_COLOR:

@@ -5,9 +5,9 @@
 [ext_resource path="res://DefaultAnimationContext.gd" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 92.5, 96 )
 
 [node name="Node2D" type="Node2D"]
+position = Vector2( 0, 1 )
 script = ExtResource( 4 )
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
@@ -18,12 +18,6 @@ polygon = PoolVector2Array( 135, 73, 319, 67, 364, 242, 183, 268, 44, 209 )
 position = Vector2( 648, 142 )
 color = Color( 0.345098, 0.541176, 1, 1 )
 polygon = PoolVector2Array( 286, -18, 184, 198, 364, 242, 183, 268, 44, 209 )
-
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 82.5, 86 )
-shape = SubResource( 1 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = 721.0
@@ -45,6 +39,7 @@ defaultPreviewScene = ""
 speed = 1
 Duration = 1
 looping = false
+Tracks/Poly1Color/obj = NodePath("../../Polygon2D")
 trackObjects = {
 }
 trackProperties = {
@@ -57,3 +52,44 @@ trackObjects = {
 }
 trackProperties = {
 }
+Variables/howMany = 1
+Variables/var0/obj = "../.."
+Variables/var0/var = "testVar"
+variables = {
+"var0": {
+"object": "../..",
+"var": "testVar"
+}
+}
+
+[node name="NewAnimation2" parent="AnimationController" instance=ExtResource( 3 )]
+visible = false
+trackObjects = {
+}
+trackProperties = {
+}
+trackObjects = {
+}
+trackProperties = {
+}
+trackObjects = {
+}
+trackProperties = {
+}
+variables = {
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Area2D2" type="Area2D" parent="CanvasLayer/Control"]
+position = Vector2( 0, 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Control/Area2D2"]
+shape = SubResource( 1 )

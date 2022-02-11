@@ -13,14 +13,17 @@ func _exit_tree():
 func updateKeyframeValues():	
 	var prop
 	for key in keys:
-		if type in [TYPES.Float,TYPES.Str]:
+		if type == TYPES.Str:
+			key.value = control.text
+		elif type == TYPES.Float:
 			key.value = str2var(control.text)
-		if type == TYPES.Vec2:
+		elif type == TYPES.Vec2:
 			key.value = str2var("Vector2( " + control.text + " )")				
-		if type == TYPES.Vec3:
+		elif type == TYPES.Vec3:
 			key.value = str2var("Vector3( " + control.text + " )")
 		elif type == TYPES.Vec4:
 			key.value = control.color			
+			
 	
 func _ready():	
 	keys = get_tree().get_nodes_in_group("selected")		

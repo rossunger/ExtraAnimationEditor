@@ -41,7 +41,7 @@ func _ready():
 func frameChanged(position = owner.position): # #TimelineEditor.animation.position):
 	if Engine.editor_hint and not is_instance_valid(TimelineEditor.animation.currentScene):
 		return
-	
+		
 	#TO DO: implement a reset button that resets the trackStartingValue to original
 	#if !trackOriginalStartingValue:		
 	#	trackOriginalStartingValue = obj[property]
@@ -53,7 +53,7 @@ func frameChanged(position = owner.position): # #TimelineEditor.animation.positi
 		lastKeyframe = get_child(0)
 		nextKeyframe = get_child(0)
 		if !lastKeyframe.relative:
-			applyKeyframeValues(0)
+			applyKeyframeValues(0)		
 		owner.stop()
 		return
 		
@@ -141,6 +141,29 @@ func frameChanged(position = owner.position): # #TimelineEditor.animation.positi
 			
 		absoluteValueAtLastKeyframe = lastKeyframe.value
 		absoluteValueAtNextKeyframe = nextKeyframe.value
+		if lastKeyframe.value is String and lastKeyframe.value.find("var") != -1:			
+			if !owner.variables.has(nextKeyframe.value):
+				print("ERROR: variable doesn't exist")
+				print(owner.variables.keys())
+				absoluteValueAtLastKeyframe = nextKeyframe.value
+				return
+			var varVar = owner.variables[lastKeyframe.value]
+			var varObject = owner.get_node(varVar["object"])
+			var varValue = varObject[varVar["var"]]
+			absoluteValueAtLastKeyframe = varValue
+			print("LK: ", absoluteValueAtLastKeyframe)
+		
+		if nextKeyframe.value is String and nextKeyframe.value.find("var") != -1:								
+			if !owner.variables.has(nextKeyframe.value):
+				print("ERROR: variable doesn't exist")
+				print(owner.variables.keys())
+				absoluteValueAtNextKeyframe = lastKeyframe.value
+				return				
+			var varVar = owner.variables[nextKeyframe.value]
+			var varObject = owner.get_node(varVar["object"])
+			var varValue = varObject[varVar["var"]]
+			absoluteValueAtNextKeyframe = varValue
+			print("VarVar: " , absoluteValueAtLastKeyframe)
 			
 		if type in [TYPES.Bool, TYPES.Float, TYPES.Vec2, TYPES.Vec3, TYPES.Vec4] and nextKeyframe.relative:			
 			#init delta as the correct type
@@ -203,43 +226,52 @@ func applyKeyframeValues(lerpWeight):
 				return
 			else:	
 				#setObjPropValue(absoluteValueAtLastKeyframe.value)
-				obj[property] = absoluteValueAtLastKeyframe.value
+				obj[property] = absoluteValueAtLastKeyframe
 				return
 		else:
 			print("last key should be type Bool, but it is: ", lastKeyframe.value, " : type: ", typeof(lastKeyframe.value))			
 	
 	if type == TYPES.Float:
-		if lastKeyframe.value is float or lastKeyframe.value is int:			
+		if absoluteValueAtLastKeyframe is float or absoluteValueAtLastKeyframe is int:			
 			setObjPropValue(lerp(absoluteValueAtLastKeyframe, absoluteValueAtNextKeyframe, lerpWeight))
 			#obj[property] = lerp(absoluteValueAtLastKeyframe, absoluteValueAtNextKeyframe, lerpWeight)
 			
 		else:
 			print("last key should be type Float, but it is: ", lastKeyframe.value, " : type: ", typeof(lastKeyframe.value))					
 	if type == TYPES.Vec2:
-		if lastKeyframe.value is Vector2:			
+		if absoluteValueAtLastKeyframe is Vector2:			
 			#setObjPropValue(absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight))
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)			
 		else:
 			print("last key should be type Vec2, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 	if type == TYPES.Vec3:
-		if lastKeyframe.value is Vector3:						
+		if absoluteValueAtLastKeyframe is Vector3:						
 			#setObjPropValue(absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight))
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
 		else:
 			print("last key should be type Vec3, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 
 	if type == TYPES.Vec4:
-		if lastKeyframe.value is Color:						
+		if absoluteValueAtLastKeyframe is Color:						
 			#setObjPropValue(absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight))
 			obj[property] = absoluteValueAtLastKeyframe.linear_interpolate( absoluteValueAtNextKeyframe, lerpWeight)						
 		else:
 			print("last key should be type Vec4, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 
 	if type == TYPES.Str:
-		if lastKeyframe.value is Color:						
-			obj[property] = absoluteValueAtLastKeyframe 			
+		if lastKeyframe.value as String:						
+			if property.find("#Func") == -1:
+				obj[property] = absoluteValueAtLastKeyframe 			
+			else:				
+				var params = absoluteValueAtLastKeyframe.split(",")
+				
+				if params.size() > 1:
+					obj.call(params[1], params[2])
+				else:
+					print("calling func")
+					obj.call(params[1])
 		else:
-			print("last key should be type Vec4, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
+			print("last key should be type Str, but it is: ", lastKeyframe.value, " : type: ",  typeof(lastKeyframe.value))	
 
 	#TO DO:
 	#implement str, and res... also reference to an object's param?
@@ -330,6 +362,9 @@ func setDefaultKeyValue(k):
 		k.value = ""
 		
 func validateValueType(value):	
+	if value is String and value.find("#Var") != -1:
+		value = owner.variables[value]
+		
 	if type == TYPES.Bool:
 		if typeof(value) == TYPE_BOOL:
 			return true

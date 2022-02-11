@@ -6,7 +6,7 @@ signal keyframeChanged
 #DATA
 export (float) var time = 0.25 setget setTime #in seconds
 export var relative = false #absolute or relative
-export var value = 0 
+export var value = ""
 
 export var curve: Curve = Curve.new() 
 
@@ -27,15 +27,18 @@ func _init():
 	add_to_group("selectable")	
 	
 func _ready():		
-	#connect("item_rect_changed", self, "rect_changed")
-	time = rect_position.x / TimelineEditor.zoom.x -  TimelineEditor.scroll.x
-	if !is_connected("keyframeChanged", TimelineEditor, "keyframeChanged"):
-		connect("keyframeChanged", TimelineEditor, "keyframeChanged")
-	if !TimelineEditor.is_connected("zoomChanged", self, "setXFromTime"):
-		TimelineEditor.connect("zoomChanged", self, "setXFromTime")
+	if Engine.editor_hint:
+		#connect("item_rect_changed", self, "rect_changed")
+		time = rect_position.x / TimelineEditor.zoom.x -  TimelineEditor.scroll.x
+		if !is_connected("keyframeChanged", TimelineEditor, "keyframeChanged"):
+			connect("keyframeChanged", TimelineEditor, "keyframeChanged")
+		if !TimelineEditor.is_connected("zoomChanged", self, "setXFromTime"):
+			TimelineEditor.connect("zoomChanged", self, "setXFromTime")
+		call_deferred("emit_signal", "keyframeChanged", self)
+	
 	if not is_in_group("Keyframe"):
 		add_to_group("Keyframe")
-	call_deferred("emit_signal", "keyframeChanged", self)
+	
 
 func rect_changed():
 	if self.time == rect_position.x / TimelineEditor.zoom.x -  TimelineEditor.scroll.x:

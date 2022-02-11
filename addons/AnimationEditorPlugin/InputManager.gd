@@ -165,6 +165,8 @@ func _enter_tree():
 
 func _input(event): # handleInput(event, timelineEditor):	
 	var timelineEditor = TimelineEditor	
+	if not is_instance_valid(timelineEditor) or !timelineEditor.has_focus():
+		return	
 	if not statusBarRect:
 		statusBarRect = timelineEditor.get_child(0).get_child(0).get_global_rect()
 	if not fullRect:
@@ -180,9 +182,7 @@ func _input(event): # handleInput(event, timelineEditor):
 	#print(trackMetaRect)	
 	
 	#if not timelineEditor.has_focus():
-	#	return	
-	if not timelineEditor.visible:
-		return	
+	#	return		
 
 	if timelineEditor.draggingKeys:
 		if event is InputEventMouseMotion:					

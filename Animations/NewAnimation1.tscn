@@ -1,0 +1,196 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraAnimation.gd" type="Script" id=1]
+[ext_resource path="res://addons/AnimationEditorPlugin/Timeline.gd" type="Script" id=2]
+[ext_resource path="res://addons/AnimationEditorPlugin/TrackMetaContainer.gd" type="Script" id=3]
+[ext_resource path="res://addons/AnimationEditorPlugin/TrackMeta.tscn" type="PackedScene" id=5]
+[ext_resource path="res://addons/AnimationEditorPlugin/Track.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/SelectionController.gd" type="Script" id=9]
+[ext_resource path="res://addons/AnimationEditorPlugin/playhead.gd" type="Script" id=10]
+[ext_resource path="res://addons/AnimationEditorPlugin/Keyframe.tscn" type="PackedScene" id=11]
+
+[sub_resource type="Curve" id=3]
+
+[sub_resource type="Curve" id=1]
+
+[sub_resource type="Curve" id=4]
+
+[sub_resource type="Curve" id=6]
+
+[sub_resource type="Curve" id=5]
+
+[sub_resource type="Curve" id=7]
+
+[node name="NewAnimation" type="HSplitContainer"]
+visible = false
+margin_top = 44.0
+margin_right = 1924.0
+margin_bottom = 1484.0
+rect_clip_content = true
+mouse_filter = 1
+size_flags_vertical = 3
+split_offset = 104
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+defaultPreviewScene = "res://DefaultAnimationContext.tscn"
+speed = 1.5
+AutoDuration = true
+Duration = 6.5
+looping = true
+autoPlay = false
+Tracks/Poly1Color/obj = "./Polygon2D"
+Tracks/Poly1Color/prop = "color"
+trackObjects = {
+}
+trackProperties = {
+}
+Tracks/ColorRectColor/obj = "./ColorRect"
+Tracks/ColorRectColor/prop = "color"
+trackObjects = {
+}
+trackProperties = {
+}
+"Tracks/Poly1 Y/obj" = "./Polygon2D"
+"Tracks/Poly1 Y/prop" = "position.y"
+trackObjects = {
+}
+trackProperties = {
+}
+Variables/howMany = 0
+variables = {
+}
+
+[node name="TrackMeta" type="VBoxContainer" parent="."]
+margin_right = 224.0
+margin_bottom = 1440.0
+rect_min_size = Vector2( 120, 1440 )
+rect_clip_content = true
+mouse_filter = 0
+custom_constants/separation = 5
+script = ExtResource( 3 )
+
+[node name="Poly1Color" parent="TrackMeta" instance=ExtResource( 5 )]
+margin_right = 224.0
+margin_bottom = 36.0
+track = NodePath("Timeline/Tracks/Poly1Color")
+
+[node name="ColorRectColor" parent="TrackMeta" instance=ExtResource( 5 )]
+margin_top = 41.0
+margin_right = 224.0
+margin_bottom = 77.0
+track = NodePath("Timeline/Tracks/ColorRectColor")
+
+[node name="Poly1 Y" parent="TrackMeta" instance=ExtResource( 5 )]
+margin_top = 82.0
+margin_right = 224.0
+margin_bottom = 118.0
+track = NodePath("Timeline/Tracks/Poly1 Y")
+
+[node name="Timeline" type="Control" parent="."]
+margin_left = 248.0
+margin_right = 1924.0
+margin_bottom = 1440.0
+rect_min_size = Vector2( 200, 1440 )
+rect_clip_content = true
+mouse_filter = 1
+script = ExtResource( 2 )
+
+[node name="Tracks" type="VBoxContainer" parent="Timeline"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1.0
+margin_bottom = -2.0
+size_flags_vertical = 3
+custom_constants/separation = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Poly1Color" parent="Timeline/Tracks" instance=ExtResource( 6 )]
+margin_right = 1691.0
+type = 6
+object = "./Polygon2D"
+property = "color"
+type = 6
+
+[node name="Keyframe2" parent="Timeline/Tracks/Poly1Color" instance=ExtResource( 11 )]
+time = 0.0
+value = Color( 0.47168, 0.133121, 0.133121, 1 )
+curve = SubResource( 3 )
+
+[node name="Keyframe1" parent="Timeline/Tracks/Poly1Color" instance=ExtResource( 11 )]
+margin_left = 650.0
+margin_right = 670.0
+time = 3.25
+value = "var0"
+curve = SubResource( 1 )
+
+[node name="Keyframe0" parent="Timeline/Tracks/Poly1Color" instance=ExtResource( 11 )]
+margin_left = 1300.0
+margin_right = 1320.0
+time = 6.5
+value = Color( 0.827451, 0.752941, 0, 1 )
+curve = SubResource( 4 )
+
+[node name="ColorRectColor" parent="Timeline/Tracks" instance=ExtResource( 6 )]
+margin_top = 41.0
+margin_right = 1691.0
+margin_bottom = 77.0
+type = 6
+object = "./ColorRect"
+property = "color"
+type = 6
+
+[node name="Keyframe0" parent="Timeline/Tracks/ColorRectColor" instance=ExtResource( 11 )]
+time = 0.0
+value = Color( 0, 0, 0, 0 )
+curve = SubResource( 6 )
+
+[node name="Keyframe1" parent="Timeline/Tracks/ColorRectColor" instance=ExtResource( 11 )]
+margin_left = 500.0
+margin_right = 520.0
+time = 2.5
+value = Color( 0.0901961, 0.178661, 0.678431, 1 )
+curve = SubResource( 5 )
+
+[node name="Poly1 Y" parent="Timeline/Tracks" instance=ExtResource( 6 )]
+margin_top = 82.0
+margin_right = 1691.0
+margin_bottom = 118.0
+object = "./Polygon2D"
+property = "position.y"
+
+[node name="Keyframe0" parent="Timeline/Tracks/Poly1 Y" instance=ExtResource( 11 )]
+time = 0.0
+relative = true
+value = 0
+curve = SubResource( 7 )
+
+[node name="Keyframe1" parent="Timeline/Tracks/Poly1 Y" instance=ExtResource( 11 )]
+margin_left = 400.0
+margin_right = 420.0
+time = 2.0
+relative = true
+value = 30
+curve = SubResource( 6 )
+
+[node name="Keyframe2" parent="Timeline/Tracks/Poly1 Y" instance=ExtResource( 11 )]
+margin_left = 1300.0
+margin_right = 1320.0
+time = 6.5
+relative = true
+value = 40
+curve = SubResource( 6 )
+
+[node name="Playhead" type="ColorRect" parent="Timeline"]
+margin_left = 460.0
+margin_right = 461.0
+margin_bottom = 3000.0
+mouse_filter = 2
+color = Color( 1, 1, 1, 0.3 )
+script = ExtResource( 10 )
+
+[node name="SelectionController" type="Node" parent="Timeline"]
+script = ExtResource( 9 )

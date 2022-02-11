@@ -16,6 +16,9 @@ var playing = false
 var duration = 1 
 var looping = false
 var autoPlay = false
+var varCount = 0
+var variables = {}
+
 #EDITING EXPORT VARS
 export (String, FILE, "*.tscn, PackedScene") var defaultPreviewScene = ""
 var currentScene
@@ -30,25 +33,31 @@ var timeline
 var trackMeta
 
 #INTERNAL EDITOR VARS
-var TrackScene = preload("Track.tscn")
-var TrackMetaScene = preload("TrackMeta.tscn")
-var playheadScene = preload("Playhead.tscn")
+var TrackScene
+var TrackMetaScene
+var playheadScene
+
+
 func _init():
 	pass
 	
-func _enter_tree():	
+func _enter_tree():		
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	#if there's no context, then we're in runtime, so hide the interface
 	if !debug or !Engine.editor_hint or !get_parent().get_parent() == TimelineEditor:
 		hide()
 	else:				
+		TrackScene = preload("Track.tscn")
+		TrackMetaScene = preload("TrackMeta.tscn")
+		playheadScene = preload("Playhead.tscn")	
 		if not is_in_group("animations"):
 			add_to_group("animations")
 
 	
 func _ready():				
 	if !Engine.editor_hint and !debug:
-		hide()		
+		hide()	
+	
 	
 	if autoPlay:
 		play()
@@ -72,7 +81,7 @@ func _ready():
 			if !is_connected("frameChanged", child, "frameChanged"):
 				connect("frameChanged", child, "frameChanged")	
 	
-func togglePlay():		
+func togglePlay():	
 	if playing:
 		stop()
 	else:
@@ -99,7 +108,7 @@ func stop():
 	emit_signal("stop")
 	
 func _physics_process(delta):	
-	if !playing: 
+	if !playing: 		
 		return
 	position+=delta*speed
 	if !looping:
@@ -174,6 +183,10 @@ func _set(prop, value):
 	if prop == "Duration":
 		duration = value		
 		return true
+	if prop == "Variables/howMany":
+		varCount = value		
+		property_list_changed_notify()
+		return true
 	if prop == "AutoDuration":		
 		autoDuration = value
 		if autoDuration:		
@@ -181,15 +194,26 @@ func _set(prop, value):
 		property_list_changed_notify()
 		return true		
 	
-	if prop.find("Tracks/") == -1:
-		return
-			
-	if timeline and timeline.tracks:
-		for track in timeline.tracks.get_children():
-			if prop == "Tracks/" + track.name + "/obj":
-				track.object = value
-			if prop == "Tracks/" + track.name + "/prop":
-				track.property = value			
+	if prop.find("Tracks/") != -1:					
+		if timeline and timeline.tracks:
+			for track in timeline.tracks.get_children():
+				if prop == "Tracks/" + track.name + "/obj":
+					track.object = value
+				if prop == "Tracks/" + track.name + "/prop":
+					track.property = value			
+	if prop.find("Variables/var") != -1:				
+		for i in varCount:
+			if !variables.has("var" + str(i)):
+				return
+			if prop == "Variables/var" + str(i) + "/obj":								
+				if !variables["var" + str(i)] is Dictionary:
+					variables["var" + str(i)] = {}
+				variables["var" + str(i)]["object"] = str(value)
+			if prop == "Variables/var" + str(i) + "/var":				
+				if !variables["var" + str(i)] is Dictionary:
+					variables["var" + str(i)] = {}
+				variables["var" + str(i)]["var"] = value				
+		
 	
 	
 func _get(prop):	
@@ -198,15 +222,26 @@ func _get(prop):
 		return duration			
 	if prop == "AutoDuration":
 		return autoDuration
+	
+	if prop == "Variables/howMany":
+		return varCount
 		
-	if prop.find("Tracks/") == -1:
-		return
-	if timeline and timeline.tracks:
-		for track in timeline.tracks.get_children():
-			if prop == "Tracks/" + track.name + "/obj":			
-				return track.object				
-			if prop == "Tracks/" + track.name + "/prop":											
-				return track.property
+	if prop.find("Tracks/") != -1:		
+		if timeline and timeline.tracks:
+			for track in timeline.tracks.get_children():
+				if prop == "Tracks/" + track.name + "/obj":			
+					return track.object				
+				if prop == "Tracks/" + track.name + "/prop":											
+					return track.property
+					
+	if prop.find("Variables/var") != -1:				
+		for i in varCount:
+			if !variables.has("var" + str(i)):
+				return
+			if prop == "Variables/var" + str(i) + "/obj":				
+				return variables["var" + str(i)]["object"]
+			if prop == "Variables/var" + str(i) + "/var":				
+				return variables["var" + str(i)]["var"]
 	return
 	
 func _get_property_list():	# overridden function
@@ -272,7 +307,27 @@ func _get_property_list():	# overridden function
 					"usage": PROPERTY_USAGE_STORAGE,    	
 					"type": TYPE_DICTIONARY,			
 				})
-	
+	property_list.append({
+		"name": "Variables/howMany",		
+		"type": TYPE_INT,			
+		"hint_string": "0,10,1"	
+	})
+	for i in varCount:
+		property_list.append({
+			"name": "Variables/var" + str(i) + "/obj",					
+			"usage": PROPERTY_USAGE_DEFAULT,    	
+			"type": TYPE_NODE_PATH,					
+		})
+		property_list.append({
+			"name": "Variables/var" + str(i) + "/var",					
+			"usage": PROPERTY_USAGE_DEFAULT,    	
+			"type": TYPE_STRING,
+		})
+	property_list.append({
+		"name": "variables",		
+		"usage": PROPERTY_USAGE_STORAGE,    	
+		"type": TYPE_DICTIONARY
+	})
 	return property_list
 
 

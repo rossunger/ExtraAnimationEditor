@@ -4,7 +4,7 @@
 [ext_resource path="res://new scene2.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Animations/Run.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/AnimationEditorPlugin/AnimationController.gd" type="Script" id=4]
-[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/fonts/defaultFont.tres" type="DynamicFont" id=5]
+[ext_resource path="res://addons/AnimationEditorPlugin/ExtraGui/fonts/defaultFont1.tres" type="DynamicFont" id=5]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0

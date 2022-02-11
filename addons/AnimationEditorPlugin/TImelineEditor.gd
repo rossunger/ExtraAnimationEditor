@@ -43,13 +43,14 @@ enum undoTypes{ 	create, delete, keyframe, track, animation 		}
 
 #func debugGuiFocus(who):
 	#print(who.name, " : ", who.get_path())
-	
+
 func _enter_tree():	
 	#if not get_viewport().is_connected("gui_focus_changed", self, "debugGuiFocus"):
 	#	get_viewport().connect("gui_focus_changed", self, "debugGuiFocus")
 	set_focus_mode(Control.FOCUS_ALL)
 	if !Engine.editor_hint:
-		queue_free()	
+		hide()
+	#	queue_free()	
 	get_tree().call_group("AnimationEditorPlugin", "initTimeline", self)	
 	
 func handleSelection(obj):	
@@ -167,8 +168,8 @@ func selectionChanged(who):
 		keyframeTime.text = str( who.time )
 		keyframeRelative.pressed = who.relative
 	else:
-		#print(who.get_script().get_path())
-		KeyframeData.hide()
+		pass
+		#KeyframeData.hide()
 
 func previewContextChanged(path):
 	animation.defaultPreviewScene = path	
